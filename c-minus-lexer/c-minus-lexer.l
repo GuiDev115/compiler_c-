@@ -18,9 +18,9 @@ newline                 \n
 digit                   [0-9]
 letter                  [a-zA-Z]
 integer_num             {digit}+
-float_num               {digit}+"."{digit}+ 
 identifier              {letter}({letter}|{digit})*
 array_identifier        {identifier}"["{integer_num}"]"
+float_num               {digit}+(\.{digit}+)?([Ee][+-]?{digit}+)?
 
 other                   .
 
@@ -129,7 +129,7 @@ other                   .
 {array_identifier}     { fprintf(yyout,"%d(%d): %s (IDENTIFICADOR DE VETOR)\n",line_number,column_number,yytext);
                             column_number+=yyleng; }
 {ws}                    { column_number+=yyleng; }
-{other}                 { fprintf(yyout, "(%d) Lexical error in line %d and col %d. Input -> \"%s\"\n", 
+{other}                 { fprintf(yyout, "(%d) Erro léxico na linha %d e na coluna %d. Entrada -> \"%s\"\n", 
                          ++errors_count, line_number, column_number, yytext); } 
 
 %%

@@ -1,0 +1,15 @@
+/* Este é um comentário
+   de múltiplas linhas. */
+int main() {
+    int x; // Variável local
+    x = 5; /* Atribuição */
+    if (x > 0) {
+        return x;
+    } else {
+        return 0; /* Retorno padrão */
+    }
+    /* Fim do main */
+}
+
+/* Comentário com * e / dentro ** // */
+void func(int a, float b);
