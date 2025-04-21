@@ -10,17 +10,16 @@ int errors_count = 0;
 
 %x COMMENT
 
-/*ARRUMA O FLOAT*/
-
 delim                   [ \t]
 ws                      {delim}+
 newline                 \n
-digit                   [0-9]
-letter                  [a-zA-Z]
-integer_num             {digit}+
-identifier              {letter}({letter}|{digit})*
-array_identifier        {identifier}"["{integer_num}"]"
-float_num               {digit}+(\.{digit}+)?([Ee][+-]?{digit}+)?
+digito                  [0-9]
+letra                   [a-z]
+num-int                 {digito}+
+int                     {digito}+(\.{digito}+)?([E][+-]?{digito}+)?
+ident                   {letra}({letra}|{digito})*
+array_ident             {ident}"["{num-int}"]"
+
 
 other                   .
 
@@ -86,16 +85,6 @@ other                   .
                             column_number+=yyleng; }
 ">="                    { fprintf(yyout,"%d(%d): %s (MAIOR IGUAL >=)\n",line_number,column_number,yytext);
                             column_number+=yyleng; }
-"&&"                    { fprintf(yyout,"%d(%d): %s (E LOGICO &&)\n",line_number,column_number,yytext);
-                            column_number+=yyleng; }
-"||"                    { fprintf(yyout,"%d(%d): %s (OU LOGICO ||)\n",line_number,column_number,yytext);
-                            column_number+=yyleng; }
-"!"                     { fprintf(yyout,"%d(%d): %s (NAO LOGICO !)\n",line_number,column_number,yytext);
-                            column_number+=yyleng; }
-"++"                    { fprintf(yyout,"%d(%d): %s (INCREMENTO ++)\n",line_number,column_number,yytext);
-                            column_number+=yyleng; }
-"--"                    { fprintf(yyout,"%d(%d): %s (DECREMENTO --)\n",line_number,column_number,yytext);
-                            column_number+=yyleng; }
 
 
  /* --- Pontuação --- */
@@ -112,22 +101,31 @@ other                   .
                             column_number+=yyleng; }
 ","                     { fprintf(yyout,"%d(%d): %s (VIRGULA ,)\n",line_number,column_number,yytext);
                             column_number+=yyleng; }
+"."                     { fprintf(yyout,"%d(%d): %s (PONTO .)\n",line_number,column_number,yytext);
+                         column_number+=yyleng; }
 "["                     { fprintf(yyout,"%d(%d): %s (ABRE COLCHETES [)\n",line_number,column_number,yytext);
                             column_number+=yyleng; }
 "]"                     { fprintf(yyout,"%d(%d): %s (FECHA COLCHETES ]\n",line_number,column_number,yytext);
                             column_number+=yyleng; }
 
+    /* --- Outros CASOS--- */
 
-{integer_num}                { fprintf(yyout,"%d(%d): %s (NUMERO INTEIRO)\n",line_number,column_number,yytext); 
+{digito}+{letra}({letra}|{digito})*   { fprintf(yyout, "(%d) Erro léxico na linha %d e na coluna %d. Identificador inválido -> \"%s\"\n", 
+                                        ++errors_count, line_number, column_number, yytext);
+                                        column_number+=yyleng; }
+
+
+{num-int}               { fprintf(yyout,"%d(%d): %s (NUMERO INTEIRO)\n",line_number,column_number,yytext); 
                          column_number+=yyleng; }
-{letter}                { fprintf(yyout,"%d(%d): %s (CHAR)\n",line_number,column_number,yytext); 
+{letra}                 { fprintf(yyout,"%d(%d): %s (CHAR)\n",line_number,column_number,yytext); 
                          column_number+=yyleng; }
-{float_num}              { fprintf(yyout,"%d(%d): %s (NUMERO REAL)\n",line_number,column_number,yytext); 
+{int}                   { fprintf(yyout,"%d(%d): %s (NUMERO REAL)\n",line_number,column_number,yytext); 
                          column_number+=yyleng; }
-{identifier}           { fprintf(yyout,"%d(%d): %s (IDENTIFICADOR)\n",line_number,column_number,yytext);
+{ident}                 { fprintf(yyout,"%d(%d): %s (IDENTIFICADOR)\n",line_number,column_number,yytext);
                             column_number+=yyleng; }
-{array_identifier}     { fprintf(yyout,"%d(%d): %s (IDENTIFICADOR DE VETOR)\n",line_number,column_number,yytext);
+{array_ident}           { fprintf(yyout,"%d(%d): %s (IDENTIFICADOR DE VETOR)\n",line_number,column_number,yytext);
                             column_number+=yyleng; }
+{newline}               { line_number++; column_number = 1; }
 {ws}                    { column_number+=yyleng; }
 {other}                 { fprintf(yyout, "(%d) Erro léxico na linha %d e na coluna %d. Entrada -> \"%s\"\n", 
                          ++errors_count, line_number, column_number, yytext); } 

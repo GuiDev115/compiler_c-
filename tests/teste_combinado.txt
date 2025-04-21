@@ -18,7 +18,7 @@ void main(void) {
   return;
 }
 
-float calculate_average(int arr[10], int size) {
+float calculateaverage(int arr[10], int size) {
     float sum = 0.0;
     int i = 0;
     while (i < size) {

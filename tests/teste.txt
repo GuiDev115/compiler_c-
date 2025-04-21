@@ -1,2 +1,8 @@
-200.200
-200e-202
+/* Calcula fatorial */
+int fact(int n) {
+  if (n <= 1) return 1;
+  else return n * fact(n-1);
+}
+
+float pi = 3.14;
+int count = 0;

@@ -1,4 +1,12 @@
 int #invalid;
+
 float value@;
-result = 5 $ 2;
-/* Comentário não fechado
+
+$2 = 10;
+
+int 2222aaaa;
+
+ç á
+
+
+^#||\
