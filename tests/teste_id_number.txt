@@ -1,0 +1,13 @@
+int count;
+float averageValue;
+struct Point p1;
+count = 10;
+averageValue = 99.5;
+myArray[5] = count + 1;
+another_var = averageValue / 2.0;
+result123 = myArray[0];
+_invalidIdentifier /* Embora a regra permita, _ não é comum em C- */
+12345
+0.0
+1.234
+vector[100]

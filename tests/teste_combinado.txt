@@ -1,0 +1,29 @@
+/* Programa de exemplo C-Minus */
+
+int gcd(int u, int v) {
+  if (v == 0) return u;
+  else return gcd(v, u % v); /* Chamada recursiva */
+}
+
+void main(void) {
+  int x;
+  int y;
+  /* Assume que read() e write() são funções pré-definidas */
+  /* x = read(); */
+  /* y = read(); */
+  x = 10;
+  y = 5;
+  /* write(gcd(x,y)); */
+  gcd(x,y);
+  return;
+}
+
+float calculate_average(int arr[10], int size) {
+    float sum = 0.0;
+    int i = 0;
+    while (i < size) {
+        sum = sum + arr[i];
+        i++;
+    }
+    return sum / size;
+}

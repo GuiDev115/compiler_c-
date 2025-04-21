@@ -1,50 +1,46 @@
-# C- Lexer Project
+# Analisador Léxico C-Minus
 
-Este projeto implementa um analisador léxico para a linguagem C- utilizando a ferramenta Flex/Lex. O analisador é responsável por reconhecer os tokens da linguagem, detectar erros e gerar uma saída formatada que inclui informações sobre a linha, coluna, lexema e tipo do token identificado.
+Este projeto implementa um analisador léxico para a linguagem C-Minus utilizando Flex.
 
 ## Estrutura do Projeto
 
-O projeto é organizado da seguinte forma:
+*   `c-minus-lexer/`: Contém os arquivos do analisador léxico.
+    *   [`c-minus-lexer.l`](c-minus-lexer/c-minus-lexer.l): Arquivo de definição do Flex para o analisador léxico.
+    *   [`lex.yy.c`](c-minus-lexer/lex.yy.c): Código C gerado pelo Flex.
+    *   [`c-minus-lexer`](c-minus-lexer/c-minus-lexer): Executável compilado do analisador léxico.
+*   [`scriptCompileAndRun.sh`](scriptCompileAndRun.sh): Script para compilar e executar o analisador léxico.
+*   [`teste.txt`](teste.txt): Arquivo de exemplo para testar o analisador léxico.
+*   [`README.md`](README.md): Este arquivo.
 
-```
-c-minus-lexer
-├── src
-│   └── c_minus_lexer.l       # Implementação do analisador léxico
-├── tests
-│   ├── test_case_1.cm        # Programa de teste correto
-│   └── test_case_error.cm     # Programa de teste com erros
-├── report
-│   └── report.md              # Relatório do projeto
-├── Makefile                   # Instruções para compilação
-└── README.md                  # Documentação do projeto
-```
+## Dependências
 
-## Instruções de Compilação e Execução
+*   **Flex**: Ferramenta para gerar analisadores léxicos.
+*   **GCC**: Compilador C para compilar o código gerado pelo Flex.
 
-Para compilar o projeto, utilize o Makefile incluído no diretório raiz. Execute o seguinte comando no terminal:
+## Como Compilar e Executar
 
-```
-make
-```
+1.  **Certifique-se de ter o Flex e o GCC instalados.**
+2.  **Dê permissão de execução ao script:**
+    ```sh
+    chmod +x scriptCompileAndRun.sh
+    ```
+3.  **Execute o script:**
+    O script [`scriptCompileAndRun.sh`](scriptCompileAndRun.sh) automatiza o processo de compilação e execução. Ele recebe dois argumentos:
+    *   O nome do diretório de compilação (que contém o arquivo `.l`).
+    *   O caminho para o arquivo de texto de entrada.
 
-Isso irá gerar o analisador léxico e os executáveis necessários para os testes.
+    Exemplo de uso:
+    ```sh
+    ./scriptCompileAndRun.sh c-minus-lexer teste.txt
+    ```
+    Este comando irá:
+    *   Navegar até o diretório `c-minus-lexer`.
+    *   Gerar o arquivo `lex.yy.c` usando `flex c-minus-lexer.l`.
+    *   Compilar `lex.yy.c` para criar o executável `c-minus-lexer` usando `gcc lex.yy.c -ll -o c-minus-lexer`.
+    *   Executar o analisador léxico `./c-minus-lexer` usando o arquivo `../teste.txt` como entrada.
 
-Para executar o analisador léxico, utilize o seguinte comando:
+    A saída do analisador léxico (tokens reconhecidos ou erros) será exibida no terminal.
 
-```
-./c_minus_lexer < caminho_do_arquivo.cm
-```
+## Funcionamento
 
-Substitua `caminho_do_arquivo.cm` pelo caminho do arquivo que deseja analisar.
-
-## Testes Realizados
-
-O projeto inclui dois arquivos de teste na pasta `tests`:
-
-1. **test_case_1.cm**: Este arquivo contém um programa de teste correto que utiliza todos os tipos de tokens da linguagem C-. Ele serve para validar o funcionamento do analisador léxico.
-
-2. **test_case_error.cm**: Este arquivo contém um programa de teste que inclui pelo menos 5 erros distintos. Ele é utilizado para verificar a capacidade do analisador léxico em detectar e reportar erros.
-
-## Conclusão
-
-Este projeto fornece uma implementação básica de um analisador léxico para a linguagem C-. Através dos testes realizados, foi possível validar a funcionalidade do analisador e sua capacidade de detectar erros lexicais.
+O arquivo [`c-minus-lexer.l`](c-minus-lexer/c-minus-lexer.l) define as regras (usando expressões regulares) para reconhecer os tokens da linguagem C-Minus (palavras reservadas, identificadores, números, operadores, pontuação, comentários). Para cada regra, uma ação em C é definida (geralmente imprimir o token encontrado e sua classificação). O script [`scriptCompileAndRun.sh`](scriptCompileAndRun.sh) utiliza o `flex` para gerar o código C correspondente ([`lex.yy.c`](c-minus-lexer/lex.yy.c)) e o `gcc` para compilá-lo, criando o executável [`c-minus-lexer`](c-minus-lexer/c-minus-lexer) que pode processar um arquivo de entrada ([`teste.txt`](teste.txt)).

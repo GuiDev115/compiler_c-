@@ -1,0 +1,4 @@
+int #invalid;
+float value@;
+result = 5 $ 2;
+/* Comentário não fechado
