@@ -45,7 +45,7 @@ echo "Gerando analisador léxico com flex..."
 flex "$NOME_COMPILACAO.l"
 if [ $? -ne 0 ]; then
     echo "Erro ao executar o flex."
-    cd "$DIR_ATUAL" # Volta para o diretório original em caso de erro
+    cd "$DIR_ATUAL" 
     exit 1
 fi
 
@@ -54,15 +54,16 @@ echo "Compilando o código C gerado..."
 gcc lex.yy.c -ll -o "$NOME_COMPILACAO"
 if [ $? -ne 0 ]; then
     echo "Erro ao compilar com gcc."
-    cd "$DIR_ATUAL" # Volta para o diretório original em caso de erro
+    cd "$DIR_ATUAL" 
     exit 1
 fi
 
 # Executa o programa com o arquivo de entrada (usando o caminho completo)
-echo "Executando o analisador léxico com $ARQUIVO_TEXTO_COMPLETO..."
+echo -e "\nExecutando o analisador léxico com $ARQUIVO_TEXTO_COMPLETO..."
 # O caminho para o arquivo de texto agora é relativo ao diretório original (DIR_ATUAL)
 # Por isso usamos ../ mais o caminho completo que encontramos
 ./"$NOME_COMPILACAO" "$DIR_ATUAL/$ARQUIVO_TEXTO_COMPLETO"
 
 cd "$DIR_ATUAL" # Volta para o diretório original
-echo "Script concluído."
+echo -e "\nScript Realizado com sucesso!"
+echo "Saindo do diretório de compilação '$NOME_COMPILACAO'."

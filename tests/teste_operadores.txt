@@ -2,4 +2,4 @@ int float struct void
 if else while return
 + - * / %
 = == != < <= > >=
-++ --
++ -

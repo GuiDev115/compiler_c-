@@ -125,7 +125,8 @@ other                   .
                             column_number+=yyleng; }
 {array_ident}           { fprintf(yyout,"%d(%d): %s (IDENTIFICADOR DE VETOR)\n",line_number,column_number,yytext);
                             column_number+=yyleng; }
-{newline}               { line_number++; column_number = 1; }
+{newline}               { line_number++; column_number = 1; 
+                         fprintf(yyout, "\n"); }
 {ws}                    { column_number+=yyleng; }
 {other}                 { fprintf(yyout, "(%d) Erro léxico na linha %d e na coluna %d. Entrada -> \"%s\"\n", 
                          ++errors_count, line_number, column_number, yytext); } 

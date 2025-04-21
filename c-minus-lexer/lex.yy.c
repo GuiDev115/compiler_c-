@@ -1052,25 +1052,26 @@ case 41:
 /* rule 41 can match eol */
 YY_RULE_SETUP
 #line 129 "c-minus-lexer.l"
-{ line_number++; column_number = 1; }
+{ line_number++; column_number = 1; 
+                         fprintf(yyout, "\n"); }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 130 "c-minus-lexer.l"
+#line 131 "c-minus-lexer.l"
 { column_number+=yyleng; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 131 "c-minus-lexer.l"
+#line 132 "c-minus-lexer.l"
 { fprintf(yyout, "(%d) Erro léxico na linha %d e na coluna %d. Entrada -> \"%s\"\n", 
                          ++errors_count, line_number, column_number, yytext); } 
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 134 "c-minus-lexer.l"
+#line 135 "c-minus-lexer.l"
 ECHO;
 	YY_BREAK
-#line 1074 "lex.yy.c"
+#line 1075 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT):
 	yyterminate();
@@ -2076,7 +2077,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 134 "c-minus-lexer.l"
+#line 135 "c-minus-lexer.l"
 
 /*------------------------ User subrotines ------------------------*/
 int main(int argc, char *argv[]){
