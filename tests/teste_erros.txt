@@ -1,3 +1,5 @@
+int val = 10@;
+
 int #invalid;
 
 float value@;
