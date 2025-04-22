@@ -1,5 +1,12 @@
 %{
-/*-------------------------- Definitions --------------------------*/
+
+/* C-MINUS LEXER
+Feito por: 
+    - Guilherme Fabricio Brito da Rosa
+    - Harisson de Carvalho Alvarenga
+    - Raul Soares de Carvalho
+*/    
+/*-------------------------- Definicoes --------------------------*/
 #include<stdio.h>
 #include<string.h>
 
@@ -25,7 +32,7 @@ other                   .
 
 %%
 %{
-/*----------------------------- Rules -----------------------------*/
+/*----------------------------- Regras -----------------------------*/
 %}
 
 
@@ -132,7 +139,7 @@ other                   .
                          ++errors_count, line_number, column_number, yytext); } 
 
 %%
-/*------------------------ User subrotines ------------------------*/
+
 int main(int argc, char *argv[]){
     yyin = fopen(argv[1], "r");
     yyout=stdout;
