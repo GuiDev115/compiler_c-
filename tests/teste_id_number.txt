@@ -11,3 +11,4 @@ invalididentifier /* Embora a regra permita, _ não é comum em C- */
 0.0
 1.234
 vector[100]
+1222
