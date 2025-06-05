@@ -1,0 +1,14 @@
+int soma(int a, int b) {
+    return a + b;
+}
+
+int main(void) {
+    int resultado;
+    
+    resultado = soma(10, ;
+    resultado = soma(5, 3;
+    resultado = soma(, 8);
+    resultado = (5 + 3);
+    
+    return resultado;
+}

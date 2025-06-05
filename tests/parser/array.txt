@@ -1,0 +1,10 @@
+int main(void) {
+    int matriz[3][;
+    int vetor[abc];
+    int outro[];
+    
+    matriz[1[2] = 10;
+    vetor[0 = 5;
+    
+    return 0;
+}

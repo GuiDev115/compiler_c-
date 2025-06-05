@@ -1,0 +1,85 @@
+/* Teste completo da gramática C-Minus */
+
+// Struct
+struct Pessoa {
+    int idade;
+    float peso;
+};
+
+// Variáveis globais
+int global;
+float pi = 3.14;
+char letra = 'a';
+int vetor[10];
+int matriz[3][4];
+struct Pessoa p;
+
+// Função principal
+int main(void) {
+    // Declarações locais
+    int local1;
+    float local2 = -2.5e3;
+    int arr[5];
+    
+    // Atribuições simples
+    global = 10;
+    local1 = global + 1;
+    
+    // Acesso a arrays
+    arr[0] = 5;
+    matriz[1][2] = arr[0];
+    vetor[local1] = matriz[0][1];
+    
+    // Expressões com parênteses
+    local2 = (global + local1) * pi;
+    
+    // Chamadas de função
+    local1 = soma(10, 20);
+    imprimir();
+    
+    // Estruturas de controle
+    if (local1 > 0) {
+        local2 = local2 + 1.0;
+    } else {
+        local2 = local2 - 1.0;
+    }
+    
+    // While com bloco
+    while (local1 < 100) {
+        local1 = local1 * 2;
+        if (local1 > 50)
+            break;
+    }
+    
+    return local1;
+}
+
+// Função com parâmetros
+int soma(int a, int b) {
+    return a + b;
+}
+
+// Função com array como parâmetro
+void processaArray(int arr[]) {
+    arr[0] = 100;
+}
+
+// Função void sem parâmetros
+void imprimir() {
+    return;
+}
+
+// Função com todos os operadores
+float calcula(float x, float y) {
+    float resultado;
+    
+    // Todos os operadores relacionais
+    if (x <= y) resultado = x + y;
+    if (x < y) resultado = x - y;
+    if (x > y) resultado = x * y;
+    if (x >= y) resultado = x / y;
+    if (x == y) resultado = x;
+    if (x != y) resultado = y;
+    
+    return resultado;
+}

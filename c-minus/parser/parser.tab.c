@@ -78,6 +78,7 @@ Feito por:
 */  
     #include <stdio.h>
     #include <stdlib.h>
+    #include <string.h>
 
     extern int line_number;
     extern int column_number;
@@ -86,7 +87,7 @@ Feito por:
     int yylex(void);
     void yyerror(const char *s);
 
-#line 90 "c-minus/parser/parser.tab.c"
+#line 91 "c-minus/parser/parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -575,17 +576,17 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    35,    35,    38,    39,    42,    43,    46,    47,    48,
-      49,    50,    53,    54,    55,    56,    59,    60,    61,    62,
-      63,    64,    65,    68,    69,    72,    73,    74,    77,    78,
-      81,    82,    85,    86,    87,    90,    91,    92,    95,    96,
-      99,   100,   103,   104,   105,   106,   107,   110,   111,   112,
-     115,   116,   117,   118,   119,   122,   123,   124,   125,   128,
-     129,   130,   133,   134,   137,   138,   139,   140,   143,   144,
-     145,   146,   149,   150,   153,   154,   155,   156,   157,   158,
-     161,   162,   165,   166,   169,   170,   173,   174,   177,   178,
-     179,   180,   181,   182,   183,   186,   187,   188,   191,   192,
-     195,   196
+       0,    36,    36,    39,    40,    43,    44,    47,    48,    49,
+      50,    51,    54,    55,    56,    57,    60,    61,    62,    63,
+      64,    65,    66,    69,    70,    73,    74,    75,    78,    79,
+      82,    83,    86,    87,    88,    91,    92,    93,    96,    97,
+     100,   101,   104,   105,   106,   107,   108,   111,   112,   113,
+     116,   117,   118,   119,   120,   123,   124,   128,   132,   138,
+     139,   140,   143,   144,   147,   148,   149,   150,   153,   154,
+     155,   156,   159,   160,   163,   164,   165,   166,   167,   168,
+     171,   172,   175,   176,   179,   180,   183,   184,   187,   188,
+     189,   190,   191,   192,   193,   196,   197,   198,   201,   202,
+     205,   206
 };
 #endif
 
@@ -1273,181 +1274,190 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* programa: declaracao_lista  */
-#line 35 "c-minus/parser/parser.y"
+#line 36 "c-minus/parser/parser.y"
                                                               { printf("Parsing concluído com sucesso!\n"); }
-#line 1279 "c-minus/parser/parser.tab.c"
+#line 1280 "c-minus/parser/parser.tab.c"
     break;
 
   case 9: /* var_declaracao: tipo_especificador IDENTIFIER error SEMICOLON  */
-#line 48 "c-minus/parser/parser.y"
+#line 49 "c-minus/parser/parser.y"
                                                                 { yyerror("Erro na declaração de variável"); yyerrok; }
-#line 1285 "c-minus/parser/parser.tab.c"
+#line 1286 "c-minus/parser/parser.tab.c"
     break;
 
   case 10: /* var_declaracao: tipo_especificador IDENTIFIER OPEN_BRACKET INT_NUMBER error SEMICOLON  */
-#line 49 "c-minus/parser/parser.y"
+#line 50 "c-minus/parser/parser.y"
                                                                                         { yyerror("Esperado ']' após índice do array"); yyerrok; }
-#line 1291 "c-minus/parser/parser.tab.c"
+#line 1292 "c-minus/parser/parser.tab.c"
     break;
 
   case 11: /* var_declaracao: tipo_especificador IDENTIFIER OPEN_BRACKET error CLOSE_BRACKET SEMICOLON  */
-#line 50 "c-minus/parser/parser.y"
+#line 51 "c-minus/parser/parser.y"
                                                                                            { yyerror("Índice inválido no array"); yyerrok; }
-#line 1297 "c-minus/parser/parser.tab.c"
+#line 1298 "c-minus/parser/parser.tab.c"
     break;
 
   case 14: /* arranjo_dimensao: arranjo_dimensao OPEN_BRACKET INT_NUMBER error  */
-#line 55 "c-minus/parser/parser.y"
+#line 56 "c-minus/parser/parser.y"
                                                                  { yyerror("Esperado ']' após dimensão do array"); yyerrok; }
-#line 1303 "c-minus/parser/parser.tab.c"
+#line 1304 "c-minus/parser/parser.tab.c"
     break;
 
   case 15: /* arranjo_dimensao: arranjo_dimensao OPEN_BRACKET error CLOSE_BRACKET  */
-#line 56 "c-minus/parser/parser.y"
+#line 57 "c-minus/parser/parser.y"
                                                                     { yyerror("Dimensão inválida no array"); yyerrok; }
-#line 1309 "c-minus/parser/parser.tab.c"
+#line 1310 "c-minus/parser/parser.tab.c"
     break;
 
   case 21: /* tipo_especificador: STRUCT_TYPE IDENTIFIER OPEN_BRACE atributos_declaracao error  */
-#line 64 "c-minus/parser/parser.y"
+#line 65 "c-minus/parser/parser.y"
                                                                                { yyerror("Esperado '}' após declarações do struct"); yyerrok; }
-#line 1315 "c-minus/parser/parser.tab.c"
+#line 1316 "c-minus/parser/parser.tab.c"
     break;
 
   case 22: /* tipo_especificador: STRUCT_TYPE IDENTIFIER OPEN_BRACE error CLOSE_BRACE  */
-#line 65 "c-minus/parser/parser.y"
+#line 66 "c-minus/parser/parser.y"
                                                                       { yyerror("Declarações inválidas no struct"); yyerrok; }
-#line 1321 "c-minus/parser/parser.tab.c"
+#line 1322 "c-minus/parser/parser.tab.c"
     break;
 
   case 26: /* fun_declaracao: tipo_especificador IDENTIFIER OPEN_PAREN params error composto_decl  */
-#line 73 "c-minus/parser/parser.y"
+#line 74 "c-minus/parser/parser.y"
                                                                                       { yyerror("Esperado ')' após parâmetros da função"); yyerrok; }
-#line 1327 "c-minus/parser/parser.tab.c"
+#line 1328 "c-minus/parser/parser.tab.c"
     break;
 
   case 27: /* fun_declaracao: tipo_especificador IDENTIFIER OPEN_PAREN error CLOSE_PAREN composto_decl  */
-#line 74 "c-minus/parser/parser.y"
+#line 75 "c-minus/parser/parser.y"
                                                                                            { yyerror("Parâmetros inválidos na função"); yyerrok; }
-#line 1333 "c-minus/parser/parser.tab.c"
+#line 1334 "c-minus/parser/parser.tab.c"
     break;
 
   case 34: /* param: tipo_especificador IDENTIFIER OPEN_BRACKET error  */
-#line 87 "c-minus/parser/parser.y"
+#line 88 "c-minus/parser/parser.y"
                                                                    { yyerror("Esperado ']' após '[' no parâmetro array"); yyerrok; }
-#line 1339 "c-minus/parser/parser.tab.c"
+#line 1340 "c-minus/parser/parser.tab.c"
     break;
 
   case 36: /* composto_decl: OPEN_BRACE local_declaracoes comando_lista error  */
-#line 91 "c-minus/parser/parser.y"
+#line 92 "c-minus/parser/parser.y"
                                                                    { yyerror("Esperado '}' para fechar bloco de comandos"); yyerrok; }
-#line 1345 "c-minus/parser/parser.tab.c"
+#line 1346 "c-minus/parser/parser.tab.c"
     break;
 
   case 37: /* composto_decl: OPEN_BRACE error CLOSE_BRACE  */
-#line 92 "c-minus/parser/parser.y"
+#line 93 "c-minus/parser/parser.y"
                                                { yyerror("Comandos inválidos no bloco"); yyerrok; }
-#line 1351 "c-minus/parser/parser.tab.c"
+#line 1352 "c-minus/parser/parser.tab.c"
     break;
 
   case 49: /* expressao_decl: expressao error  */
-#line 112 "c-minus/parser/parser.y"
+#line 113 "c-minus/parser/parser.y"
                                   { yyerror("Esperado ';' após expressão"); yyerrok; }
-#line 1357 "c-minus/parser/parser.tab.c"
+#line 1358 "c-minus/parser/parser.tab.c"
     break;
 
   case 52: /* selecao_decl: IF_KEYWORD OPEN_PAREN expressao error comando  */
-#line 117 "c-minus/parser/parser.y"
+#line 118 "c-minus/parser/parser.y"
                                                                 { yyerror("Esperado ')' após condição do if"); yyerrok; }
-#line 1363 "c-minus/parser/parser.tab.c"
+#line 1364 "c-minus/parser/parser.tab.c"
     break;
 
   case 53: /* selecao_decl: IF_KEYWORD OPEN_PAREN error CLOSE_PAREN comando  */
-#line 118 "c-minus/parser/parser.y"
+#line 119 "c-minus/parser/parser.y"
                                                                   { yyerror("Expressão inválida na condição do if"); yyerrok; }
-#line 1369 "c-minus/parser/parser.tab.c"
+#line 1370 "c-minus/parser/parser.tab.c"
     break;
 
   case 54: /* selecao_decl: IF_KEYWORD error  */
-#line 119 "c-minus/parser/parser.y"
+#line 120 "c-minus/parser/parser.y"
                                    { yyerror("Esperado '(' após if"); yyerrok; }
-#line 1375 "c-minus/parser/parser.tab.c"
+#line 1376 "c-minus/parser/parser.tab.c"
     break;
 
   case 56: /* iteracao_decl: WHILE_KEYWORD OPEN_PAREN expressao error comando  */
-#line 123 "c-minus/parser/parser.y"
-                                                                   { yyerror("Esperado ')' após condição do while"); yyerrok; }
-#line 1381 "c-minus/parser/parser.tab.c"
+#line 124 "c-minus/parser/parser.y"
+                                                                   { 
+                    yyerror("Esperado ')' após condição do while"); 
+                    yyerrok; 
+                }
+#line 1385 "c-minus/parser/parser.tab.c"
     break;
 
   case 57: /* iteracao_decl: WHILE_KEYWORD OPEN_PAREN error CLOSE_PAREN comando  */
-#line 124 "c-minus/parser/parser.y"
-                                                                     { yyerror("Expressão inválida na condição do while"); yyerrok; }
-#line 1387 "c-minus/parser/parser.tab.c"
+#line 128 "c-minus/parser/parser.y"
+                                                                     { 
+                    yyerror("Expressão inválida na condição do while"); 
+                    yyerrok; 
+                }
+#line 1394 "c-minus/parser/parser.tab.c"
     break;
 
   case 58: /* iteracao_decl: WHILE_KEYWORD error  */
-#line 125 "c-minus/parser/parser.y"
-                                      { yyerror("Esperado '(' após while"); yyerrok; }
-#line 1393 "c-minus/parser/parser.tab.c"
+#line 132 "c-minus/parser/parser.y"
+                                      { 
+                    yyerror("Esperado '(' após while"); 
+                    yyerrok; 
+                }
+#line 1403 "c-minus/parser/parser.tab.c"
     break;
 
   case 61: /* retorno_decl: RETURN_KEYWORD expressao error  */
-#line 130 "c-minus/parser/parser.y"
+#line 140 "c-minus/parser/parser.y"
                                                  { yyerror("Esperado ';' após return"); yyerrok; }
-#line 1399 "c-minus/parser/parser.tab.c"
+#line 1409 "c-minus/parser/parser.tab.c"
     break;
 
   case 66: /* var: IDENTIFIER OPEN_BRACKET expressao error arranjo_acesso  */
-#line 139 "c-minus/parser/parser.y"
+#line 149 "c-minus/parser/parser.y"
                                                                          { yyerror("Esperado ']' após índice do array"); yyerrok; }
-#line 1405 "c-minus/parser/parser.tab.c"
+#line 1415 "c-minus/parser/parser.tab.c"
     break;
 
   case 67: /* var: IDENTIFIER OPEN_BRACKET error CLOSE_BRACKET arranjo_acesso  */
-#line 140 "c-minus/parser/parser.y"
+#line 150 "c-minus/parser/parser.y"
                                                                              { yyerror("Índice inválido no array"); yyerrok; }
-#line 1411 "c-minus/parser/parser.tab.c"
+#line 1421 "c-minus/parser/parser.tab.c"
     break;
 
   case 70: /* arranjo_acesso: arranjo_acesso OPEN_BRACKET expressao error  */
-#line 145 "c-minus/parser/parser.y"
+#line 155 "c-minus/parser/parser.y"
                                                               { yyerror("Esperado ']' após índice do array multidimensional"); yyerrok; }
-#line 1417 "c-minus/parser/parser.tab.c"
+#line 1427 "c-minus/parser/parser.tab.c"
     break;
 
   case 71: /* arranjo_acesso: arranjo_acesso OPEN_BRACKET error CLOSE_BRACKET  */
-#line 146 "c-minus/parser/parser.y"
+#line 156 "c-minus/parser/parser.y"
                                                                   { yyerror("Índice inválido no array multidimensional"); yyerrok; }
-#line 1423 "c-minus/parser/parser.tab.c"
+#line 1433 "c-minus/parser/parser.tab.c"
     break;
 
   case 93: /* fator: OPEN_PAREN expressao error  */
-#line 182 "c-minus/parser/parser.y"
+#line 192 "c-minus/parser/parser.y"
                                              { yyerror("Esperado ')' após expressão"); yyerrok; }
-#line 1429 "c-minus/parser/parser.tab.c"
+#line 1439 "c-minus/parser/parser.tab.c"
     break;
 
   case 94: /* fator: OPEN_PAREN error CLOSE_PAREN  */
-#line 183 "c-minus/parser/parser.y"
+#line 193 "c-minus/parser/parser.y"
                                                { yyerror("Expressão inválida entre parênteses"); yyerrok; }
-#line 1435 "c-minus/parser/parser.tab.c"
+#line 1445 "c-minus/parser/parser.tab.c"
     break;
 
   case 96: /* ativacao: IDENTIFIER OPEN_PAREN args error  */
-#line 187 "c-minus/parser/parser.y"
+#line 197 "c-minus/parser/parser.y"
                                                    { yyerror("Esperado ')' após argumentos da função"); yyerrok; }
-#line 1441 "c-minus/parser/parser.tab.c"
+#line 1451 "c-minus/parser/parser.tab.c"
     break;
 
   case 97: /* ativacao: IDENTIFIER OPEN_PAREN error CLOSE_PAREN  */
-#line 188 "c-minus/parser/parser.y"
+#line 198 "c-minus/parser/parser.y"
                                                           { yyerror("Argumentos inválidos na chamada de função"); yyerrok; }
-#line 1447 "c-minus/parser/parser.tab.c"
+#line 1457 "c-minus/parser/parser.tab.c"
     break;
 
 
-#line 1451 "c-minus/parser/parser.tab.c"
+#line 1461 "c-minus/parser/parser.tab.c"
 
       default: break;
     }
@@ -1640,11 +1650,17 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 199 "c-minus/parser/parser.y"
+#line 209 "c-minus/parser/parser.y"
 
 
 void yyerror(const char *s){
-    fprintf(stderr, "(%d) Erro sintático na linha %d, coluna %d: %s\n", ++errors_count, line_number, column_number, s);
+    if (strcmp(s, "syntax error") == 0) {
+        fprintf(stderr, "(%d) Erro sintático na linha %d, coluna %d: Token inesperado\n", 
+            ++errors_count, line_number, column_number);
+    } else {
+        fprintf(stderr, "(%d) Erro sintático na linha %d, coluna %d: %s\n", 
+            ++errors_count, line_number, column_number, s);
+    }
 }
 
 extern FILE *yyin;
@@ -1652,7 +1668,7 @@ extern int yydebug;
 
 int main(int argc, char *argv[]) {
     yydebug = 1;
-    errors_count = 0; // Inicializa contador de erros
+    errors_count = 0;
     
     if (argc < 2) {
         fprintf(stderr, "Uso: %s <arquivo_entrada>\n", argv[0]);

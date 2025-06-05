@@ -1,0 +1,5 @@
+int main(void) {
+    int arr[10;
+    arr[0 = 5;
+    return arr[0];
+}

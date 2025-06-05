@@ -1,0 +1,11 @@
+void funcao(int a, , float b) {
+    return;
+}
+
+int outra(int x  {
+    return x;
+}
+
+int main(void) {
+    return 0;
+}

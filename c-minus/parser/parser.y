@@ -8,6 +8,7 @@ Feito por:
 */  
     #include <stdio.h>
     #include <stdlib.h>
+    #include <string.h>
 
     extern int line_number;
     extern int column_number;
@@ -120,9 +121,18 @@ selecao_decl		:	  IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando %prec LOWE
             ;
             
 iteracao_decl		:	  WHILE_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando
-                | WHILE_KEYWORD OPEN_PAREN expressao error comando { yyerror("Esperado ')' após condição do while"); yyerrok; }
-                | WHILE_KEYWORD OPEN_PAREN error CLOSE_PAREN comando { yyerror("Expressão inválida na condição do while"); yyerrok; }
-                | WHILE_KEYWORD error { yyerror("Esperado '(' após while"); yyerrok; }
+                | WHILE_KEYWORD OPEN_PAREN expressao error comando { 
+                    yyerror("Esperado ')' após condição do while"); 
+                    yyerrok; 
+                }
+                | WHILE_KEYWORD OPEN_PAREN error CLOSE_PAREN comando { 
+                    yyerror("Expressão inválida na condição do while"); 
+                    yyerrok; 
+                }
+                | WHILE_KEYWORD error { 
+                    yyerror("Esperado '(' após while"); 
+                    yyerrok; 
+                }
             ;
             
 retorno_decl		:	  RETURN_KEYWORD SEMICOLON
@@ -199,7 +209,13 @@ arg_lista		:	  expressao
 %%
 
 void yyerror(const char *s){
-    fprintf(stderr, "(%d) Erro sintático na linha %d, coluna %d: %s\n", ++errors_count, line_number, column_number, s);
+    if (strcmp(s, "syntax error") == 0) {
+        fprintf(stderr, "(%d) Erro sintático na linha %d, coluna %d: Token inesperado\n", 
+            ++errors_count, line_number, column_number);
+    } else {
+        fprintf(stderr, "(%d) Erro sintático na linha %d, coluna %d: %s\n", 
+            ++errors_count, line_number, column_number, s);
+    }
 }
 
 extern FILE *yyin;
@@ -207,7 +223,7 @@ extern int yydebug;
 
 int main(int argc, char *argv[]) {
     yydebug = 1;
-    errors_count = 0; // Inicializa contador de erros
+    errors_count = 0;
     
     if (argc < 2) {
         fprintf(stderr, "Uso: %s <arquivo_entrada>\n", argv[0]);
