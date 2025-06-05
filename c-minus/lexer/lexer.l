@@ -9,7 +9,7 @@ Feito por:
 /*-------------------------- Definicoes --------------------------*/
 #include<stdio.h>
 #include<string.h>
-#include "parser.tab.h"
+#include "../parser/parser.tab.h"    // Corrigido: caminho relativo correto
 
 int line_number = 1;
 int column_number = 1;
