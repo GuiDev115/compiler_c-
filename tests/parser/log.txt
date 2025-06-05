@@ -8,7 +8,7 @@ Next token is token INT_TYPE ()
 Shifting token INT_TYPE ()
 Entering state 1
 Stack now 0 1
-Reducing stack by rule 15 (line 60):
+Reducing stack by rule 15 (line 61):
    $1 = token INT_TYPE ()
 -> $$ = nterm tipo_especificador ()
 Entering state 10
@@ -35,7 +35,7 @@ Stack now 0 10 15 18 27
 Reading a token
 --accepting rule at line 101 (")")
 Next token is token CLOSE_PAREN ()
-Reducing stack by rule 28 (line 79):
+Reducing stack by rule 28 (line 80):
    $1 = token VOID_TYPE ()
 -> $$ = nterm params ()
 Entering state 29
@@ -51,344 +51,215 @@ Next token is token OPEN_BRACE ()
 Shifting token OPEN_BRACE ()
 Entering state 47
 Stack now 0 10 15 18 29 42 47
+Reducing stack by rule 37 (line 98):
+-> $$ = nterm local_declaracoes ()
+Entering state 56
+Stack now 0 10 15 18 29 42 47 56
 Reading a token
 --accepting rule at line 128 ("
 ")
 --accepting rule at line 130 ("    ")
 --accepting rule at line 48 ("int")
 Next token is token INT_TYPE ()
-Reducing stack by rule 37 (line 96):
--> $$ = nterm local_declaracoes ()
-Entering state 57
-Stack now 0 10 15 18 29 42 47 57
-Next token is token INT_TYPE ()
 Shifting token INT_TYPE ()
 Entering state 1
-Stack now 0 10 15 18 29 42 47 57 1
-Reducing stack by rule 15 (line 60):
+Stack now 0 10 15 18 29 42 47 56 1
+Reducing stack by rule 15 (line 61):
    $1 = token INT_TYPE ()
 -> $$ = nterm tipo_especificador ()
 Entering state 23
-Stack now 0 10 15 18 29 42 47 57 23
+Stack now 0 10 15 18 29 42 47 56 23
 Reading a token
 --accepting rule at line 130 (" ")
---accepting rule at line 124 ("x")
+--accepting rule at line 124 ("arr")
 Next token is token IDENTIFIER ()
 Shifting token IDENTIFIER ()
 Entering state 35
-Stack now 0 10 15 18 29 42 47 57 23 35
+Stack now 0 10 15 18 29 42 47 56 23 35
+Reading a token
+--accepting rule at line 103 ("[")
+Next token is token OPEN_BRACKET ()
+Shifting token OPEN_BRACKET ()
+Entering state 19
+Stack now 0 10 15 18 29 42 47 56 23 35 19
+Reading a token
+--accepting rule at line 120 ("10")
+Next token is token INT_NUMBER ()
+Shifting token INT_NUMBER ()
+Entering state 33
+Stack now 0 10 15 18 29 42 47 56 23 35 19 33
 Reading a token
 --accepting rule at line 110 (";")
 Next token is token SEMICOLON ()
+(1) Erro sintático na linha 2, coluna 16: Token inesperado
+Shifting token error ()
+Entering state 45
+Stack now 0 10 15 18 29 42 47 56 23 35 19 33 45
+Next token is token SEMICOLON ()
 Shifting token SEMICOLON ()
-Entering state 20
-Stack now 0 10 15 18 29 42 47 57 23 35 20
-Reducing stack by rule 6 (line 47):
+Entering state 54
+Stack now 0 10 15 18 29 42 47 56 23 35 19 33 45 54
+Reducing stack by rule 9 (line 51):
    $1 = nterm tipo_especificador ()
    $2 = token IDENTIFIER ()
-   $3 = token SEMICOLON ()
+   $3 = token OPEN_BRACKET ()
+   $4 = token INT_NUMBER ()
+   $5 = token error ()
+   $6 = token SEMICOLON ()
+(2) Erro sintático na linha 2, coluna 16: Esperado ']' após índice do array
 -> $$ = nterm var_declaracao ()
-Entering state 63
-Stack now 0 10 15 18 29 42 47 57 63
-Reducing stack by rule 38 (line 97):
+Entering state 61
+Stack now 0 10 15 18 29 42 47 56 61
+Reducing stack by rule 38 (line 99):
    $1 = nterm local_declaracoes ()
    $2 = nterm var_declaracao ()
 -> $$ = nterm local_declaracoes ()
-Entering state 57
-Stack now 0 10 15 18 29 42 47 57
+Entering state 56
+Stack now 0 10 15 18 29 42 47 56
 Reading a token
 --accepting rule at line 128 ("
 ")
 --accepting rule at line 130 ("    ")
---accepting rule at line 60 ("while")
-Next token is token WHILE_KEYWORD ()
-Reducing stack by rule 39 (line 100):
+--accepting rule at line 124 ("arr")
+Next token is token IDENTIFIER ()
+Reducing stack by rule 39 (line 102):
 -> $$ = nterm comando_lista ()
-Entering state 64
-Stack now 0 10 15 18 29 42 47 57 64
-Next token is token WHILE_KEYWORD ()
-Shifting token WHILE_KEYWORD ()
-Entering state 69
-Stack now 0 10 15 18 29 42 47 57 64 69
-Reading a token
---accepting rule at line 130 (" ")
---accepting rule at line 99 ("(")
-Next token is token OPEN_PAREN ()
-Shifting token OPEN_PAREN ()
-Entering state 96
-Stack now 0 10 15 18 29 42 47 57 64 69 96
-Reading a token
---accepting rule at line 124 ("x")
+Entering state 62
+Stack now 0 10 15 18 29 42 47 56 62
 Next token is token IDENTIFIER ()
 Shifting token IDENTIFIER ()
-Entering state 74
-Stack now 0 10 15 18 29 42 47 57 64 69 96 74
+Entering state 72
+Stack now 0 10 15 18 29 42 47 56 62 72
 Reading a token
---accepting rule at line 130 (" ")
---accepting rule at line 85 ("<")
-Next token is token LT_OP ()
-Reducing stack by rule 63 (line 147):
-   $1 = token IDENTIFIER ()
--> $$ = nterm var ()
-Entering state 84
-Stack now 0 10 15 18 29 42 47 57 64 69 96 84
-Next token is token LT_OP ()
-Reducing stack by rule 88 (line 188):
-   $1 = nterm var ()
--> $$ = nterm fator ()
-Entering state 88
-Stack now 0 10 15 18 29 42 47 57 64 69 96 88
-Reducing stack by rule 83 (line 179):
-   $1 = nterm fator ()
--> $$ = nterm termo ()
-Entering state 87
-Stack now 0 10 15 18 29 42 47 57 64 69 96 87
-Next token is token LT_OP ()
-Reducing stack by rule 79 (line 171):
-   $1 = nterm termo ()
--> $$ = nterm expressao_soma ()
-Entering state 86
-Stack now 0 10 15 18 29 42 47 57 64 69 96 86
-Next token is token LT_OP ()
-Shifting token LT_OP ()
-Entering state 110
-Stack now 0 10 15 18 29 42 47 57 64 69 96 86 110
-Reducing stack by rule 74 (line 164):
-   $1 = token LT_OP ()
--> $$ = nterm relacional ()
-Entering state 114
-Stack now 0 10 15 18 29 42 47 57 64 69 96 86 114
+--accepting rule at line 103 ("[")
+Next token is token OPEN_BRACKET ()
+Shifting token OPEN_BRACKET ()
+Entering state 101
+Stack now 0 10 15 18 29 42 47 56 62 72 101
 Reading a token
---accepting rule at line 130 (" ")
---accepting rule at line 120 ("10")
+--accepting rule at line 120 ("0")
 Next token is token INT_NUMBER ()
 Shifting token INT_NUMBER ()
-Entering state 75
-Stack now 0 10 15 18 29 42 47 57 64 69 96 86 114 75
-Reducing stack by rule 91 (line 191):
+Entering state 73
+Stack now 0 10 15 18 29 42 47 56 62 72 101 73
+Reducing stack by rule 91 (line 193):
    $1 = token INT_NUMBER ()
 -> $$ = nterm fator ()
-Entering state 88
-Stack now 0 10 15 18 29 42 47 57 64 69 96 86 114 88
-Reducing stack by rule 83 (line 179):
+Entering state 87
+Stack now 0 10 15 18 29 42 47 56 62 72 101 87
+Reducing stack by rule 83 (line 181):
    $1 = nterm fator ()
 -> $$ = nterm termo ()
-Entering state 87
-Stack now 0 10 15 18 29 42 47 57 64 69 96 86 114 87
-Reading a token
---accepting rule at line 130 (" ")
---accepting rule at line 95 ("{")
-Next token is token OPEN_BRACE ()
-Reducing stack by rule 79 (line 171):
-   $1 = nterm termo ()
--> $$ = nterm expressao_soma ()
-Entering state 136
-Stack now 0 10 15 18 29 42 47 57 64 69 96 86 114 136
-Next token is token OPEN_BRACE ()
-Reducing stack by rule 72 (line 160):
-   $1 = nterm expressao_soma ()
-   $2 = nterm relacional ()
-   $3 = nterm expressao_soma ()
--> $$ = nterm expressao_simples ()
-Entering state 85
-Stack now 0 10 15 18 29 42 47 57 64 69 96 85
-Reducing stack by rule 62 (line 144):
-   $1 = nterm expressao_simples ()
--> $$ = nterm expressao ()
-Entering state 122
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122
-Next token is token OPEN_BRACE ()
-(1) Erro sintático na linha 3, coluna 20: Token inesperado
-Shifting token error ()
-Entering state 143
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143
-Next token is token OPEN_BRACE ()
-Shifting token OPEN_BRACE ()
-Entering state 47
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47
-Reading a token
---accepting rule at line 128 ("
-")
---accepting rule at line 130 ("        ")
---accepting rule at line 124 ("x")
-Next token is token IDENTIFIER ()
-Reducing stack by rule 37 (line 96):
--> $$ = nterm local_declaracoes ()
-Entering state 57
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57
-Next token is token IDENTIFIER ()
-Reducing stack by rule 39 (line 100):
--> $$ = nterm comando_lista ()
-Entering state 64
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64
-Next token is token IDENTIFIER ()
-Shifting token IDENTIFIER ()
-Entering state 74
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 74
+Entering state 86
+Stack now 0 10 15 18 29 42 47 56 62 72 101 86
 Reading a token
 --accepting rule at line 130 (" ")
 --accepting rule at line 79 ("=")
 Next token is token ASSIGN_OP ()
-Reducing stack by rule 63 (line 147):
-   $1 = token IDENTIFIER ()
--> $$ = nterm var ()
-Entering state 84
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 84
-Next token is token ASSIGN_OP ()
-Shifting token ASSIGN_OP ()
-Entering state 105
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 84 105
-Reading a token
---accepting rule at line 130 (" ")
---accepting rule at line 124 ("x")
-Next token is token IDENTIFIER ()
-Shifting token IDENTIFIER ()
-Entering state 74
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 84 105 74
-Reading a token
---accepting rule at line 130 (" ")
---accepting rule at line 69 ("+")
-Next token is token PLUS_OP ()
-Reducing stack by rule 63 (line 147):
-   $1 = token IDENTIFIER ()
--> $$ = nterm var ()
-Entering state 84
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 84 105 84
-Next token is token PLUS_OP ()
-Reducing stack by rule 88 (line 188):
-   $1 = nterm var ()
--> $$ = nterm fator ()
-Entering state 88
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 84 105 88
-Reducing stack by rule 83 (line 179):
-   $1 = nterm fator ()
--> $$ = nterm termo ()
-Entering state 87
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 84 105 87
-Next token is token PLUS_OP ()
-Reducing stack by rule 79 (line 171):
+Reducing stack by rule 79 (line 173):
    $1 = nterm termo ()
 -> $$ = nterm expressao_soma ()
-Entering state 86
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 84 105 86
-Next token is token PLUS_OP ()
-Shifting token PLUS_OP ()
-Entering state 106
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 84 105 86 106
-Reducing stack by rule 81 (line 175):
-   $1 = token PLUS_OP ()
--> $$ = nterm soma_op ()
-Entering state 115
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 84 105 86 115
+Entering state 85
+Stack now 0 10 15 18 29 42 47 56 62 72 101 85
+Next token is token ASSIGN_OP ()
+Reducing stack by rule 71 (line 161):
+   $1 = nterm expressao_soma ()
+-> $$ = nterm expressao_simples ()
+Entering state 84
+Stack now 0 10 15 18 29 42 47 56 62 72 101 84
+Reducing stack by rule 62 (line 146):
+   $1 = nterm expressao_simples ()
+-> $$ = nterm expressao ()
+Entering state 131
+Stack now 0 10 15 18 29 42 47 56 62 72 101 131
+Next token is token ASSIGN_OP ()
+(3) Erro sintático na linha 3, coluna 12: Token inesperado
+Shifting token error ()
+Entering state 147
+Stack now 0 10 15 18 29 42 47 56 62 72 101 131 147
+Reducing stack by rule 67 (line 155):
+-> $$ = nterm arranjo_acesso ()
+Entering state 157
+Stack now 0 10 15 18 29 42 47 56 62 72 101 131 147 157
+Next token is token ASSIGN_OP ()
+Reducing stack by rule 65 (line 151):
+   $1 = token IDENTIFIER ()
+   $2 = token OPEN_BRACKET ()
+   $3 = nterm expressao ()
+   $4 = token error ()
+   $5 = nterm arranjo_acesso ()
+(4) Erro sintático na linha 3, coluna 12: Esperado ']' após índice do array
+-> $$ = nterm var ()
+Entering state 83
+Stack now 0 10 15 18 29 42 47 56 62 83
+Next token is token ASSIGN_OP ()
+Shifting token ASSIGN_OP ()
+Entering state 104
+Stack now 0 10 15 18 29 42 47 56 62 83 104
 Reading a token
 --accepting rule at line 130 (" ")
---accepting rule at line 120 ("1")
+--accepting rule at line 120 ("5")
 Next token is token INT_NUMBER ()
 Shifting token INT_NUMBER ()
-Entering state 75
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 84 105 86 115 75
-Reducing stack by rule 91 (line 191):
+Entering state 73
+Stack now 0 10 15 18 29 42 47 56 62 83 104 73
+Reducing stack by rule 91 (line 193):
    $1 = token INT_NUMBER ()
 -> $$ = nterm fator ()
-Entering state 88
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 84 105 86 115 88
-Reducing stack by rule 83 (line 179):
+Entering state 87
+Stack now 0 10 15 18 29 42 47 56 62 83 104 87
+Reducing stack by rule 83 (line 181):
    $1 = nterm fator ()
 -> $$ = nterm termo ()
-Entering state 137
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 84 105 86 115 137
+Entering state 86
+Stack now 0 10 15 18 29 42 47 56 62 83 104 86
 Reading a token
 --accepting rule at line 110 (";")
 Next token is token SEMICOLON ()
-Reducing stack by rule 80 (line 172):
-   $1 = nterm expressao_soma ()
-   $2 = nterm soma_op ()
-   $3 = nterm termo ()
+Reducing stack by rule 79 (line 173):
+   $1 = nterm termo ()
 -> $$ = nterm expressao_soma ()
-Entering state 86
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 84 105 86
+Entering state 85
+Stack now 0 10 15 18 29 42 47 56 62 83 104 85
 Next token is token SEMICOLON ()
-Reducing stack by rule 71 (line 159):
+Reducing stack by rule 71 (line 161):
    $1 = nterm expressao_soma ()
 -> $$ = nterm expressao_simples ()
-Entering state 85
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 84 105 85
-Reducing stack by rule 62 (line 144):
+Entering state 84
+Stack now 0 10 15 18 29 42 47 56 62 83 104 84
+Reducing stack by rule 62 (line 146):
    $1 = nterm expressao_simples ()
 -> $$ = nterm expressao ()
-Entering state 134
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 84 105 134
-Reducing stack by rule 61 (line 143):
+Entering state 132
+Stack now 0 10 15 18 29 42 47 56 62 83 104 132
+Reducing stack by rule 61 (line 145):
    $1 = nterm var ()
    $2 = token ASSIGN_OP ()
    $3 = nterm expressao ()
 -> $$ = nterm expressao ()
-Entering state 83
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 83
+Entering state 82
+Stack now 0 10 15 18 29 42 47 56 62 82
 Next token is token SEMICOLON ()
 Shifting token SEMICOLON ()
-Entering state 104
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 83 104
-Reducing stack by rule 46 (line 111):
+Entering state 103
+Stack now 0 10 15 18 29 42 47 56 62 82 103
+Reducing stack by rule 46 (line 113):
    $1 = nterm expressao ()
    $2 = token SEMICOLON ()
 -> $$ = nterm expressao_decl ()
-Entering state 79
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 79
-Reducing stack by rule 41 (line 104):
+Entering state 78
+Stack now 0 10 15 18 29 42 47 56 62 78
+Reducing stack by rule 41 (line 106):
    $1 = nterm expressao_decl ()
 -> $$ = nterm comando ()
-Entering state 78
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 78
-Reducing stack by rule 40 (line 101):
-   $1 = nterm comando_lista ()
-   $2 = nterm comando ()
--> $$ = nterm comando_lista ()
-Entering state 64
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64
-Reading a token
---accepting rule at line 128 ("
-")
---accepting rule at line 130 ("    ")
---accepting rule at line 97 ("}")
-Next token is token CLOSE_BRACE ()
-Shifting token CLOSE_BRACE ()
-Entering state 71
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 47 57 64 71
-Reducing stack by rule 34 (line 91):
-   $1 = token OPEN_BRACE ()
-   $2 = nterm local_declaracoes ()
-   $3 = nterm comando_lista ()
-   $4 = token CLOSE_BRACE ()
--> $$ = nterm composto_decl ()
 Entering state 77
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 77
-Reducing stack by rule 42 (line 105):
-   $1 = nterm composto_decl ()
--> $$ = nterm comando ()
-Entering state 156
-Stack now 0 10 15 18 29 42 47 57 64 69 96 122 143 156
-Reducing stack by rule 55 (line 124):
-   $1 = token WHILE_KEYWORD ()
-   $2 = token OPEN_PAREN ()
-   $3 = nterm expressao ()
-   $4 = token error ()
-   $5 = nterm comando ()
-(2) Erro sintático na linha 5, coluna 6: Esperado ')' após condição do while
--> $$ = nterm iteracao_decl ()
-Entering state 81
-Stack now 0 10 15 18 29 42 47 57 64 81
-Reducing stack by rule 44 (line 107):
-   $1 = nterm iteracao_decl ()
--> $$ = nterm comando ()
-Entering state 78
-Stack now 0 10 15 18 29 42 47 57 64 78
-Reducing stack by rule 40 (line 101):
+Stack now 0 10 15 18 29 42 47 56 62 77
+Reducing stack by rule 40 (line 103):
    $1 = nterm comando_lista ()
    $2 = nterm comando ()
 -> $$ = nterm comando_lista ()
-Entering state 64
-Stack now 0 10 15 18 29 42 47 57 64
+Entering state 62
+Stack now 0 10 15 18 29 42 47 56 62
 Reading a token
 --accepting rule at line 128 ("
 ")
@@ -396,83 +267,148 @@ Reading a token
 --accepting rule at line 62 ("return")
 Next token is token RETURN_KEYWORD ()
 Shifting token RETURN_KEYWORD ()
-Entering state 70
-Stack now 0 10 15 18 29 42 47 57 64 70
+Entering state 68
+Stack now 0 10 15 18 29 42 47 56 62 68
 Reading a token
 --accepting rule at line 130 (" ")
+--accepting rule at line 124 ("arr")
+Next token is token IDENTIFIER ()
+Shifting token IDENTIFIER ()
+Entering state 72
+Stack now 0 10 15 18 29 42 47 56 62 68 72
+Reading a token
+--accepting rule at line 103 ("[")
+Next token is token OPEN_BRACKET ()
+Shifting token OPEN_BRACKET ()
+Entering state 101
+Stack now 0 10 15 18 29 42 47 56 62 68 72 101
+Reading a token
 --accepting rule at line 120 ("0")
 Next token is token INT_NUMBER ()
 Shifting token INT_NUMBER ()
-Entering state 75
-Stack now 0 10 15 18 29 42 47 57 64 70 75
-Reducing stack by rule 91 (line 191):
+Entering state 73
+Stack now 0 10 15 18 29 42 47 56 62 68 72 101 73
+Reducing stack by rule 91 (line 193):
    $1 = token INT_NUMBER ()
 -> $$ = nterm fator ()
-Entering state 88
-Stack now 0 10 15 18 29 42 47 57 64 70 88
-Reducing stack by rule 83 (line 179):
+Entering state 87
+Stack now 0 10 15 18 29 42 47 56 62 68 72 101 87
+Reducing stack by rule 83 (line 181):
    $1 = nterm fator ()
 -> $$ = nterm termo ()
-Entering state 87
-Stack now 0 10 15 18 29 42 47 57 64 70 87
+Entering state 86
+Stack now 0 10 15 18 29 42 47 56 62 68 72 101 86
+Reading a token
+--accepting rule at line 105 ("]")
+Next token is token CLOSE_BRACKET ()
+Reducing stack by rule 79 (line 173):
+   $1 = nterm termo ()
+-> $$ = nterm expressao_soma ()
+Entering state 85
+Stack now 0 10 15 18 29 42 47 56 62 68 72 101 85
+Next token is token CLOSE_BRACKET ()
+Reducing stack by rule 71 (line 161):
+   $1 = nterm expressao_soma ()
+-> $$ = nterm expressao_simples ()
+Entering state 84
+Stack now 0 10 15 18 29 42 47 56 62 68 72 101 84
+Reducing stack by rule 62 (line 146):
+   $1 = nterm expressao_simples ()
+-> $$ = nterm expressao ()
+Entering state 131
+Stack now 0 10 15 18 29 42 47 56 62 68 72 101 131
+Next token is token CLOSE_BRACKET ()
+Shifting token CLOSE_BRACKET ()
+Entering state 148
+Stack now 0 10 15 18 29 42 47 56 62 68 72 101 131 148
+Reducing stack by rule 67 (line 155):
+-> $$ = nterm arranjo_acesso ()
+Entering state 158
+Stack now 0 10 15 18 29 42 47 56 62 68 72 101 131 148 158
 Reading a token
 --accepting rule at line 110 (";")
 Next token is token SEMICOLON ()
-Reducing stack by rule 79 (line 171):
+Reducing stack by rule 64 (line 150):
+   $1 = token IDENTIFIER ()
+   $2 = token OPEN_BRACKET ()
+   $3 = nterm expressao ()
+   $4 = token CLOSE_BRACKET ()
+   $5 = nterm arranjo_acesso ()
+-> $$ = nterm var ()
+Entering state 83
+Stack now 0 10 15 18 29 42 47 56 62 68 83
+Next token is token SEMICOLON ()
+Reducing stack by rule 88 (line 190):
+   $1 = nterm var ()
+-> $$ = nterm fator ()
+Entering state 87
+Stack now 0 10 15 18 29 42 47 56 62 68 87
+Reducing stack by rule 83 (line 181):
+   $1 = nterm fator ()
+-> $$ = nterm termo ()
+Entering state 86
+Stack now 0 10 15 18 29 42 47 56 62 68 86
+Next token is token SEMICOLON ()
+Reducing stack by rule 79 (line 173):
    $1 = nterm termo ()
 -> $$ = nterm expressao_soma ()
-Entering state 86
-Stack now 0 10 15 18 29 42 47 57 64 70 86
+Entering state 85
+Stack now 0 10 15 18 29 42 47 56 62 68 85
 Next token is token SEMICOLON ()
-Reducing stack by rule 71 (line 159):
+Reducing stack by rule 71 (line 161):
    $1 = nterm expressao_soma ()
 -> $$ = nterm expressao_simples ()
-Entering state 85
-Stack now 0 10 15 18 29 42 47 57 64 70 85
-Reducing stack by rule 62 (line 144):
+Entering state 84
+Stack now 0 10 15 18 29 42 47 56 62 68 84
+Reducing stack by rule 62 (line 146):
    $1 = nterm expressao_simples ()
 -> $$ = nterm expressao ()
-Entering state 98
-Stack now 0 10 15 18 29 42 47 57 64 70 98
+Entering state 97
+Stack now 0 10 15 18 29 42 47 56 62 68 97
 Next token is token SEMICOLON ()
 Shifting token SEMICOLON ()
-Entering state 124
-Stack now 0 10 15 18 29 42 47 57 64 70 98 124
-Reducing stack by rule 59 (line 139):
+Entering state 123
+Stack now 0 10 15 18 29 42 47 56 62 68 97 123
+Reducing stack by rule 59 (line 141):
    $1 = token RETURN_KEYWORD ()
    $2 = nterm expressao ()
    $3 = token SEMICOLON ()
 -> $$ = nterm retorno_decl ()
-Entering state 82
-Stack now 0 10 15 18 29 42 47 57 64 82
-Reducing stack by rule 45 (line 108):
+Entering state 81
+Stack now 0 10 15 18 29 42 47 56 62 81
+Reducing stack by rule 45 (line 110):
    $1 = nterm retorno_decl ()
 -> $$ = nterm comando ()
-Entering state 78
-Stack now 0 10 15 18 29 42 47 57 64 78
-Reducing stack by rule 40 (line 101):
+Entering state 77
+Stack now 0 10 15 18 29 42 47 56 62 77
+Reducing stack by rule 40 (line 103):
    $1 = nterm comando_lista ()
    $2 = nterm comando ()
 -> $$ = nterm comando_lista ()
-Entering state 64
-Stack now 0 10 15 18 29 42 47 57 64
+Entering state 62
+Stack now 0 10 15 18 29 42 47 56 62
 Reading a token
 --accepting rule at line 128 ("
 ")
 --accepting rule at line 97 ("}")
 Next token is token CLOSE_BRACE ()
 Shifting token CLOSE_BRACE ()
-Entering state 71
-Stack now 0 10 15 18 29 42 47 57 64 71
-Reducing stack by rule 34 (line 91):
+Entering state 69
+Stack now 0 10 15 18 29 42 47 56 62 69
+Reducing stack by rule 35 (line 95):
+   $1 = token CLOSE_BRACE ()
+-> $$ = nterm temp ()
+Entering state 76
+Stack now 0 10 15 18 29 42 47 56 62 76
+Reducing stack by rule 34 (line 92):
    $1 = token OPEN_BRACE ()
    $2 = nterm local_declaracoes ()
    $3 = nterm comando_lista ()
-   $4 = token CLOSE_BRACE ()
+   $4 = nterm temp ()
 -> $$ = nterm composto_decl ()
 Entering state 51
 Stack now 0 10 15 18 29 42 51
-Reducing stack by rule 24 (line 73):
+Reducing stack by rule 24 (line 74):
    $1 = nterm tipo_especificador ()
    $2 = token IDENTIFIER ()
    $3 = token OPEN_PAREN ()
@@ -482,12 +418,12 @@ Reducing stack by rule 24 (line 73):
 -> $$ = nterm fun_declaracao ()
 Entering state 11
 Stack now 0 11
-Reducing stack by rule 5 (line 44):
+Reducing stack by rule 5 (line 45):
    $1 = nterm fun_declaracao ()
 -> $$ = nterm declaracao ()
 Entering state 8
 Stack now 0 8
-Reducing stack by rule 2 (line 39):
+Reducing stack by rule 2 (line 40):
    $1 = nterm declaracao ()
 -> $$ = nterm declaracao_lista ()
 Entering state 7
@@ -496,7 +432,7 @@ Reading a token
 --(end of buffer or a NUL)
 --EOF (start condition 0)
 Now at end of input.
-Reducing stack by rule 1 (line 36):
+Reducing stack by rule 1 (line 37):
    $1 = nterm declaracao_lista ()
 -> $$ = nterm programa ()
 Entering state 6

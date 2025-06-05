@@ -29,6 +29,7 @@ Feito por:
 
 %nonassoc LOWER
 %nonassoc ELSE_KEYWORD
+%nonassoc ERROR_RECOVERY
 
 %start programa
 
@@ -88,12 +89,13 @@ param			:	  tipo_especificador IDENTIFIER
                 | tipo_especificador IDENTIFIER OPEN_BRACKET error { yyerror("Esperado ']' após '[' no parâmetro array"); yyerrok; }
             ;
             
-composto_decl		:	  OPEN_BRACE local_declaracoes comando_lista CLOSE_BRACE
-                | OPEN_BRACE local_declaracoes comando_lista error { yyerror("Esperado '}' para fechar bloco de comandos"); yyerrok; }
-                | OPEN_BRACE error CLOSE_BRACE { yyerror("Comandos inválidos no bloco"); yyerrok; }
+composto_decl        :      OPEN_BRACE local_declaracoes comando_lista temp
             ;
 
-local_declaracoes	:	  
+temp        :      CLOSE_BRACE
+            | error { yyerror("Esperado '}' para fechar bloco de comandos"); yyerrok; }
+
+local_declaracoes	:	  /* empty */
                 | local_declaracoes var_declaracao
             ;
             
@@ -195,11 +197,10 @@ fator			:	  OPEN_PAREN expressao CLOSE_PAREN
 
 ativacao		:	  IDENTIFIER OPEN_PAREN args CLOSE_PAREN
                 | IDENTIFIER OPEN_PAREN args error { yyerror("Esperado ')' após argumentos da função"); yyerrok; }
-                | IDENTIFIER OPEN_PAREN error CLOSE_PAREN { yyerror("Argumentos inválidos na chamada de função"); yyerrok; }
             ;
             
-args			:	  arg_lista
-                | 
+args			:	  /* empty */
+                | arg_lista
             ;
             
 arg_lista		:	  expressao 
