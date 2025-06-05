@@ -1,46 +1,153 @@
-# Analisador Léxico C-Minus
+# Compilador C-Minus
 
-Este projeto implementa um analisador léxico para a linguagem C-Minus utilizando Flex.
+Este projeto implementa um compilador para a linguagem C-Minus, incluindo analisador léxico (Flex) e analisador sintático (Bison).
+
+## Sobre C-Minus
+
+C-Minus é uma linguagem de programação simplificada baseada em C, comumente utilizada em cursos de compiladores para fins educacionais. A linguagem suporta:
+- Tipos básicos: `int` e `float`
+- Estruturas de controle: `if`, `else`, `while`
+- Funções e recursão
+- Arrays
+- Operadores aritméticos e relacionais
+- Comentários multi-linha
 
 ## Estrutura do Projeto
 
-*   `c-minus-lexer/`: Contém os arquivos do analisador léxico.
-    *   [`c-minus-lexer.l`](c-minus-lexer/c-minus-lexer.l): Arquivo de definição do Flex para o analisador léxico.
-    *   [`lex.yy.c`](c-minus-lexer/lex.yy.c): Código C gerado pelo Flex.
-    *   [`c-minus-lexer`](c-minus-lexer/c-minus-lexer): Executável compilado do analisador léxico.
-*   [`scriptCompileAndRun.sh`](scriptCompileAndRun.sh): Script para compilar e executar o analisador léxico.
-*   [`teste.txt`](teste.txt): Arquivo de exemplo para testar o analisador léxico.
-*   [`README.md`](README.md): Este arquivo.
+```
+compiler_c-/
+├── c-minus/
+│   ├── lexer/
+│   │   └── lexer.l              # Definições do analisador léxico (Flex)
+│   └── parser/
+│       └── parser.y             # Definições do analisador sintático (Bison)
+├── tests/
+│   └── parser/
+│       └── teste.txt            # Arquivos de teste para o parser
+├── c-minus-lexer/               # Analisador léxico standalone
+│   ├── c-minus-lexer.l         
+│   └── tests/                   # Testes do lexer
+├── scriptCompileAndRun.sh       # Script para compilar e executar apenas o lexer
+├── ScriptRunParser.sh           # Script para compilar e executar o parser completo
+└── README.md
+```
 
 ## Dependências
 
-*   **Flex**: Ferramenta para gerar analisadores léxicos.
-*   **GCC**: Compilador C para compilar o código gerado pelo Flex.
+Para executar este projeto, você precisa ter instalado:
+
+- **Flex**: Ferramenta para gerar analisadores léxicos
+- **Bison**: Ferramenta para gerar analisadores sintáticos
+- **GCC**: Compilador C
+
+### Instalação das Dependências (Ubuntu/Debian)
+
+```bash
+sudo apt update
+sudo apt install flex bison gcc
+```
 
 ## Como Compilar e Executar
 
-1.  **Certifique-se de ter o Flex e o GCC instalados.**
-2.  **Dê permissão de execução ao script:**
-    ```sh
-    chmod +x scriptCompileAndRun.sh
-    ```
-3.  **Execute o script:**
-    O script [`scriptCompileAndRun.sh`](scriptCompileAndRun.sh) automatiza o processo de compilação e execução. Ele recebe dois argumentos:
-    *   O nome do diretório de compilação (que contém o arquivo `.l`).
-    *   O caminho para o arquivo de texto de entrada.
+### 1. Analisador Léxico (Lexer apenas)
 
-    Exemplo de uso:
-    ```sh
-    ./scriptCompileAndRun.sh c-minus-lexer teste.txt
-    ```
-    Este comando irá:
-    *   Navegar até o diretório `c-minus-lexer`.
-    *   Gerar o arquivo `lex.yy.c` usando `flex c-minus-lexer.l`.
-    *   Compilar `lex.yy.c` para criar o executável `c-minus-lexer` usando `gcc lex.yy.c -ll -o c-minus-lexer`.
-    *   Executar o analisador léxico `./c-minus-lexer` usando o arquivo `../teste.txt` como entrada.
+Para testar apenas o analisador léxico:
 
-    A saída do analisador léxico (tokens reconhecidos ou erros) será exibida no terminal.
+```bash
+# Dar permissão de execução
+chmod +x scriptRunLexer.sh
+
+# Executar o lexer
+./scriptRunLexer.sh c-minus-lexer teste.txt
+```
+
+Este comando irá:
+- Navegar até o diretório `c-minus-lexer`
+- Gerar o arquivo `lex.yy.c` usando `flex`
+- Compilar para criar o executável
+- Executar o analisador léxico com o arquivo de teste
+
+### 2. Compilador Completo (Lexer + Parser)
+
+Para compilar e executar o analisador sintático completo:
+
+```bash
+# Dar permissão de execução
+chmod +x ScriptRunParser.sh
+
+# Executar o parser completo
+./ScriptRunParser.sh teste.txt
+```
+
+O script `ScriptRunParser.sh` automatiza o processo completo:
+
+1. **Geração do Parser**: Executa `bison` no arquivo `c-minus/parser/parser.y` para gerar:
+   - `parser.tab.c` (código do parser)
+   - `parser.tab.h` (definições de tokens)
+
+2. **Geração do Lexer**: Executa `flex` no arquivo `c-minus/lexer/lexer.l` para gerar:
+   - `scanner.yy.c` (código do lexer integrado)
+
+3. **Compilação**: Usa `gcc` para compilar ambos os arquivos, criando o executável `c-` em `tests/parser/`
+
+4. **Execução**: Roda o compilador com o arquivo de teste especificado
+
+5. **Debug**: Salva o log detalhado em `tests/parser/log.txt`
+
+### Arquivos de Teste
+
+O script procura arquivos de teste em duas localizações:
+1. No diretório raiz do projeto
+2. Na pasta `tests/parser/`
+
+Exemplo de arquivo de teste (`teste.txt`):
+```c
+/* Programa exemplo em C-Minus */
+int fatorial(int n) {
+    if (n <= 1)
+        return 1;
+    else
+        return n * fatorial(n - 1);
+}
+
+int main(void) {
+    int numero;
+    numero = 5;
+    return fatorial(numero);
+}
+```
 
 ## Funcionamento
 
-O arquivo [`c-minus-lexer.l`](c-minus-lexer/c-minus-lexer.l) define as regras (usando expressões regulares) para reconhecer os tokens da linguagem C-Minus (palavras reservadas, identificadores, números, operadores, pontuação, comentários). Para cada regra, uma ação em C é definida (geralmente imprimir o token encontrado e sua classificação). O script [`scriptCompileAndRun.sh`](scriptCompileAndRun.sh) utiliza o `flex` para gerar o código C correspondente ([`lex.yy.c`](c-minus-lexer/lex.yy.c)) e o `gcc` para compilá-lo, criando o executável [`c-minus-lexer`](c-minus-lexer/c-minus-lexer) que pode processar um arquivo de entrada ([`teste.txt`](teste.txt)).
+### Analisador Léxico (Flex)
+O arquivo `lexer.l` define as regras para reconhecer tokens da linguagem C-Minus:
+- Palavras reservadas (`int`, `float`, `if`, `while`, etc.)
+- Identificadores e números
+- Operadores e pontuação
+- Comentários (que são ignorados)
+
+### Analisador Sintático (Bison)
+O arquivo `parser.y` define a gramática da linguagem C-Minus, especificando:
+- Estrutura de programas e funções
+- Expressões aritméticas e relacionais
+- Comandos de controle de fluxo
+- Declarações de variáveis e arrays
+
+### Integração
+O lexer e parser trabalham juntos: o lexer quebra o código-fonte em tokens, que são então analisados pelo parser para verificar se seguem a gramática da linguagem.
+
+## Saída
+
+- **Lexer**: Lista os tokens encontrados com linha e coluna
+- **Parser**: Verifica se o código segue a sintaxe correta, reportando erros sintáticos se houver
+- **Log**: Arquivo detalhado de debug salvo em `tests/parser/log.txt`
+
+## Exemplo de Uso
+
+```bash
+# Compilar e testar com arquivo específico
+./ScriptRunParser.sh meu_programa.txt
+
+# Verificar o log de execução
+cat tests/parser/log.txt
+```

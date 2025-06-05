@@ -88,7 +88,8 @@ extern int yydebug;
     INT_NUMBER = 289,              /* INT_NUMBER  */
     REAL_NUMBER = 290,             /* REAL_NUMBER  */
     INVALID_IDENTIFIER = 291,      /* INVALID_IDENTIFIER  */
-    LEXICAL_ERROR = 292            /* LEXICAL_ERROR  */
+    LEXICAL_ERROR = 292,           /* LEXICAL_ERROR  */
+    LOWER = 293                    /* LOWER  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
