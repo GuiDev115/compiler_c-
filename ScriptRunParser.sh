@@ -73,3 +73,11 @@ export YYDEBUG=1
 
 echo -e "\nScript concluído com sucesso!"
 echo "Log de debug salvo em: tests/parser/log.txt"
+
+# 6. Filtra e mostra apenas os erros sintáticos
+echo -e "\n=== ERROS SINTÁTICOS ENCONTRADOS ==="
+if grep -E "^\([0-9]+\) Erro sintático" tests/parser/log.txt; then
+    echo -e "\n=== FIM DOS ERROS SINTÁTICOS ==="
+else
+    echo "Nenhum erro sintático encontrado!"
+fi
