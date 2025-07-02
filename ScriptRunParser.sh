@@ -58,7 +58,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # 3. Compila (ajusta os caminhos dos arquivos gerados e cria o executável em tests/parser)
-gcc -o tests/parser/c- c-minus/lexer/scanner.yy.c c-minus/parser/parser.tab.c -lfl
+gcc -o tests/parser/c- c-minus/lexer/scanner.yy.c c-minus/parser/parser.tab.c c-minus/semantic/symbol_table.c c-minus/semantic/code_generator.c c-minus/semantic/semantic.c -lfl
 if [ $? -ne 0 ]; then
     echo "Erro ao compilar com gcc."
     exit 1

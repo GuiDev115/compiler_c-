@@ -9,6 +9,8 @@ Feito por:
 /*-------------------------- Definicoes --------------------------*/
 #include<stdio.h>
 #include<string.h>
+#include "../semantic/utils.h"       // Include utils for str_duplicate
+#include "../semantic/semantic.h"     // Include semantic headers first
 #include "../parser/parser.tab.h"    // Corrigido: caminho relativo correto
 
 int line_number = 1;
@@ -44,13 +46,13 @@ other                   .
 
  /* --- Palavras Reservadas --- */
  
-"int"                   { column_number+=yyleng; return INT_TYPE; }
+"int"                   { column_number+=yyleng; yylval.data_type = TYPE_INT; return INT_TYPE; }
 
-"float"                 { column_number+=yyleng; return FLOAT_TYPE; }
+"float"                 { column_number+=yyleng; yylval.data_type = TYPE_FLOAT; return FLOAT_TYPE; }
 
-"struct"                { column_number+=yyleng; return STRUCT_TYPE; }
+"struct"                { column_number+=yyleng; yylval.data_type = TYPE_STRUCT; return STRUCT_TYPE; }
 
-"void"                  { column_number+=yyleng; return VOID_TYPE; }
+"void"                  { column_number+=yyleng; yylval.data_type = TYPE_VOID; return VOID_TYPE; }
 
 "if"                    { column_number+=yyleng; return IF_KEYWORD; }
 
@@ -60,7 +62,7 @@ other                   .
 
 "return"                { column_number+=yyleng; return RETURN_KEYWORD; } 
 
-"char"                  { column_number+=yyleng; return CHAR_TYPE; }
+"char"                  { column_number+=yyleng; yylval.data_type = TYPE_CHAR; return CHAR_TYPE; }
 
 
  /* --- Operadores --- */
@@ -116,11 +118,11 @@ other                   .
  
 {digito}+{letra}({letra}|{digito})* 	{ fprintf(yyout, "(%d) Erro léxico na linha %d e na coluna %d. 						Identificador inválido -> \"%s\"\n", ++errors_count, line_number, 						column_number, yytext); column_number+=yyleng; return 						INVALID_IDENTIFIER; }
 
-{num_int}               		{ column_number+=yyleng; return INT_NUMBER; }  
+{num_int}               		{ column_number+=yyleng; yylval.int_val = atoi(yytext); return INT_NUMBER; }  
 
-{int}                   		{ column_number+=yyleng; return REAL_NUMBER; } 
+{int}                   		{ column_number+=yyleng; yylval.float_val = atof(yytext); return REAL_NUMBER; } 
 
-{ident}                 		{ column_number+=yyleng; return IDENTIFIER; } 
+{ident}                 		{ column_number+=yyleng; yylval.string_val = my_strdup(yytext); return IDENTIFIER; } 
 
  /* --- Outros --- */
  

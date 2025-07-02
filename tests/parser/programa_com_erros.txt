@@ -1,0 +1,51 @@
+/* Programa de teste C- com erros semânticos */
+
+int main(void) {
+    int x;
+    float y;
+    
+    x = 10;
+    y = 3.14;
+    
+    /* Erro 1: Variável não declarada */
+    z = x + y;
+    
+    /* Erro 2: Redeclaração de variável */
+    int x;
+    
+    /* Erro 3: Tipo incompatível na atribuição */
+    x = "string literal";
+    
+    /* Erro 4: Operação entre tipos incompatíveis */
+    x = x + "string";
+    
+    /* Erro 5: Variável fora de escopo */
+    {
+        int temp;
+        temp = 5;
+    }
+    temp = 10;
+    
+    /* Erro 6: Função não declarada */
+    resultado = funcao_inexistente(x, y);
+    
+    /* Erro 7: Chamada com argumentos incorretos */
+    resultado = soma(x);
+    
+    /* Erro 8: Return com tipo incompatível */
+    return 3.14;
+}
+
+/* Erro 9: Redeclaração de função */
+int main(void) {
+    return 0;
+}
+
+/* Erro 10: Parâmetro void em função não-void */
+int funcao_invalida(void x) {
+    return x;
+}
+
+int soma(int a, int b) {
+    return a + b;
+}

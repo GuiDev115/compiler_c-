@@ -54,39 +54,39 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    INT_TYPE = 258,                /* INT_TYPE  */
-    FLOAT_TYPE = 259,              /* FLOAT_TYPE  */
-    CHAR_TYPE = 260,               /* CHAR_TYPE  */
-    STRUCT_TYPE = 261,             /* STRUCT_TYPE  */
-    VOID_TYPE = 262,               /* VOID_TYPE  */
-    IF_KEYWORD = 263,              /* IF_KEYWORD  */
-    ELSE_KEYWORD = 264,            /* ELSE_KEYWORD  */
-    WHILE_KEYWORD = 265,           /* WHILE_KEYWORD  */
-    RETURN_KEYWORD = 266,          /* RETURN_KEYWORD  */
-    PLUS_OP = 267,                 /* PLUS_OP  */
-    MINUS_OP = 268,                /* MINUS_OP  */
-    MULT_OP = 269,                 /* MULT_OP  */
-    DIV_OP = 270,                  /* DIV_OP  */
-    MOD_OP = 271,                  /* MOD_OP  */
-    ASSIGN_OP = 272,               /* ASSIGN_OP  */
-    EQUAL_OP = 273,                /* EQUAL_OP  */
-    NE_OP = 274,                   /* NE_OP  */
-    LT_OP = 275,                   /* LT_OP  */
-    LE_OP = 276,                   /* LE_OP  */
-    GT_OP = 277,                   /* GT_OP  */
-    GE_OP = 278,                   /* GE_OP  */
-    OPEN_BRACE = 279,              /* OPEN_BRACE  */
-    CLOSE_BRACE = 280,             /* CLOSE_BRACE  */
-    OPEN_PAREN = 281,              /* OPEN_PAREN  */
-    CLOSE_PAREN = 282,             /* CLOSE_PAREN  */
-    OPEN_BRACKET = 283,            /* OPEN_BRACKET  */
-    CLOSE_BRACKET = 284,           /* CLOSE_BRACKET  */
-    SEMICOLON = 285,               /* SEMICOLON  */
-    COMMA = 286,                   /* COMMA  */
-    DOT = 287,                     /* DOT  */
-    IDENTIFIER = 288,              /* IDENTIFIER  */
-    INT_NUMBER = 289,              /* INT_NUMBER  */
-    REAL_NUMBER = 290,             /* REAL_NUMBER  */
+    IDENTIFIER = 258,              /* IDENTIFIER  */
+    INT_NUMBER = 259,              /* INT_NUMBER  */
+    REAL_NUMBER = 260,             /* REAL_NUMBER  */
+    INT_TYPE = 261,                /* INT_TYPE  */
+    FLOAT_TYPE = 262,              /* FLOAT_TYPE  */
+    CHAR_TYPE = 263,               /* CHAR_TYPE  */
+    STRUCT_TYPE = 264,             /* STRUCT_TYPE  */
+    VOID_TYPE = 265,               /* VOID_TYPE  */
+    IF_KEYWORD = 266,              /* IF_KEYWORD  */
+    ELSE_KEYWORD = 267,            /* ELSE_KEYWORD  */
+    WHILE_KEYWORD = 268,           /* WHILE_KEYWORD  */
+    RETURN_KEYWORD = 269,          /* RETURN_KEYWORD  */
+    PLUS_OP = 270,                 /* PLUS_OP  */
+    MINUS_OP = 271,                /* MINUS_OP  */
+    MULT_OP = 272,                 /* MULT_OP  */
+    DIV_OP = 273,                  /* DIV_OP  */
+    MOD_OP = 274,                  /* MOD_OP  */
+    ASSIGN_OP = 275,               /* ASSIGN_OP  */
+    EQUAL_OP = 276,                /* EQUAL_OP  */
+    NE_OP = 277,                   /* NE_OP  */
+    LT_OP = 278,                   /* LT_OP  */
+    LE_OP = 279,                   /* LE_OP  */
+    GT_OP = 280,                   /* GT_OP  */
+    GE_OP = 281,                   /* GE_OP  */
+    OPEN_BRACE = 282,              /* OPEN_BRACE  */
+    CLOSE_BRACE = 283,             /* CLOSE_BRACE  */
+    OPEN_PAREN = 284,              /* OPEN_PAREN  */
+    CLOSE_PAREN = 285,             /* CLOSE_PAREN  */
+    OPEN_BRACKET = 286,            /* OPEN_BRACKET  */
+    CLOSE_BRACKET = 287,           /* CLOSE_BRACKET  */
+    SEMICOLON = 288,               /* SEMICOLON  */
+    COMMA = 289,                   /* COMMA  */
+    DOT = 290,                     /* DOT  */
     INVALID_IDENTIFIER = 291,      /* INVALID_IDENTIFIER  */
     LEXICAL_ERROR = 292,           /* LEXICAL_ERROR  */
     LOWER = 293,                   /* LOWER  */
@@ -97,7 +97,22 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 26 "c-minus/parser/parser.y"
+
+    int int_val;
+    float float_val;
+    char char_val;
+    char *string_val;
+    ASTNode *ast_node;
+    DataType data_type;
+    Operator operator;
+
+#line 113 "c-minus/parser/parser.tab.h"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

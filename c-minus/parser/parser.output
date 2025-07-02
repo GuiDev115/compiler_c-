@@ -7,6 +7,132 @@ Terminals unused in grammar
     ERROR_RECOVERY
 
 
+Rules useless in parser due to conflicts
+
+  100 arranjo_dimensao: ε
+  101                 | arranjo_dimensao OPEN_BRACKET INT_NUMBER CLOSE_BRACKET
+  102                 | arranjo_dimensao OPEN_BRACKET INT_NUMBER error
+  103                 | arranjo_dimensao OPEN_BRACKET error CLOSE_BRACKET
+
+  104 arranjo_acesso: ε
+  105               | arranjo_acesso OPEN_BRACKET expressao CLOSE_BRACKET
+  106               | arranjo_acesso OPEN_BRACKET expressao error
+  107               | arranjo_acesso OPEN_BRACKET error CLOSE_BRACKET
+
+  108 composto_decl: OPEN_BRACE local_declaracoes comando_lista temp
+
+  109 temp: CLOSE_BRACE
+  110     | error
+
+  111 local_declaracoes: ε
+  112                  | local_declaracoes var_declaracao
+
+  113 comando_lista: ε
+  114              | comando_lista comando
+
+  115 comando: expressao_decl
+  116        | composto_decl
+  117        | selecao_decl
+  118        | iteracao_decl
+  119        | retorno_decl
+
+  120 expressao_decl: expressao SEMICOLON
+  121               | SEMICOLON
+  122               | expressao error
+
+  123 selecao_decl: IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando
+  124             | IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando ELSE_KEYWORD comando
+  125             | IF_KEYWORD OPEN_PAREN expressao error comando
+  126             | IF_KEYWORD OPEN_PAREN error CLOSE_PAREN comando
+  127             | IF_KEYWORD error
+
+  128 iteracao_decl: WHILE_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando
+  129              | WHILE_KEYWORD OPEN_PAREN expressao error comando
+  130              | WHILE_KEYWORD OPEN_PAREN error CLOSE_PAREN comando
+  131              | WHILE_KEYWORD error
+
+  132 retorno_decl: RETURN_KEYWORD SEMICOLON
+  133             | RETURN_KEYWORD expressao SEMICOLON
+  134             | RETURN_KEYWORD expressao error
+
+  135 expressao_simples: expressao_soma
+  136                  | expressao_soma relacional expressao_soma
+
+  137 relacional: LE_OP
+  138           | LT_OP
+  139           | GT_OP
+  140           | GE_OP
+  141           | EQUAL_OP
+  142           | NE_OP
+
+  143 expressao_soma: termo
+  144               | expressao_soma soma_op termo
+
+  145 soma_op: PLUS_OP
+  146        | MINUS_OP
+
+  147 termo: fator
+  148      | termo mult_op fator
+
+  149 mult_op: MULT_OP
+  150        | DIV_OP
+
+
+State 46 conflicts: 2 reduce/reduce
+State 47 conflicts: 16 reduce/reduce
+State 56 conflicts: 11 reduce/reduce
+State 61 conflicts: 16 reduce/reduce
+State 65 conflicts: 18 reduce/reduce
+State 72 conflicts: 18 reduce/reduce
+State 74 conflicts: 12 reduce/reduce
+State 75 conflicts: 12 reduce/reduce
+State 76 conflicts: 18 reduce/reduce
+State 77 conflicts: 11 reduce/reduce
+State 78 conflicts: 12 reduce/reduce
+State 79 conflicts: 12 reduce/reduce
+State 80 conflicts: 12 reduce/reduce
+State 81 conflicts: 12 reduce/reduce
+State 85 conflicts: 5 reduce/reduce
+State 86 conflicts: 13 reduce/reduce
+State 87 conflicts: 15 reduce/reduce
+State 89 conflicts: 2 reduce/reduce
+State 90 conflicts: 2 reduce/reduce
+State 91 conflicts: 2 reduce/reduce
+State 94 conflicts: 12 reduce/reduce
+State 96 conflicts: 12 reduce/reduce
+State 98 conflicts: 12 reduce/reduce
+State 102 conflicts: 12 reduce/reduce
+State 103 conflicts: 12 reduce/reduce
+State 105 conflicts: 4 reduce/reduce
+State 106 conflicts: 4 reduce/reduce
+State 107 conflicts: 4 reduce/reduce
+State 108 conflicts: 4 reduce/reduce
+State 109 conflicts: 4 reduce/reduce
+State 110 conflicts: 4 reduce/reduce
+State 111 conflicts: 4 reduce/reduce
+State 112 conflicts: 4 reduce/reduce
+State 115 conflicts: 4 reduce/reduce
+State 116 conflicts: 4 reduce/reduce
+State 127 conflicts: 12 reduce/reduce
+State 128 conflicts: 12 reduce/reduce
+State 134 conflicts: 5 reduce/reduce
+State 135 conflicts: 13 reduce/reduce
+State 136 conflicts: 15 reduce/reduce
+State 140 conflicts: 17 reduce/reduce
+State 141 conflicts: 17 reduce/reduce
+State 142 conflicts: 17 reduce/reduce
+State 153 conflicts: 12 reduce/reduce
+State 154 conflicts: 12 reduce/reduce
+State 155 conflicts: 11 reduce/reduce
+State 156 conflicts: 12 reduce/reduce
+State 157 conflicts: 12 reduce/reduce
+State 158 conflicts: 12 reduce/reduce
+State 163 conflicts: 12 reduce/reduce
+State 164 conflicts: 17 reduce/reduce
+State 165 conflicts: 17 reduce/reduce
+State 166 conflicts: 17 reduce/reduce
+
+
 Grammar
 
     0 $accept: programa $end
@@ -143,44 +269,112 @@ Grammar
    98 arg_lista: expressao
    99          | arg_lista COMMA expressao
 
+  100 arranjo_dimensao: ε
+  101                 | arranjo_dimensao OPEN_BRACKET INT_NUMBER CLOSE_BRACKET
+  102                 | arranjo_dimensao OPEN_BRACKET INT_NUMBER error
+  103                 | arranjo_dimensao OPEN_BRACKET error CLOSE_BRACKET
+
+  104 arranjo_acesso: ε
+  105               | arranjo_acesso OPEN_BRACKET expressao CLOSE_BRACKET
+  106               | arranjo_acesso OPEN_BRACKET expressao error
+  107               | arranjo_acesso OPEN_BRACKET error CLOSE_BRACKET
+
+  108 composto_decl: OPEN_BRACE local_declaracoes comando_lista temp
+
+  109 temp: CLOSE_BRACE
+  110     | error
+
+  111 local_declaracoes: ε
+  112                  | local_declaracoes var_declaracao
+
+  113 comando_lista: ε
+  114              | comando_lista comando
+
+  115 comando: expressao_decl
+  116        | composto_decl
+  117        | selecao_decl
+  118        | iteracao_decl
+  119        | retorno_decl
+
+  120 expressao_decl: expressao SEMICOLON
+  121               | SEMICOLON
+  122               | expressao error
+
+  123 selecao_decl: IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando
+  124             | IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando ELSE_KEYWORD comando
+  125             | IF_KEYWORD OPEN_PAREN expressao error comando
+  126             | IF_KEYWORD OPEN_PAREN error CLOSE_PAREN comando
+  127             | IF_KEYWORD error
+
+  128 iteracao_decl: WHILE_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando
+  129              | WHILE_KEYWORD OPEN_PAREN expressao error comando
+  130              | WHILE_KEYWORD OPEN_PAREN error CLOSE_PAREN comando
+  131              | WHILE_KEYWORD error
+
+  132 retorno_decl: RETURN_KEYWORD SEMICOLON
+  133             | RETURN_KEYWORD expressao SEMICOLON
+  134             | RETURN_KEYWORD expressao error
+
+  135 expressao_simples: expressao_soma
+  136                  | expressao_soma relacional expressao_soma
+
+  137 relacional: LE_OP
+  138           | LT_OP
+  139           | GT_OP
+  140           | GE_OP
+  141           | EQUAL_OP
+  142           | NE_OP
+
+  143 expressao_soma: termo
+  144               | expressao_soma soma_op termo
+
+  145 soma_op: PLUS_OP
+  146        | MINUS_OP
+
+  147 termo: fator
+  148      | termo mult_op fator
+
+  149 mult_op: MULT_OP
+  150        | DIV_OP
+
 
 Terminals, with rules where they appear
 
     $end (0) 0
-    error (256) 8 9 10 13 14 20 21 25 26 33 36 48 51 52 53 55 56 57 60 65 66 69 70 92 93 95
-    INT_TYPE (258) 15
-    FLOAT_TYPE (259) 16
-    CHAR_TYPE (260) 17
-    STRUCT_TYPE (261) 19 20 21
-    VOID_TYPE (262) 18 28
-    IF_KEYWORD (263) 49 50 51 52 53
-    ELSE_KEYWORD (264) 50
-    WHILE_KEYWORD (265) 54 55 56 57
-    RETURN_KEYWORD (266) 58 59 60
-    PLUS_OP (267) 81
-    MINUS_OP (268) 82
-    MULT_OP (269) 85
-    DIV_OP (270) 86
-    MOD_OP (271)
-    ASSIGN_OP (272) 61
-    EQUAL_OP (273) 77
-    NE_OP (274) 78
-    LT_OP (275) 74
-    LE_OP (276) 73
-    GT_OP (277) 75
-    GE_OP (278) 76
-    OPEN_BRACE (279) 19 20 21 34
-    CLOSE_BRACE (280) 19 21 35
-    OPEN_PAREN (281) 24 25 26 49 50 51 52 54 55 56 87 92 93 94 95
-    CLOSE_PAREN (282) 24 26 49 50 52 54 56 87 93 94
-    OPEN_BRACKET (283) 7 9 10 12 13 14 32 33 64 65 66 68 69 70
-    CLOSE_BRACKET (284) 7 10 12 14 32 64 66 68 70
-    SEMICOLON (285) 6 7 8 9 10 46 47 58 59
-    COMMA (286) 30 99
-    DOT (287)
-    IDENTIFIER (288) 6 7 8 9 10 19 20 21 24 25 26 31 32 33 63 64 65 66 94 95
-    INT_NUMBER (289) 7 9 12 13 91
-    REAL_NUMBER (290) 90
+    error (256) 8 9 10 13 14 20 21 25 26 33 36 48 51 52 53 55 56 57 60 65 66 69 70 92 93 95 102 103 106 107 110 122 125 126 127 129 130 131 134
+    IDENTIFIER <string_val> (258) 6 7 8 9 10 19 20 21 24 25 26 31 32 33 63 64 65 66 94 95
+    INT_NUMBER <int_val> (259) 7 9 12 13 91 101 102
+    REAL_NUMBER <float_val> (260) 90
+    INT_TYPE <data_type> (261) 15
+    FLOAT_TYPE <data_type> (262) 16
+    CHAR_TYPE <data_type> (263) 17
+    STRUCT_TYPE <data_type> (264) 19 20 21
+    VOID_TYPE <data_type> (265) 18 28
+    IF_KEYWORD (266) 49 50 51 52 53 123 124 125 126 127
+    ELSE_KEYWORD (267) 50 124
+    WHILE_KEYWORD (268) 54 55 56 57 128 129 130 131
+    RETURN_KEYWORD (269) 58 59 60 132 133 134
+    PLUS_OP (270) 81 145
+    MINUS_OP (271) 82 146
+    MULT_OP (272) 85 149
+    DIV_OP (273) 86 150
+    MOD_OP (274)
+    ASSIGN_OP (275) 61
+    EQUAL_OP (276) 77 141
+    NE_OP (277) 78 142
+    LT_OP (278) 74 138
+    LE_OP (279) 73 137
+    GT_OP (280) 75 139
+    GE_OP (281) 76 140
+    OPEN_BRACE (282) 19 20 21 34 108
+    CLOSE_BRACE (283) 19 21 35 109
+    OPEN_PAREN (284) 24 25 26 49 50 51 52 54 55 56 87 92 93 94 95 123 124 125 126 128 129 130
+    CLOSE_PAREN (285) 24 26 49 50 52 54 56 87 93 94 123 124 126 128 130
+    OPEN_BRACKET (286) 7 9 10 12 13 14 32 33 64 65 66 68 69 70 101 102 103 105 106 107
+    CLOSE_BRACKET (287) 7 10 12 14 32 64 66 68 70 101 103 105 107
+    SEMICOLON (288) 6 7 8 9 10 46 47 58 59 120 121 132 133
+    COMMA (289) 30 99
+    DOT (290)
     INVALID_IDENTIFIER (291)
     LEXICAL_ERROR (292)
     LOWER (293)
@@ -191,103 +385,103 @@ Nonterminals, with rules where they appear
 
     $accept (40)
         on left: 0
-    programa (41)
+    programa <ast_node> (41)
         on left: 1
         on right: 0
-    declaracao_lista (42)
+    declaracao_lista <ast_node> (42)
         on left: 2 3
         on right: 1 3
-    declaracao (43)
+    declaracao <ast_node> (43)
         on left: 4 5
         on right: 2 3
-    var_declaracao (44)
+    var_declaracao <ast_node> (44)
         on left: 6 7 8 9 10
-        on right: 4 22 23 38
-    arranjo_dimensao (45)
-        on left: 11 12 13 14
-        on right: 7 12 13 14
-    tipo_especificador (46)
+        on right: 4 22 23 38 112
+    arranjo_dimensao <ast_node> (45)
+        on left: 11 12 13 14 100 101 102 103
+        on right: 7 12 13 14 101 102 103
+    tipo_especificador <data_type> (46)
         on left: 15 16 17 18 19 20 21
         on right: 6 7 8 9 10 24 25 26 31 32 33
-    atributos_declaracao (47)
+    atributos_declaracao <ast_node> (47)
         on left: 22 23
         on right: 19 20 23
-    fun_declaracao (48)
+    fun_declaracao <ast_node> (48)
         on left: 24 25 26
         on right: 5
-    params (49)
+    params <ast_node> (49)
         on left: 27 28
         on right: 24 25
-    param_lista (50)
+    param_lista <ast_node> (50)
         on left: 29 30
         on right: 27 30
-    param (51)
+    param <ast_node> (51)
         on left: 31 32 33
         on right: 29 30
-    composto_decl (52)
-        on left: 34
-        on right: 24 25 26 42
-    temp (53)
-        on left: 35 36
-        on right: 34
-    local_declaracoes (54)
-        on left: 37 38
-        on right: 34 38
-    comando_lista (55)
-        on left: 39 40
-        on right: 34 40
-    comando (56)
-        on left: 41 42 43 44 45
-        on right: 40 49 50 51 52 54 55 56
-    expressao_decl (57)
-        on left: 46 47 48
-        on right: 41
-    selecao_decl (58)
-        on left: 49 50 51 52 53
-        on right: 43
-    iteracao_decl (59)
-        on left: 54 55 56 57
-        on right: 44
-    retorno_decl (60)
-        on left: 58 59 60
-        on right: 45
-    expressao (61)
+    composto_decl <ast_node> (52)
+        on left: 34 108
+        on right: 24 25 26 42 116
+    temp <ast_node> (53)
+        on left: 35 36 109 110
+        on right: 34 108
+    local_declaracoes <ast_node> (54)
+        on left: 37 38 111 112
+        on right: 34 38 108 112
+    comando_lista <ast_node> (55)
+        on left: 39 40 113 114
+        on right: 34 40 108 114
+    comando <ast_node> (56)
+        on left: 41 42 43 44 45 115 116 117 118 119
+        on right: 40 49 50 51 52 54 55 56 114 123 124 125 126 128 129 130
+    expressao_decl <ast_node> (57)
+        on left: 46 47 48 120 121 122
+        on right: 41 115
+    selecao_decl <ast_node> (58)
+        on left: 49 50 51 52 53 123 124 125 126 127
+        on right: 43 117
+    iteracao_decl <ast_node> (59)
+        on left: 54 55 56 57 128 129 130 131
+        on right: 44 118
+    retorno_decl <ast_node> (60)
+        on left: 58 59 60 132 133 134
+        on right: 45 119
+    expressao <ast_node> (61)
         on left: 61 62
-        on right: 46 48 49 50 51 54 55 59 60 61 64 65 68 69 87 92 98 99
-    var (62)
+        on right: 46 48 49 50 51 54 55 59 60 61 64 65 68 69 87 92 98 99 105 106 120 122 123 124 125 128 129 133 134
+    var <ast_node> (62)
         on left: 63 64 65 66
         on right: 61 88
-    arranjo_acesso (63)
-        on left: 67 68 69 70
-        on right: 64 65 66 68 69 70
-    expressao_simples (64)
-        on left: 71 72
+    arranjo_acesso <ast_node> (63)
+        on left: 67 68 69 70 104 105 106 107
+        on right: 64 65 66 68 69 70 105 106 107
+    expressao_simples <ast_node> (64)
+        on left: 71 72 135 136
         on right: 62
-    relacional (65)
-        on left: 73 74 75 76 77 78
-        on right: 72
-    expressao_soma (66)
-        on left: 79 80
-        on right: 71 72 80
-    soma_op (67)
-        on left: 81 82
-        on right: 80
-    termo (68)
-        on left: 83 84
-        on right: 79 80 84
-    mult_op (69)
-        on left: 85 86
-        on right: 84
-    fator (70)
+    relacional <operator> (65)
+        on left: 73 74 75 76 77 78 137 138 139 140 141 142
+        on right: 72 136
+    expressao_soma <ast_node> (66)
+        on left: 79 80 143 144
+        on right: 71 72 80 135 136 144
+    soma_op <operator> (67)
+        on left: 81 82 145 146
+        on right: 80 144
+    termo <ast_node> (68)
+        on left: 83 84 147 148
+        on right: 79 80 84 143 144 148
+    mult_op <operator> (69)
+        on left: 85 86 149 150
+        on right: 84 148
+    fator <ast_node> (70)
         on left: 87 88 89 90 91 92 93
-        on right: 83 84
-    ativacao (71)
+        on right: 83 84 147 148
+    ativacao <ast_node> (71)
         on left: 94 95
         on right: 89
-    args (72)
+    args <ast_node> (72)
         on left: 96 97
         on right: 94 95
-    arg_lista (73)
+    arg_lista <ast_node> (73)
         on left: 98 99
         on right: 97 99
 
@@ -737,7 +931,11 @@ State 46
 
     7 var_declaracao: tipo_especificador IDENTIFIER OPEN_BRACKET INT_NUMBER CLOSE_BRACKET • arranjo_dimensao SEMICOLON
 
-    $default  reduce using rule 11 (arranjo_dimensao)
+    OPEN_BRACKET  reduce using rule 11 (arranjo_dimensao)
+    OPEN_BRACKET  [reduce using rule 100 (arranjo_dimensao)]
+    SEMICOLON     reduce using rule 11 (arranjo_dimensao)
+    SEMICOLON     [reduce using rule 100 (arranjo_dimensao)]
+    $default      reduce using rule 11 (arranjo_dimensao)
 
     arranjo_dimensao  go to state 55
 
@@ -745,8 +943,41 @@ State 46
 State 47
 
    34 composto_decl: OPEN_BRACE • local_declaracoes comando_lista temp
+  108              | OPEN_BRACE • local_declaracoes comando_lista temp
 
-    $default  reduce using rule 37 (local_declaracoes)
+    error           reduce using rule 37 (local_declaracoes)
+    error           [reduce using rule 111 (local_declaracoes)]
+    IDENTIFIER      reduce using rule 37 (local_declaracoes)
+    IDENTIFIER      [reduce using rule 111 (local_declaracoes)]
+    INT_NUMBER      reduce using rule 37 (local_declaracoes)
+    INT_NUMBER      [reduce using rule 111 (local_declaracoes)]
+    REAL_NUMBER     reduce using rule 37 (local_declaracoes)
+    REAL_NUMBER     [reduce using rule 111 (local_declaracoes)]
+    INT_TYPE        reduce using rule 37 (local_declaracoes)
+    INT_TYPE        [reduce using rule 111 (local_declaracoes)]
+    FLOAT_TYPE      reduce using rule 37 (local_declaracoes)
+    FLOAT_TYPE      [reduce using rule 111 (local_declaracoes)]
+    CHAR_TYPE       reduce using rule 37 (local_declaracoes)
+    CHAR_TYPE       [reduce using rule 111 (local_declaracoes)]
+    STRUCT_TYPE     reduce using rule 37 (local_declaracoes)
+    STRUCT_TYPE     [reduce using rule 111 (local_declaracoes)]
+    VOID_TYPE       reduce using rule 37 (local_declaracoes)
+    VOID_TYPE       [reduce using rule 111 (local_declaracoes)]
+    IF_KEYWORD      reduce using rule 37 (local_declaracoes)
+    IF_KEYWORD      [reduce using rule 111 (local_declaracoes)]
+    WHILE_KEYWORD   reduce using rule 37 (local_declaracoes)
+    WHILE_KEYWORD   [reduce using rule 111 (local_declaracoes)]
+    RETURN_KEYWORD  reduce using rule 37 (local_declaracoes)
+    RETURN_KEYWORD  [reduce using rule 111 (local_declaracoes)]
+    OPEN_BRACE      reduce using rule 37 (local_declaracoes)
+    OPEN_BRACE      [reduce using rule 111 (local_declaracoes)]
+    CLOSE_BRACE     reduce using rule 37 (local_declaracoes)
+    CLOSE_BRACE     [reduce using rule 111 (local_declaracoes)]
+    OPEN_PAREN      reduce using rule 37 (local_declaracoes)
+    OPEN_PAREN      [reduce using rule 111 (local_declaracoes)]
+    SEMICOLON       reduce using rule 37 (local_declaracoes)
+    SEMICOLON       [reduce using rule 111 (local_declaracoes)]
+    $default        reduce using rule 37 (local_declaracoes)
 
     local_declaracoes  go to state 56
 
@@ -808,6 +1039,9 @@ State 55
    12 arranjo_dimensao: arranjo_dimensao • OPEN_BRACKET INT_NUMBER CLOSE_BRACKET
    13                 | arranjo_dimensao • OPEN_BRACKET INT_NUMBER error
    14                 | arranjo_dimensao • OPEN_BRACKET error CLOSE_BRACKET
+  101                 | arranjo_dimensao • OPEN_BRACKET INT_NUMBER CLOSE_BRACKET
+  102                 | arranjo_dimensao • OPEN_BRACKET INT_NUMBER error
+  103                 | arranjo_dimensao • OPEN_BRACKET error CLOSE_BRACKET
 
     OPEN_BRACKET  shift, and go to state 59
     SEMICOLON     shift, and go to state 60
@@ -817,6 +1051,8 @@ State 56
 
    34 composto_decl: OPEN_BRACE local_declaracoes • comando_lista temp
    38 local_declaracoes: local_declaracoes • var_declaracao
+  108 composto_decl: OPEN_BRACE local_declaracoes • comando_lista temp
+  112 local_declaracoes: local_declaracoes • var_declaracao
 
     INT_TYPE     shift, and go to state 1
     FLOAT_TYPE   shift, and go to state 2
@@ -824,7 +1060,29 @@ State 56
     STRUCT_TYPE  shift, and go to state 4
     VOID_TYPE    shift, and go to state 5
 
-    $default  reduce using rule 39 (comando_lista)
+    error           reduce using rule 39 (comando_lista)
+    error           [reduce using rule 113 (comando_lista)]
+    IDENTIFIER      reduce using rule 39 (comando_lista)
+    IDENTIFIER      [reduce using rule 113 (comando_lista)]
+    INT_NUMBER      reduce using rule 39 (comando_lista)
+    INT_NUMBER      [reduce using rule 113 (comando_lista)]
+    REAL_NUMBER     reduce using rule 39 (comando_lista)
+    REAL_NUMBER     [reduce using rule 113 (comando_lista)]
+    IF_KEYWORD      reduce using rule 39 (comando_lista)
+    IF_KEYWORD      [reduce using rule 113 (comando_lista)]
+    WHILE_KEYWORD   reduce using rule 39 (comando_lista)
+    WHILE_KEYWORD   [reduce using rule 113 (comando_lista)]
+    RETURN_KEYWORD  reduce using rule 39 (comando_lista)
+    RETURN_KEYWORD  [reduce using rule 113 (comando_lista)]
+    OPEN_BRACE      reduce using rule 39 (comando_lista)
+    OPEN_BRACE      [reduce using rule 113 (comando_lista)]
+    CLOSE_BRACE     reduce using rule 39 (comando_lista)
+    CLOSE_BRACE     [reduce using rule 113 (comando_lista)]
+    OPEN_PAREN      reduce using rule 39 (comando_lista)
+    OPEN_PAREN      [reduce using rule 113 (comando_lista)]
+    SEMICOLON       reduce using rule 39 (comando_lista)
+    SEMICOLON       [reduce using rule 113 (comando_lista)]
+    $default        reduce using rule 39 (comando_lista)
 
     var_declaracao      go to state 61
     tipo_especificador  go to state 23
@@ -850,6 +1108,9 @@ State 59
    12 arranjo_dimensao: arranjo_dimensao OPEN_BRACKET • INT_NUMBER CLOSE_BRACKET
    13                 | arranjo_dimensao OPEN_BRACKET • INT_NUMBER error
    14                 | arranjo_dimensao OPEN_BRACKET • error CLOSE_BRACKET
+  101                 | arranjo_dimensao OPEN_BRACKET • INT_NUMBER CLOSE_BRACKET
+  102                 | arranjo_dimensao OPEN_BRACKET • INT_NUMBER error
+  103                 | arranjo_dimensao OPEN_BRACKET • error CLOSE_BRACKET
 
     error       shift, and go to state 63
     INT_NUMBER  shift, and go to state 64
@@ -865,26 +1126,61 @@ State 60
 State 61
 
    38 local_declaracoes: local_declaracoes var_declaracao •
+  112                  | local_declaracoes var_declaracao •
 
-    $default  reduce using rule 38 (local_declaracoes)
+    error           reduce using rule 38 (local_declaracoes)
+    error           [reduce using rule 112 (local_declaracoes)]
+    IDENTIFIER      reduce using rule 38 (local_declaracoes)
+    IDENTIFIER      [reduce using rule 112 (local_declaracoes)]
+    INT_NUMBER      reduce using rule 38 (local_declaracoes)
+    INT_NUMBER      [reduce using rule 112 (local_declaracoes)]
+    REAL_NUMBER     reduce using rule 38 (local_declaracoes)
+    REAL_NUMBER     [reduce using rule 112 (local_declaracoes)]
+    INT_TYPE        reduce using rule 38 (local_declaracoes)
+    INT_TYPE        [reduce using rule 112 (local_declaracoes)]
+    FLOAT_TYPE      reduce using rule 38 (local_declaracoes)
+    FLOAT_TYPE      [reduce using rule 112 (local_declaracoes)]
+    CHAR_TYPE       reduce using rule 38 (local_declaracoes)
+    CHAR_TYPE       [reduce using rule 112 (local_declaracoes)]
+    STRUCT_TYPE     reduce using rule 38 (local_declaracoes)
+    STRUCT_TYPE     [reduce using rule 112 (local_declaracoes)]
+    VOID_TYPE       reduce using rule 38 (local_declaracoes)
+    VOID_TYPE       [reduce using rule 112 (local_declaracoes)]
+    IF_KEYWORD      reduce using rule 38 (local_declaracoes)
+    IF_KEYWORD      [reduce using rule 112 (local_declaracoes)]
+    WHILE_KEYWORD   reduce using rule 38 (local_declaracoes)
+    WHILE_KEYWORD   [reduce using rule 112 (local_declaracoes)]
+    RETURN_KEYWORD  reduce using rule 38 (local_declaracoes)
+    RETURN_KEYWORD  [reduce using rule 112 (local_declaracoes)]
+    OPEN_BRACE      reduce using rule 38 (local_declaracoes)
+    OPEN_BRACE      [reduce using rule 112 (local_declaracoes)]
+    CLOSE_BRACE     reduce using rule 38 (local_declaracoes)
+    CLOSE_BRACE     [reduce using rule 112 (local_declaracoes)]
+    OPEN_PAREN      reduce using rule 38 (local_declaracoes)
+    OPEN_PAREN      [reduce using rule 112 (local_declaracoes)]
+    SEMICOLON       reduce using rule 38 (local_declaracoes)
+    SEMICOLON       [reduce using rule 112 (local_declaracoes)]
+    $default        reduce using rule 38 (local_declaracoes)
 
 
 State 62
 
    34 composto_decl: OPEN_BRACE local_declaracoes comando_lista • temp
    40 comando_lista: comando_lista • comando
+  108 composto_decl: OPEN_BRACE local_declaracoes comando_lista • temp
+  114 comando_lista: comando_lista • comando
 
     error           shift, and go to state 65
-    IF_KEYWORD      shift, and go to state 66
-    WHILE_KEYWORD   shift, and go to state 67
-    RETURN_KEYWORD  shift, and go to state 68
+    IDENTIFIER      shift, and go to state 66
+    INT_NUMBER      shift, and go to state 67
+    REAL_NUMBER     shift, and go to state 68
+    IF_KEYWORD      shift, and go to state 69
+    WHILE_KEYWORD   shift, and go to state 70
+    RETURN_KEYWORD  shift, and go to state 71
     OPEN_BRACE      shift, and go to state 47
-    CLOSE_BRACE     shift, and go to state 69
-    OPEN_PAREN      shift, and go to state 70
-    SEMICOLON       shift, and go to state 71
-    IDENTIFIER      shift, and go to state 72
-    INT_NUMBER      shift, and go to state 73
-    REAL_NUMBER     shift, and go to state 74
+    CLOSE_BRACE     shift, and go to state 72
+    OPEN_PAREN      shift, and go to state 73
+    SEMICOLON       shift, and go to state 74
 
     composto_decl      go to state 75
     temp               go to state 76
@@ -905,6 +1201,7 @@ State 62
 State 63
 
    14 arranjo_dimensao: arranjo_dimensao OPEN_BRACKET error • CLOSE_BRACKET
+  103                 | arranjo_dimensao OPEN_BRACKET error • CLOSE_BRACKET
 
     CLOSE_BRACKET  shift, and go to state 89
 
@@ -913,6 +1210,8 @@ State 64
 
    12 arranjo_dimensao: arranjo_dimensao OPEN_BRACKET INT_NUMBER • CLOSE_BRACKET
    13                 | arranjo_dimensao OPEN_BRACKET INT_NUMBER • error
+  101                 | arranjo_dimensao OPEN_BRACKET INT_NUMBER • CLOSE_BRACKET
+  102                 | arranjo_dimensao OPEN_BRACKET INT_NUMBER • error
 
     error          shift, and go to state 90
     CLOSE_BRACKET  shift, and go to state 91
@@ -921,72 +1220,122 @@ State 64
 State 65
 
    36 temp: error •
+  110     | error •
 
-    $default  reduce using rule 36 (temp)
+    $end            reduce using rule 36 (temp)
+    $end            [reduce using rule 110 (temp)]
+    error           reduce using rule 36 (temp)
+    error           [reduce using rule 110 (temp)]
+    IDENTIFIER      reduce using rule 36 (temp)
+    IDENTIFIER      [reduce using rule 110 (temp)]
+    INT_NUMBER      reduce using rule 36 (temp)
+    INT_NUMBER      [reduce using rule 110 (temp)]
+    REAL_NUMBER     reduce using rule 36 (temp)
+    REAL_NUMBER     [reduce using rule 110 (temp)]
+    INT_TYPE        reduce using rule 36 (temp)
+    INT_TYPE        [reduce using rule 110 (temp)]
+    FLOAT_TYPE      reduce using rule 36 (temp)
+    FLOAT_TYPE      [reduce using rule 110 (temp)]
+    CHAR_TYPE       reduce using rule 36 (temp)
+    CHAR_TYPE       [reduce using rule 110 (temp)]
+    STRUCT_TYPE     reduce using rule 36 (temp)
+    STRUCT_TYPE     [reduce using rule 110 (temp)]
+    VOID_TYPE       reduce using rule 36 (temp)
+    VOID_TYPE       [reduce using rule 110 (temp)]
+    IF_KEYWORD      reduce using rule 36 (temp)
+    IF_KEYWORD      [reduce using rule 110 (temp)]
+    ELSE_KEYWORD    reduce using rule 36 (temp)
+    ELSE_KEYWORD    [reduce using rule 110 (temp)]
+    WHILE_KEYWORD   reduce using rule 36 (temp)
+    WHILE_KEYWORD   [reduce using rule 110 (temp)]
+    RETURN_KEYWORD  reduce using rule 36 (temp)
+    RETURN_KEYWORD  [reduce using rule 110 (temp)]
+    OPEN_BRACE      reduce using rule 36 (temp)
+    OPEN_BRACE      [reduce using rule 110 (temp)]
+    CLOSE_BRACE     reduce using rule 36 (temp)
+    CLOSE_BRACE     [reduce using rule 110 (temp)]
+    OPEN_PAREN      reduce using rule 36 (temp)
+    OPEN_PAREN      [reduce using rule 110 (temp)]
+    SEMICOLON       reduce using rule 36 (temp)
+    SEMICOLON       [reduce using rule 110 (temp)]
+    $default        reduce using rule 36 (temp)
 
 
 State 66
+
+   63 var: IDENTIFIER •
+   64    | IDENTIFIER • OPEN_BRACKET expressao CLOSE_BRACKET arranjo_acesso
+   65    | IDENTIFIER • OPEN_BRACKET expressao error arranjo_acesso
+   66    | IDENTIFIER • OPEN_BRACKET error CLOSE_BRACKET arranjo_acesso
+   94 ativacao: IDENTIFIER • OPEN_PAREN args CLOSE_PAREN
+   95         | IDENTIFIER • OPEN_PAREN args error
+
+    OPEN_PAREN    shift, and go to state 92
+    OPEN_BRACKET  shift, and go to state 93
+
+    $default  reduce using rule 63 (var)
+
+
+State 67
+
+   91 fator: INT_NUMBER •
+
+    $default  reduce using rule 91 (fator)
+
+
+State 68
+
+   90 fator: REAL_NUMBER •
+
+    $default  reduce using rule 90 (fator)
+
+
+State 69
 
    49 selecao_decl: IF_KEYWORD • OPEN_PAREN expressao CLOSE_PAREN comando
    50             | IF_KEYWORD • OPEN_PAREN expressao CLOSE_PAREN comando ELSE_KEYWORD comando
    51             | IF_KEYWORD • OPEN_PAREN expressao error comando
    52             | IF_KEYWORD • OPEN_PAREN error CLOSE_PAREN comando
    53             | IF_KEYWORD • error
-
-    error       shift, and go to state 92
-    OPEN_PAREN  shift, and go to state 93
-
-
-State 67
-
-   54 iteracao_decl: WHILE_KEYWORD • OPEN_PAREN expressao CLOSE_PAREN comando
-   55              | WHILE_KEYWORD • OPEN_PAREN expressao error comando
-   56              | WHILE_KEYWORD • OPEN_PAREN error CLOSE_PAREN comando
-   57              | WHILE_KEYWORD • error
+  123             | IF_KEYWORD • OPEN_PAREN expressao CLOSE_PAREN comando
+  124             | IF_KEYWORD • OPEN_PAREN expressao CLOSE_PAREN comando ELSE_KEYWORD comando
+  125             | IF_KEYWORD • OPEN_PAREN expressao error comando
+  126             | IF_KEYWORD • OPEN_PAREN error CLOSE_PAREN comando
+  127             | IF_KEYWORD • error
 
     error       shift, and go to state 94
     OPEN_PAREN  shift, and go to state 95
 
 
-State 68
+State 70
+
+   54 iteracao_decl: WHILE_KEYWORD • OPEN_PAREN expressao CLOSE_PAREN comando
+   55              | WHILE_KEYWORD • OPEN_PAREN expressao error comando
+   56              | WHILE_KEYWORD • OPEN_PAREN error CLOSE_PAREN comando
+   57              | WHILE_KEYWORD • error
+  128              | WHILE_KEYWORD • OPEN_PAREN expressao CLOSE_PAREN comando
+  129              | WHILE_KEYWORD • OPEN_PAREN expressao error comando
+  130              | WHILE_KEYWORD • OPEN_PAREN error CLOSE_PAREN comando
+  131              | WHILE_KEYWORD • error
+
+    error       shift, and go to state 96
+    OPEN_PAREN  shift, and go to state 97
+
+
+State 71
 
    58 retorno_decl: RETURN_KEYWORD • SEMICOLON
    59             | RETURN_KEYWORD • expressao SEMICOLON
    60             | RETURN_KEYWORD • expressao error
+  132             | RETURN_KEYWORD • SEMICOLON
+  133             | RETURN_KEYWORD • expressao SEMICOLON
+  134             | RETURN_KEYWORD • expressao error
 
-    OPEN_PAREN   shift, and go to state 70
-    SEMICOLON    shift, and go to state 96
-    IDENTIFIER   shift, and go to state 72
-    INT_NUMBER   shift, and go to state 73
-    REAL_NUMBER  shift, and go to state 74
-
-    expressao          go to state 97
-    var                go to state 83
-    expressao_simples  go to state 84
-    expressao_soma     go to state 85
-    termo              go to state 86
-    fator              go to state 87
-    ativacao           go to state 88
-
-
-State 69
-
-   35 temp: CLOSE_BRACE •
-
-    $default  reduce using rule 35 (temp)
-
-
-State 70
-
-   87 fator: OPEN_PAREN • expressao CLOSE_PAREN
-   92      | OPEN_PAREN • expressao error
-   93      | OPEN_PAREN • error CLOSE_PAREN
-
-    error        shift, and go to state 98
-    OPEN_PAREN   shift, and go to state 70
-    IDENTIFIER   shift, and go to state 72
-    INT_NUMBER   shift, and go to state 73
-    REAL_NUMBER  shift, and go to state 74
+    IDENTIFIER   shift, and go to state 66
+    INT_NUMBER   shift, and go to state 67
+    REAL_NUMBER  shift, and go to state 68
+    OPEN_PAREN   shift, and go to state 73
+    SEMICOLON    shift, and go to state 98
 
     expressao          go to state 99
     var                go to state 83
@@ -997,95 +1346,343 @@ State 70
     ativacao           go to state 88
 
 
-State 71
-
-   47 expressao_decl: SEMICOLON •
-
-    $default  reduce using rule 47 (expressao_decl)
-
-
 State 72
 
-   63 var: IDENTIFIER •
-   64    | IDENTIFIER • OPEN_BRACKET expressao CLOSE_BRACKET arranjo_acesso
-   65    | IDENTIFIER • OPEN_BRACKET expressao error arranjo_acesso
-   66    | IDENTIFIER • OPEN_BRACKET error CLOSE_BRACKET arranjo_acesso
-   94 ativacao: IDENTIFIER • OPEN_PAREN args CLOSE_PAREN
-   95         | IDENTIFIER • OPEN_PAREN args error
+   35 temp: CLOSE_BRACE •
+  109     | CLOSE_BRACE •
 
-    OPEN_PAREN    shift, and go to state 100
-    OPEN_BRACKET  shift, and go to state 101
-
-    $default  reduce using rule 63 (var)
+    $end            reduce using rule 35 (temp)
+    $end            [reduce using rule 109 (temp)]
+    error           reduce using rule 35 (temp)
+    error           [reduce using rule 109 (temp)]
+    IDENTIFIER      reduce using rule 35 (temp)
+    IDENTIFIER      [reduce using rule 109 (temp)]
+    INT_NUMBER      reduce using rule 35 (temp)
+    INT_NUMBER      [reduce using rule 109 (temp)]
+    REAL_NUMBER     reduce using rule 35 (temp)
+    REAL_NUMBER     [reduce using rule 109 (temp)]
+    INT_TYPE        reduce using rule 35 (temp)
+    INT_TYPE        [reduce using rule 109 (temp)]
+    FLOAT_TYPE      reduce using rule 35 (temp)
+    FLOAT_TYPE      [reduce using rule 109 (temp)]
+    CHAR_TYPE       reduce using rule 35 (temp)
+    CHAR_TYPE       [reduce using rule 109 (temp)]
+    STRUCT_TYPE     reduce using rule 35 (temp)
+    STRUCT_TYPE     [reduce using rule 109 (temp)]
+    VOID_TYPE       reduce using rule 35 (temp)
+    VOID_TYPE       [reduce using rule 109 (temp)]
+    IF_KEYWORD      reduce using rule 35 (temp)
+    IF_KEYWORD      [reduce using rule 109 (temp)]
+    ELSE_KEYWORD    reduce using rule 35 (temp)
+    ELSE_KEYWORD    [reduce using rule 109 (temp)]
+    WHILE_KEYWORD   reduce using rule 35 (temp)
+    WHILE_KEYWORD   [reduce using rule 109 (temp)]
+    RETURN_KEYWORD  reduce using rule 35 (temp)
+    RETURN_KEYWORD  [reduce using rule 109 (temp)]
+    OPEN_BRACE      reduce using rule 35 (temp)
+    OPEN_BRACE      [reduce using rule 109 (temp)]
+    CLOSE_BRACE     reduce using rule 35 (temp)
+    CLOSE_BRACE     [reduce using rule 109 (temp)]
+    OPEN_PAREN      reduce using rule 35 (temp)
+    OPEN_PAREN      [reduce using rule 109 (temp)]
+    SEMICOLON       reduce using rule 35 (temp)
+    SEMICOLON       [reduce using rule 109 (temp)]
+    $default        reduce using rule 35 (temp)
 
 
 State 73
 
-   91 fator: INT_NUMBER •
+   87 fator: OPEN_PAREN • expressao CLOSE_PAREN
+   92      | OPEN_PAREN • expressao error
+   93      | OPEN_PAREN • error CLOSE_PAREN
 
-    $default  reduce using rule 91 (fator)
+    error        shift, and go to state 100
+    IDENTIFIER   shift, and go to state 66
+    INT_NUMBER   shift, and go to state 67
+    REAL_NUMBER  shift, and go to state 68
+    OPEN_PAREN   shift, and go to state 73
+
+    expressao          go to state 101
+    var                go to state 83
+    expressao_simples  go to state 84
+    expressao_soma     go to state 85
+    termo              go to state 86
+    fator              go to state 87
+    ativacao           go to state 88
 
 
 State 74
 
-   90 fator: REAL_NUMBER •
+   47 expressao_decl: SEMICOLON •
+  121               | SEMICOLON •
 
-    $default  reduce using rule 90 (fator)
+    error           reduce using rule 47 (expressao_decl)
+    error           [reduce using rule 121 (expressao_decl)]
+    IDENTIFIER      reduce using rule 47 (expressao_decl)
+    IDENTIFIER      [reduce using rule 121 (expressao_decl)]
+    INT_NUMBER      reduce using rule 47 (expressao_decl)
+    INT_NUMBER      [reduce using rule 121 (expressao_decl)]
+    REAL_NUMBER     reduce using rule 47 (expressao_decl)
+    REAL_NUMBER     [reduce using rule 121 (expressao_decl)]
+    IF_KEYWORD      reduce using rule 47 (expressao_decl)
+    IF_KEYWORD      [reduce using rule 121 (expressao_decl)]
+    ELSE_KEYWORD    reduce using rule 47 (expressao_decl)
+    ELSE_KEYWORD    [reduce using rule 121 (expressao_decl)]
+    WHILE_KEYWORD   reduce using rule 47 (expressao_decl)
+    WHILE_KEYWORD   [reduce using rule 121 (expressao_decl)]
+    RETURN_KEYWORD  reduce using rule 47 (expressao_decl)
+    RETURN_KEYWORD  [reduce using rule 121 (expressao_decl)]
+    OPEN_BRACE      reduce using rule 47 (expressao_decl)
+    OPEN_BRACE      [reduce using rule 121 (expressao_decl)]
+    CLOSE_BRACE     reduce using rule 47 (expressao_decl)
+    CLOSE_BRACE     [reduce using rule 121 (expressao_decl)]
+    OPEN_PAREN      reduce using rule 47 (expressao_decl)
+    OPEN_PAREN      [reduce using rule 121 (expressao_decl)]
+    SEMICOLON       reduce using rule 47 (expressao_decl)
+    SEMICOLON       [reduce using rule 121 (expressao_decl)]
+    $default        reduce using rule 47 (expressao_decl)
 
 
 State 75
 
    42 comando: composto_decl •
+  116        | composto_decl •
 
-    $default  reduce using rule 42 (comando)
+    error           reduce using rule 42 (comando)
+    error           [reduce using rule 116 (comando)]
+    IDENTIFIER      reduce using rule 42 (comando)
+    IDENTIFIER      [reduce using rule 116 (comando)]
+    INT_NUMBER      reduce using rule 42 (comando)
+    INT_NUMBER      [reduce using rule 116 (comando)]
+    REAL_NUMBER     reduce using rule 42 (comando)
+    REAL_NUMBER     [reduce using rule 116 (comando)]
+    IF_KEYWORD      reduce using rule 42 (comando)
+    IF_KEYWORD      [reduce using rule 116 (comando)]
+    ELSE_KEYWORD    reduce using rule 42 (comando)
+    ELSE_KEYWORD    [reduce using rule 116 (comando)]
+    WHILE_KEYWORD   reduce using rule 42 (comando)
+    WHILE_KEYWORD   [reduce using rule 116 (comando)]
+    RETURN_KEYWORD  reduce using rule 42 (comando)
+    RETURN_KEYWORD  [reduce using rule 116 (comando)]
+    OPEN_BRACE      reduce using rule 42 (comando)
+    OPEN_BRACE      [reduce using rule 116 (comando)]
+    CLOSE_BRACE     reduce using rule 42 (comando)
+    CLOSE_BRACE     [reduce using rule 116 (comando)]
+    OPEN_PAREN      reduce using rule 42 (comando)
+    OPEN_PAREN      [reduce using rule 116 (comando)]
+    SEMICOLON       reduce using rule 42 (comando)
+    SEMICOLON       [reduce using rule 116 (comando)]
+    $default        reduce using rule 42 (comando)
 
 
 State 76
 
    34 composto_decl: OPEN_BRACE local_declaracoes comando_lista temp •
+  108              | OPEN_BRACE local_declaracoes comando_lista temp •
 
-    $default  reduce using rule 34 (composto_decl)
+    $end            reduce using rule 34 (composto_decl)
+    $end            [reduce using rule 108 (composto_decl)]
+    error           reduce using rule 34 (composto_decl)
+    error           [reduce using rule 108 (composto_decl)]
+    IDENTIFIER      reduce using rule 34 (composto_decl)
+    IDENTIFIER      [reduce using rule 108 (composto_decl)]
+    INT_NUMBER      reduce using rule 34 (composto_decl)
+    INT_NUMBER      [reduce using rule 108 (composto_decl)]
+    REAL_NUMBER     reduce using rule 34 (composto_decl)
+    REAL_NUMBER     [reduce using rule 108 (composto_decl)]
+    INT_TYPE        reduce using rule 34 (composto_decl)
+    INT_TYPE        [reduce using rule 108 (composto_decl)]
+    FLOAT_TYPE      reduce using rule 34 (composto_decl)
+    FLOAT_TYPE      [reduce using rule 108 (composto_decl)]
+    CHAR_TYPE       reduce using rule 34 (composto_decl)
+    CHAR_TYPE       [reduce using rule 108 (composto_decl)]
+    STRUCT_TYPE     reduce using rule 34 (composto_decl)
+    STRUCT_TYPE     [reduce using rule 108 (composto_decl)]
+    VOID_TYPE       reduce using rule 34 (composto_decl)
+    VOID_TYPE       [reduce using rule 108 (composto_decl)]
+    IF_KEYWORD      reduce using rule 34 (composto_decl)
+    IF_KEYWORD      [reduce using rule 108 (composto_decl)]
+    ELSE_KEYWORD    reduce using rule 34 (composto_decl)
+    ELSE_KEYWORD    [reduce using rule 108 (composto_decl)]
+    WHILE_KEYWORD   reduce using rule 34 (composto_decl)
+    WHILE_KEYWORD   [reduce using rule 108 (composto_decl)]
+    RETURN_KEYWORD  reduce using rule 34 (composto_decl)
+    RETURN_KEYWORD  [reduce using rule 108 (composto_decl)]
+    OPEN_BRACE      reduce using rule 34 (composto_decl)
+    OPEN_BRACE      [reduce using rule 108 (composto_decl)]
+    CLOSE_BRACE     reduce using rule 34 (composto_decl)
+    CLOSE_BRACE     [reduce using rule 108 (composto_decl)]
+    OPEN_PAREN      reduce using rule 34 (composto_decl)
+    OPEN_PAREN      [reduce using rule 108 (composto_decl)]
+    SEMICOLON       reduce using rule 34 (composto_decl)
+    SEMICOLON       [reduce using rule 108 (composto_decl)]
+    $default        reduce using rule 34 (composto_decl)
 
 
 State 77
 
    40 comando_lista: comando_lista comando •
+  114              | comando_lista comando •
 
-    $default  reduce using rule 40 (comando_lista)
+    error           reduce using rule 40 (comando_lista)
+    error           [reduce using rule 114 (comando_lista)]
+    IDENTIFIER      reduce using rule 40 (comando_lista)
+    IDENTIFIER      [reduce using rule 114 (comando_lista)]
+    INT_NUMBER      reduce using rule 40 (comando_lista)
+    INT_NUMBER      [reduce using rule 114 (comando_lista)]
+    REAL_NUMBER     reduce using rule 40 (comando_lista)
+    REAL_NUMBER     [reduce using rule 114 (comando_lista)]
+    IF_KEYWORD      reduce using rule 40 (comando_lista)
+    IF_KEYWORD      [reduce using rule 114 (comando_lista)]
+    WHILE_KEYWORD   reduce using rule 40 (comando_lista)
+    WHILE_KEYWORD   [reduce using rule 114 (comando_lista)]
+    RETURN_KEYWORD  reduce using rule 40 (comando_lista)
+    RETURN_KEYWORD  [reduce using rule 114 (comando_lista)]
+    OPEN_BRACE      reduce using rule 40 (comando_lista)
+    OPEN_BRACE      [reduce using rule 114 (comando_lista)]
+    CLOSE_BRACE     reduce using rule 40 (comando_lista)
+    CLOSE_BRACE     [reduce using rule 114 (comando_lista)]
+    OPEN_PAREN      reduce using rule 40 (comando_lista)
+    OPEN_PAREN      [reduce using rule 114 (comando_lista)]
+    SEMICOLON       reduce using rule 40 (comando_lista)
+    SEMICOLON       [reduce using rule 114 (comando_lista)]
+    $default        reduce using rule 40 (comando_lista)
 
 
 State 78
 
    41 comando: expressao_decl •
+  115        | expressao_decl •
 
-    $default  reduce using rule 41 (comando)
+    error           reduce using rule 41 (comando)
+    error           [reduce using rule 115 (comando)]
+    IDENTIFIER      reduce using rule 41 (comando)
+    IDENTIFIER      [reduce using rule 115 (comando)]
+    INT_NUMBER      reduce using rule 41 (comando)
+    INT_NUMBER      [reduce using rule 115 (comando)]
+    REAL_NUMBER     reduce using rule 41 (comando)
+    REAL_NUMBER     [reduce using rule 115 (comando)]
+    IF_KEYWORD      reduce using rule 41 (comando)
+    IF_KEYWORD      [reduce using rule 115 (comando)]
+    ELSE_KEYWORD    reduce using rule 41 (comando)
+    ELSE_KEYWORD    [reduce using rule 115 (comando)]
+    WHILE_KEYWORD   reduce using rule 41 (comando)
+    WHILE_KEYWORD   [reduce using rule 115 (comando)]
+    RETURN_KEYWORD  reduce using rule 41 (comando)
+    RETURN_KEYWORD  [reduce using rule 115 (comando)]
+    OPEN_BRACE      reduce using rule 41 (comando)
+    OPEN_BRACE      [reduce using rule 115 (comando)]
+    CLOSE_BRACE     reduce using rule 41 (comando)
+    CLOSE_BRACE     [reduce using rule 115 (comando)]
+    OPEN_PAREN      reduce using rule 41 (comando)
+    OPEN_PAREN      [reduce using rule 115 (comando)]
+    SEMICOLON       reduce using rule 41 (comando)
+    SEMICOLON       [reduce using rule 115 (comando)]
+    $default        reduce using rule 41 (comando)
 
 
 State 79
 
    43 comando: selecao_decl •
+  117        | selecao_decl •
 
-    $default  reduce using rule 43 (comando)
+    error           reduce using rule 43 (comando)
+    error           [reduce using rule 117 (comando)]
+    IDENTIFIER      reduce using rule 43 (comando)
+    IDENTIFIER      [reduce using rule 117 (comando)]
+    INT_NUMBER      reduce using rule 43 (comando)
+    INT_NUMBER      [reduce using rule 117 (comando)]
+    REAL_NUMBER     reduce using rule 43 (comando)
+    REAL_NUMBER     [reduce using rule 117 (comando)]
+    IF_KEYWORD      reduce using rule 43 (comando)
+    IF_KEYWORD      [reduce using rule 117 (comando)]
+    ELSE_KEYWORD    reduce using rule 43 (comando)
+    ELSE_KEYWORD    [reduce using rule 117 (comando)]
+    WHILE_KEYWORD   reduce using rule 43 (comando)
+    WHILE_KEYWORD   [reduce using rule 117 (comando)]
+    RETURN_KEYWORD  reduce using rule 43 (comando)
+    RETURN_KEYWORD  [reduce using rule 117 (comando)]
+    OPEN_BRACE      reduce using rule 43 (comando)
+    OPEN_BRACE      [reduce using rule 117 (comando)]
+    CLOSE_BRACE     reduce using rule 43 (comando)
+    CLOSE_BRACE     [reduce using rule 117 (comando)]
+    OPEN_PAREN      reduce using rule 43 (comando)
+    OPEN_PAREN      [reduce using rule 117 (comando)]
+    SEMICOLON       reduce using rule 43 (comando)
+    SEMICOLON       [reduce using rule 117 (comando)]
+    $default        reduce using rule 43 (comando)
 
 
 State 80
 
    44 comando: iteracao_decl •
+  118        | iteracao_decl •
 
-    $default  reduce using rule 44 (comando)
+    error           reduce using rule 44 (comando)
+    error           [reduce using rule 118 (comando)]
+    IDENTIFIER      reduce using rule 44 (comando)
+    IDENTIFIER      [reduce using rule 118 (comando)]
+    INT_NUMBER      reduce using rule 44 (comando)
+    INT_NUMBER      [reduce using rule 118 (comando)]
+    REAL_NUMBER     reduce using rule 44 (comando)
+    REAL_NUMBER     [reduce using rule 118 (comando)]
+    IF_KEYWORD      reduce using rule 44 (comando)
+    IF_KEYWORD      [reduce using rule 118 (comando)]
+    ELSE_KEYWORD    reduce using rule 44 (comando)
+    ELSE_KEYWORD    [reduce using rule 118 (comando)]
+    WHILE_KEYWORD   reduce using rule 44 (comando)
+    WHILE_KEYWORD   [reduce using rule 118 (comando)]
+    RETURN_KEYWORD  reduce using rule 44 (comando)
+    RETURN_KEYWORD  [reduce using rule 118 (comando)]
+    OPEN_BRACE      reduce using rule 44 (comando)
+    OPEN_BRACE      [reduce using rule 118 (comando)]
+    CLOSE_BRACE     reduce using rule 44 (comando)
+    CLOSE_BRACE     [reduce using rule 118 (comando)]
+    OPEN_PAREN      reduce using rule 44 (comando)
+    OPEN_PAREN      [reduce using rule 118 (comando)]
+    SEMICOLON       reduce using rule 44 (comando)
+    SEMICOLON       [reduce using rule 118 (comando)]
+    $default        reduce using rule 44 (comando)
 
 
 State 81
 
    45 comando: retorno_decl •
+  119        | retorno_decl •
 
-    $default  reduce using rule 45 (comando)
+    error           reduce using rule 45 (comando)
+    error           [reduce using rule 119 (comando)]
+    IDENTIFIER      reduce using rule 45 (comando)
+    IDENTIFIER      [reduce using rule 119 (comando)]
+    INT_NUMBER      reduce using rule 45 (comando)
+    INT_NUMBER      [reduce using rule 119 (comando)]
+    REAL_NUMBER     reduce using rule 45 (comando)
+    REAL_NUMBER     [reduce using rule 119 (comando)]
+    IF_KEYWORD      reduce using rule 45 (comando)
+    IF_KEYWORD      [reduce using rule 119 (comando)]
+    ELSE_KEYWORD    reduce using rule 45 (comando)
+    ELSE_KEYWORD    [reduce using rule 119 (comando)]
+    WHILE_KEYWORD   reduce using rule 45 (comando)
+    WHILE_KEYWORD   [reduce using rule 119 (comando)]
+    RETURN_KEYWORD  reduce using rule 45 (comando)
+    RETURN_KEYWORD  [reduce using rule 119 (comando)]
+    OPEN_BRACE      reduce using rule 45 (comando)
+    OPEN_BRACE      [reduce using rule 119 (comando)]
+    CLOSE_BRACE     reduce using rule 45 (comando)
+    CLOSE_BRACE     [reduce using rule 119 (comando)]
+    OPEN_PAREN      reduce using rule 45 (comando)
+    OPEN_PAREN      [reduce using rule 119 (comando)]
+    SEMICOLON       reduce using rule 45 (comando)
+    SEMICOLON       [reduce using rule 119 (comando)]
+    $default        reduce using rule 45 (comando)
 
 
 State 82
 
    46 expressao_decl: expressao • SEMICOLON
    48               | expressao • error
+  120               | expressao • SEMICOLON
+  122               | expressao • error
 
     error      shift, and go to state 102
     SEMICOLON  shift, and go to state 103
@@ -1113,6 +1710,9 @@ State 85
    71 expressao_simples: expressao_soma •
    72                  | expressao_soma • relacional expressao_soma
    80 expressao_soma: expressao_soma • soma_op termo
+  135 expressao_simples: expressao_soma •
+  136                  | expressao_soma • relacional expressao_soma
+  144 expressao_soma: expressao_soma • soma_op termo
 
     PLUS_OP   shift, and go to state 105
     MINUS_OP  shift, and go to state 106
@@ -1123,7 +1723,17 @@ State 85
     GT_OP     shift, and go to state 111
     GE_OP     shift, and go to state 112
 
-    $default  reduce using rule 71 (expressao_simples)
+    error          reduce using rule 71 (expressao_simples)
+    error          [reduce using rule 135 (expressao_simples)]
+    CLOSE_PAREN    reduce using rule 71 (expressao_simples)
+    CLOSE_PAREN    [reduce using rule 135 (expressao_simples)]
+    CLOSE_BRACKET  reduce using rule 71 (expressao_simples)
+    CLOSE_BRACKET  [reduce using rule 135 (expressao_simples)]
+    SEMICOLON      reduce using rule 71 (expressao_simples)
+    SEMICOLON      [reduce using rule 135 (expressao_simples)]
+    COMMA          reduce using rule 71 (expressao_simples)
+    COMMA          [reduce using rule 135 (expressao_simples)]
+    $default       reduce using rule 71 (expressao_simples)
 
     relacional  go to state 113
     soma_op     go to state 114
@@ -1133,11 +1743,39 @@ State 86
 
    79 expressao_soma: termo •
    84 termo: termo • mult_op fator
+  143 expressao_soma: termo •
+  148 termo: termo • mult_op fator
 
     MULT_OP  shift, and go to state 115
     DIV_OP   shift, and go to state 116
 
-    $default  reduce using rule 79 (expressao_soma)
+    error          reduce using rule 79 (expressao_soma)
+    error          [reduce using rule 143 (expressao_soma)]
+    PLUS_OP        reduce using rule 79 (expressao_soma)
+    PLUS_OP        [reduce using rule 143 (expressao_soma)]
+    MINUS_OP       reduce using rule 79 (expressao_soma)
+    MINUS_OP       [reduce using rule 143 (expressao_soma)]
+    EQUAL_OP       reduce using rule 79 (expressao_soma)
+    EQUAL_OP       [reduce using rule 143 (expressao_soma)]
+    NE_OP          reduce using rule 79 (expressao_soma)
+    NE_OP          [reduce using rule 143 (expressao_soma)]
+    LT_OP          reduce using rule 79 (expressao_soma)
+    LT_OP          [reduce using rule 143 (expressao_soma)]
+    LE_OP          reduce using rule 79 (expressao_soma)
+    LE_OP          [reduce using rule 143 (expressao_soma)]
+    GT_OP          reduce using rule 79 (expressao_soma)
+    GT_OP          [reduce using rule 143 (expressao_soma)]
+    GE_OP          reduce using rule 79 (expressao_soma)
+    GE_OP          [reduce using rule 143 (expressao_soma)]
+    CLOSE_PAREN    reduce using rule 79 (expressao_soma)
+    CLOSE_PAREN    [reduce using rule 143 (expressao_soma)]
+    CLOSE_BRACKET  reduce using rule 79 (expressao_soma)
+    CLOSE_BRACKET  [reduce using rule 143 (expressao_soma)]
+    SEMICOLON      reduce using rule 79 (expressao_soma)
+    SEMICOLON      [reduce using rule 143 (expressao_soma)]
+    COMMA          reduce using rule 79 (expressao_soma)
+    COMMA          [reduce using rule 143 (expressao_soma)]
+    $default       reduce using rule 79 (expressao_soma)
 
     mult_op  go to state 117
 
@@ -1145,8 +1783,39 @@ State 86
 State 87
 
    83 termo: fator •
+  147      | fator •
 
-    $default  reduce using rule 83 (termo)
+    error          reduce using rule 83 (termo)
+    error          [reduce using rule 147 (termo)]
+    PLUS_OP        reduce using rule 83 (termo)
+    PLUS_OP        [reduce using rule 147 (termo)]
+    MINUS_OP       reduce using rule 83 (termo)
+    MINUS_OP       [reduce using rule 147 (termo)]
+    MULT_OP        reduce using rule 83 (termo)
+    MULT_OP        [reduce using rule 147 (termo)]
+    DIV_OP         reduce using rule 83 (termo)
+    DIV_OP         [reduce using rule 147 (termo)]
+    EQUAL_OP       reduce using rule 83 (termo)
+    EQUAL_OP       [reduce using rule 147 (termo)]
+    NE_OP          reduce using rule 83 (termo)
+    NE_OP          [reduce using rule 147 (termo)]
+    LT_OP          reduce using rule 83 (termo)
+    LT_OP          [reduce using rule 147 (termo)]
+    LE_OP          reduce using rule 83 (termo)
+    LE_OP          [reduce using rule 147 (termo)]
+    GT_OP          reduce using rule 83 (termo)
+    GT_OP          [reduce using rule 147 (termo)]
+    GE_OP          reduce using rule 83 (termo)
+    GE_OP          [reduce using rule 147 (termo)]
+    CLOSE_PAREN    reduce using rule 83 (termo)
+    CLOSE_PAREN    [reduce using rule 147 (termo)]
+    CLOSE_BRACKET  reduce using rule 83 (termo)
+    CLOSE_BRACKET  [reduce using rule 147 (termo)]
+    SEMICOLON      reduce using rule 83 (termo)
+    SEMICOLON      [reduce using rule 147 (termo)]
+    COMMA          reduce using rule 83 (termo)
+    COMMA          [reduce using rule 147 (termo)]
+    $default       reduce using rule 83 (termo)
 
 
 State 88
@@ -1159,45 +1828,75 @@ State 88
 State 89
 
    14 arranjo_dimensao: arranjo_dimensao OPEN_BRACKET error CLOSE_BRACKET •
+  103                 | arranjo_dimensao OPEN_BRACKET error CLOSE_BRACKET •
 
-    $default  reduce using rule 14 (arranjo_dimensao)
+    OPEN_BRACKET  reduce using rule 14 (arranjo_dimensao)
+    OPEN_BRACKET  [reduce using rule 103 (arranjo_dimensao)]
+    SEMICOLON     reduce using rule 14 (arranjo_dimensao)
+    SEMICOLON     [reduce using rule 103 (arranjo_dimensao)]
+    $default      reduce using rule 14 (arranjo_dimensao)
 
 
 State 90
 
    13 arranjo_dimensao: arranjo_dimensao OPEN_BRACKET INT_NUMBER error •
+  102                 | arranjo_dimensao OPEN_BRACKET INT_NUMBER error •
 
-    $default  reduce using rule 13 (arranjo_dimensao)
+    OPEN_BRACKET  reduce using rule 13 (arranjo_dimensao)
+    OPEN_BRACKET  [reduce using rule 102 (arranjo_dimensao)]
+    SEMICOLON     reduce using rule 13 (arranjo_dimensao)
+    SEMICOLON     [reduce using rule 102 (arranjo_dimensao)]
+    $default      reduce using rule 13 (arranjo_dimensao)
 
 
 State 91
 
    12 arranjo_dimensao: arranjo_dimensao OPEN_BRACKET INT_NUMBER CLOSE_BRACKET •
+  101                 | arranjo_dimensao OPEN_BRACKET INT_NUMBER CLOSE_BRACKET •
 
-    $default  reduce using rule 12 (arranjo_dimensao)
+    OPEN_BRACKET  reduce using rule 12 (arranjo_dimensao)
+    OPEN_BRACKET  [reduce using rule 101 (arranjo_dimensao)]
+    SEMICOLON     reduce using rule 12 (arranjo_dimensao)
+    SEMICOLON     [reduce using rule 101 (arranjo_dimensao)]
+    $default      reduce using rule 12 (arranjo_dimensao)
 
 
 State 92
 
-   53 selecao_decl: IF_KEYWORD error •
+   94 ativacao: IDENTIFIER OPEN_PAREN • args CLOSE_PAREN
+   95         | IDENTIFIER OPEN_PAREN • args error
 
-    $default  reduce using rule 53 (selecao_decl)
+    IDENTIFIER   shift, and go to state 66
+    INT_NUMBER   shift, and go to state 67
+    REAL_NUMBER  shift, and go to state 68
+    OPEN_PAREN   shift, and go to state 73
+
+    $default  reduce using rule 96 (args)
+
+    expressao          go to state 118
+    var                go to state 83
+    expressao_simples  go to state 84
+    expressao_soma     go to state 85
+    termo              go to state 86
+    fator              go to state 87
+    ativacao           go to state 88
+    args               go to state 119
+    arg_lista          go to state 120
 
 
 State 93
 
-   49 selecao_decl: IF_KEYWORD OPEN_PAREN • expressao CLOSE_PAREN comando
-   50             | IF_KEYWORD OPEN_PAREN • expressao CLOSE_PAREN comando ELSE_KEYWORD comando
-   51             | IF_KEYWORD OPEN_PAREN • expressao error comando
-   52             | IF_KEYWORD OPEN_PAREN • error CLOSE_PAREN comando
+   64 var: IDENTIFIER OPEN_BRACKET • expressao CLOSE_BRACKET arranjo_acesso
+   65    | IDENTIFIER OPEN_BRACKET • expressao error arranjo_acesso
+   66    | IDENTIFIER OPEN_BRACKET • error CLOSE_BRACKET arranjo_acesso
 
-    error        shift, and go to state 118
-    OPEN_PAREN   shift, and go to state 70
-    IDENTIFIER   shift, and go to state 72
-    INT_NUMBER   shift, and go to state 73
-    REAL_NUMBER  shift, and go to state 74
+    error        shift, and go to state 121
+    IDENTIFIER   shift, and go to state 66
+    INT_NUMBER   shift, and go to state 67
+    REAL_NUMBER  shift, and go to state 68
+    OPEN_PAREN   shift, and go to state 73
 
-    expressao          go to state 119
+    expressao          go to state 122
     var                go to state 83
     expressao_simples  go to state 84
     expressao_soma     go to state 85
@@ -1208,24 +1907,54 @@ State 93
 
 State 94
 
-   57 iteracao_decl: WHILE_KEYWORD error •
+   53 selecao_decl: IF_KEYWORD error •
+  127             | IF_KEYWORD error •
 
-    $default  reduce using rule 57 (iteracao_decl)
+    error           reduce using rule 53 (selecao_decl)
+    error           [reduce using rule 127 (selecao_decl)]
+    IDENTIFIER      reduce using rule 53 (selecao_decl)
+    IDENTIFIER      [reduce using rule 127 (selecao_decl)]
+    INT_NUMBER      reduce using rule 53 (selecao_decl)
+    INT_NUMBER      [reduce using rule 127 (selecao_decl)]
+    REAL_NUMBER     reduce using rule 53 (selecao_decl)
+    REAL_NUMBER     [reduce using rule 127 (selecao_decl)]
+    IF_KEYWORD      reduce using rule 53 (selecao_decl)
+    IF_KEYWORD      [reduce using rule 127 (selecao_decl)]
+    ELSE_KEYWORD    reduce using rule 53 (selecao_decl)
+    ELSE_KEYWORD    [reduce using rule 127 (selecao_decl)]
+    WHILE_KEYWORD   reduce using rule 53 (selecao_decl)
+    WHILE_KEYWORD   [reduce using rule 127 (selecao_decl)]
+    RETURN_KEYWORD  reduce using rule 53 (selecao_decl)
+    RETURN_KEYWORD  [reduce using rule 127 (selecao_decl)]
+    OPEN_BRACE      reduce using rule 53 (selecao_decl)
+    OPEN_BRACE      [reduce using rule 127 (selecao_decl)]
+    CLOSE_BRACE     reduce using rule 53 (selecao_decl)
+    CLOSE_BRACE     [reduce using rule 127 (selecao_decl)]
+    OPEN_PAREN      reduce using rule 53 (selecao_decl)
+    OPEN_PAREN      [reduce using rule 127 (selecao_decl)]
+    SEMICOLON       reduce using rule 53 (selecao_decl)
+    SEMICOLON       [reduce using rule 127 (selecao_decl)]
+    $default        reduce using rule 53 (selecao_decl)
 
 
 State 95
 
-   54 iteracao_decl: WHILE_KEYWORD OPEN_PAREN • expressao CLOSE_PAREN comando
-   55              | WHILE_KEYWORD OPEN_PAREN • expressao error comando
-   56              | WHILE_KEYWORD OPEN_PAREN • error CLOSE_PAREN comando
+   49 selecao_decl: IF_KEYWORD OPEN_PAREN • expressao CLOSE_PAREN comando
+   50             | IF_KEYWORD OPEN_PAREN • expressao CLOSE_PAREN comando ELSE_KEYWORD comando
+   51             | IF_KEYWORD OPEN_PAREN • expressao error comando
+   52             | IF_KEYWORD OPEN_PAREN • error CLOSE_PAREN comando
+  123             | IF_KEYWORD OPEN_PAREN • expressao CLOSE_PAREN comando
+  124             | IF_KEYWORD OPEN_PAREN • expressao CLOSE_PAREN comando ELSE_KEYWORD comando
+  125             | IF_KEYWORD OPEN_PAREN • expressao error comando
+  126             | IF_KEYWORD OPEN_PAREN • error CLOSE_PAREN comando
 
-    error        shift, and go to state 120
-    OPEN_PAREN   shift, and go to state 70
-    IDENTIFIER   shift, and go to state 72
-    INT_NUMBER   shift, and go to state 73
-    REAL_NUMBER  shift, and go to state 74
+    error        shift, and go to state 123
+    IDENTIFIER   shift, and go to state 66
+    INT_NUMBER   shift, and go to state 67
+    REAL_NUMBER  shift, and go to state 68
+    OPEN_PAREN   shift, and go to state 73
 
-    expressao          go to state 121
+    expressao          go to state 124
     var                go to state 83
     expressao_simples  go to state 84
     expressao_soma     go to state 85
@@ -1236,102 +1965,191 @@ State 95
 
 State 96
 
-   58 retorno_decl: RETURN_KEYWORD SEMICOLON •
+   57 iteracao_decl: WHILE_KEYWORD error •
+  131              | WHILE_KEYWORD error •
 
-    $default  reduce using rule 58 (retorno_decl)
+    error           reduce using rule 57 (iteracao_decl)
+    error           [reduce using rule 131 (iteracao_decl)]
+    IDENTIFIER      reduce using rule 57 (iteracao_decl)
+    IDENTIFIER      [reduce using rule 131 (iteracao_decl)]
+    INT_NUMBER      reduce using rule 57 (iteracao_decl)
+    INT_NUMBER      [reduce using rule 131 (iteracao_decl)]
+    REAL_NUMBER     reduce using rule 57 (iteracao_decl)
+    REAL_NUMBER     [reduce using rule 131 (iteracao_decl)]
+    IF_KEYWORD      reduce using rule 57 (iteracao_decl)
+    IF_KEYWORD      [reduce using rule 131 (iteracao_decl)]
+    ELSE_KEYWORD    reduce using rule 57 (iteracao_decl)
+    ELSE_KEYWORD    [reduce using rule 131 (iteracao_decl)]
+    WHILE_KEYWORD   reduce using rule 57 (iteracao_decl)
+    WHILE_KEYWORD   [reduce using rule 131 (iteracao_decl)]
+    RETURN_KEYWORD  reduce using rule 57 (iteracao_decl)
+    RETURN_KEYWORD  [reduce using rule 131 (iteracao_decl)]
+    OPEN_BRACE      reduce using rule 57 (iteracao_decl)
+    OPEN_BRACE      [reduce using rule 131 (iteracao_decl)]
+    CLOSE_BRACE     reduce using rule 57 (iteracao_decl)
+    CLOSE_BRACE     [reduce using rule 131 (iteracao_decl)]
+    OPEN_PAREN      reduce using rule 57 (iteracao_decl)
+    OPEN_PAREN      [reduce using rule 131 (iteracao_decl)]
+    SEMICOLON       reduce using rule 57 (iteracao_decl)
+    SEMICOLON       [reduce using rule 131 (iteracao_decl)]
+    $default        reduce using rule 57 (iteracao_decl)
 
 
 State 97
 
-   59 retorno_decl: RETURN_KEYWORD expressao • SEMICOLON
-   60             | RETURN_KEYWORD expressao • error
+   54 iteracao_decl: WHILE_KEYWORD OPEN_PAREN • expressao CLOSE_PAREN comando
+   55              | WHILE_KEYWORD OPEN_PAREN • expressao error comando
+   56              | WHILE_KEYWORD OPEN_PAREN • error CLOSE_PAREN comando
+  128              | WHILE_KEYWORD OPEN_PAREN • expressao CLOSE_PAREN comando
+  129              | WHILE_KEYWORD OPEN_PAREN • expressao error comando
+  130              | WHILE_KEYWORD OPEN_PAREN • error CLOSE_PAREN comando
 
-    error      shift, and go to state 122
-    SEMICOLON  shift, and go to state 123
+    error        shift, and go to state 125
+    IDENTIFIER   shift, and go to state 66
+    INT_NUMBER   shift, and go to state 67
+    REAL_NUMBER  shift, and go to state 68
+    OPEN_PAREN   shift, and go to state 73
+
+    expressao          go to state 126
+    var                go to state 83
+    expressao_simples  go to state 84
+    expressao_soma     go to state 85
+    termo              go to state 86
+    fator              go to state 87
+    ativacao           go to state 88
 
 
 State 98
 
-   93 fator: OPEN_PAREN error • CLOSE_PAREN
+   58 retorno_decl: RETURN_KEYWORD SEMICOLON •
+  132             | RETURN_KEYWORD SEMICOLON •
 
-    CLOSE_PAREN  shift, and go to state 124
+    error           reduce using rule 58 (retorno_decl)
+    error           [reduce using rule 132 (retorno_decl)]
+    IDENTIFIER      reduce using rule 58 (retorno_decl)
+    IDENTIFIER      [reduce using rule 132 (retorno_decl)]
+    INT_NUMBER      reduce using rule 58 (retorno_decl)
+    INT_NUMBER      [reduce using rule 132 (retorno_decl)]
+    REAL_NUMBER     reduce using rule 58 (retorno_decl)
+    REAL_NUMBER     [reduce using rule 132 (retorno_decl)]
+    IF_KEYWORD      reduce using rule 58 (retorno_decl)
+    IF_KEYWORD      [reduce using rule 132 (retorno_decl)]
+    ELSE_KEYWORD    reduce using rule 58 (retorno_decl)
+    ELSE_KEYWORD    [reduce using rule 132 (retorno_decl)]
+    WHILE_KEYWORD   reduce using rule 58 (retorno_decl)
+    WHILE_KEYWORD   [reduce using rule 132 (retorno_decl)]
+    RETURN_KEYWORD  reduce using rule 58 (retorno_decl)
+    RETURN_KEYWORD  [reduce using rule 132 (retorno_decl)]
+    OPEN_BRACE      reduce using rule 58 (retorno_decl)
+    OPEN_BRACE      [reduce using rule 132 (retorno_decl)]
+    CLOSE_BRACE     reduce using rule 58 (retorno_decl)
+    CLOSE_BRACE     [reduce using rule 132 (retorno_decl)]
+    OPEN_PAREN      reduce using rule 58 (retorno_decl)
+    OPEN_PAREN      [reduce using rule 132 (retorno_decl)]
+    SEMICOLON       reduce using rule 58 (retorno_decl)
+    SEMICOLON       [reduce using rule 132 (retorno_decl)]
+    $default        reduce using rule 58 (retorno_decl)
 
 
 State 99
 
-   87 fator: OPEN_PAREN expressao • CLOSE_PAREN
-   92      | OPEN_PAREN expressao • error
+   59 retorno_decl: RETURN_KEYWORD expressao • SEMICOLON
+   60             | RETURN_KEYWORD expressao • error
+  133             | RETURN_KEYWORD expressao • SEMICOLON
+  134             | RETURN_KEYWORD expressao • error
 
-    error        shift, and go to state 125
-    CLOSE_PAREN  shift, and go to state 126
+    error      shift, and go to state 127
+    SEMICOLON  shift, and go to state 128
 
 
 State 100
 
-   94 ativacao: IDENTIFIER OPEN_PAREN • args CLOSE_PAREN
-   95         | IDENTIFIER OPEN_PAREN • args error
+   93 fator: OPEN_PAREN error • CLOSE_PAREN
 
-    OPEN_PAREN   shift, and go to state 70
-    IDENTIFIER   shift, and go to state 72
-    INT_NUMBER   shift, and go to state 73
-    REAL_NUMBER  shift, and go to state 74
-
-    $default  reduce using rule 96 (args)
-
-    expressao          go to state 127
-    var                go to state 83
-    expressao_simples  go to state 84
-    expressao_soma     go to state 85
-    termo              go to state 86
-    fator              go to state 87
-    ativacao           go to state 88
-    args               go to state 128
-    arg_lista          go to state 129
+    CLOSE_PAREN  shift, and go to state 129
 
 
 State 101
 
-   64 var: IDENTIFIER OPEN_BRACKET • expressao CLOSE_BRACKET arranjo_acesso
-   65    | IDENTIFIER OPEN_BRACKET • expressao error arranjo_acesso
-   66    | IDENTIFIER OPEN_BRACKET • error CLOSE_BRACKET arranjo_acesso
+   87 fator: OPEN_PAREN expressao • CLOSE_PAREN
+   92      | OPEN_PAREN expressao • error
 
     error        shift, and go to state 130
-    OPEN_PAREN   shift, and go to state 70
-    IDENTIFIER   shift, and go to state 72
-    INT_NUMBER   shift, and go to state 73
-    REAL_NUMBER  shift, and go to state 74
-
-    expressao          go to state 131
-    var                go to state 83
-    expressao_simples  go to state 84
-    expressao_soma     go to state 85
-    termo              go to state 86
-    fator              go to state 87
-    ativacao           go to state 88
+    CLOSE_PAREN  shift, and go to state 131
 
 
 State 102
 
    48 expressao_decl: expressao error •
+  122               | expressao error •
 
-    $default  reduce using rule 48 (expressao_decl)
+    error           reduce using rule 48 (expressao_decl)
+    error           [reduce using rule 122 (expressao_decl)]
+    IDENTIFIER      reduce using rule 48 (expressao_decl)
+    IDENTIFIER      [reduce using rule 122 (expressao_decl)]
+    INT_NUMBER      reduce using rule 48 (expressao_decl)
+    INT_NUMBER      [reduce using rule 122 (expressao_decl)]
+    REAL_NUMBER     reduce using rule 48 (expressao_decl)
+    REAL_NUMBER     [reduce using rule 122 (expressao_decl)]
+    IF_KEYWORD      reduce using rule 48 (expressao_decl)
+    IF_KEYWORD      [reduce using rule 122 (expressao_decl)]
+    ELSE_KEYWORD    reduce using rule 48 (expressao_decl)
+    ELSE_KEYWORD    [reduce using rule 122 (expressao_decl)]
+    WHILE_KEYWORD   reduce using rule 48 (expressao_decl)
+    WHILE_KEYWORD   [reduce using rule 122 (expressao_decl)]
+    RETURN_KEYWORD  reduce using rule 48 (expressao_decl)
+    RETURN_KEYWORD  [reduce using rule 122 (expressao_decl)]
+    OPEN_BRACE      reduce using rule 48 (expressao_decl)
+    OPEN_BRACE      [reduce using rule 122 (expressao_decl)]
+    CLOSE_BRACE     reduce using rule 48 (expressao_decl)
+    CLOSE_BRACE     [reduce using rule 122 (expressao_decl)]
+    OPEN_PAREN      reduce using rule 48 (expressao_decl)
+    OPEN_PAREN      [reduce using rule 122 (expressao_decl)]
+    SEMICOLON       reduce using rule 48 (expressao_decl)
+    SEMICOLON       [reduce using rule 122 (expressao_decl)]
+    $default        reduce using rule 48 (expressao_decl)
 
 
 State 103
 
    46 expressao_decl: expressao SEMICOLON •
+  120               | expressao SEMICOLON •
 
-    $default  reduce using rule 46 (expressao_decl)
+    error           reduce using rule 46 (expressao_decl)
+    error           [reduce using rule 120 (expressao_decl)]
+    IDENTIFIER      reduce using rule 46 (expressao_decl)
+    IDENTIFIER      [reduce using rule 120 (expressao_decl)]
+    INT_NUMBER      reduce using rule 46 (expressao_decl)
+    INT_NUMBER      [reduce using rule 120 (expressao_decl)]
+    REAL_NUMBER     reduce using rule 46 (expressao_decl)
+    REAL_NUMBER     [reduce using rule 120 (expressao_decl)]
+    IF_KEYWORD      reduce using rule 46 (expressao_decl)
+    IF_KEYWORD      [reduce using rule 120 (expressao_decl)]
+    ELSE_KEYWORD    reduce using rule 46 (expressao_decl)
+    ELSE_KEYWORD    [reduce using rule 120 (expressao_decl)]
+    WHILE_KEYWORD   reduce using rule 46 (expressao_decl)
+    WHILE_KEYWORD   [reduce using rule 120 (expressao_decl)]
+    RETURN_KEYWORD  reduce using rule 46 (expressao_decl)
+    RETURN_KEYWORD  [reduce using rule 120 (expressao_decl)]
+    OPEN_BRACE      reduce using rule 46 (expressao_decl)
+    OPEN_BRACE      [reduce using rule 120 (expressao_decl)]
+    CLOSE_BRACE     reduce using rule 46 (expressao_decl)
+    CLOSE_BRACE     [reduce using rule 120 (expressao_decl)]
+    OPEN_PAREN      reduce using rule 46 (expressao_decl)
+    OPEN_PAREN      [reduce using rule 120 (expressao_decl)]
+    SEMICOLON       reduce using rule 46 (expressao_decl)
+    SEMICOLON       [reduce using rule 120 (expressao_decl)]
+    $default        reduce using rule 46 (expressao_decl)
 
 
 State 104
 
    61 expressao: var ASSIGN_OP • expressao
 
-    OPEN_PAREN   shift, and go to state 70
-    IDENTIFIER   shift, and go to state 72
-    INT_NUMBER   shift, and go to state 73
-    REAL_NUMBER  shift, and go to state 74
+    IDENTIFIER   shift, and go to state 66
+    INT_NUMBER   shift, and go to state 67
+    REAL_NUMBER  shift, and go to state 68
+    OPEN_PAREN   shift, and go to state 73
 
     expressao          go to state 132
     var                go to state 83
@@ -1345,67 +2163,140 @@ State 104
 State 105
 
    81 soma_op: PLUS_OP •
+  145        | PLUS_OP •
 
-    $default  reduce using rule 81 (soma_op)
+    IDENTIFIER   reduce using rule 81 (soma_op)
+    IDENTIFIER   [reduce using rule 145 (soma_op)]
+    INT_NUMBER   reduce using rule 81 (soma_op)
+    INT_NUMBER   [reduce using rule 145 (soma_op)]
+    REAL_NUMBER  reduce using rule 81 (soma_op)
+    REAL_NUMBER  [reduce using rule 145 (soma_op)]
+    OPEN_PAREN   reduce using rule 81 (soma_op)
+    OPEN_PAREN   [reduce using rule 145 (soma_op)]
+    $default     reduce using rule 81 (soma_op)
 
 
 State 106
 
    82 soma_op: MINUS_OP •
+  146        | MINUS_OP •
 
-    $default  reduce using rule 82 (soma_op)
+    IDENTIFIER   reduce using rule 82 (soma_op)
+    IDENTIFIER   [reduce using rule 146 (soma_op)]
+    INT_NUMBER   reduce using rule 82 (soma_op)
+    INT_NUMBER   [reduce using rule 146 (soma_op)]
+    REAL_NUMBER  reduce using rule 82 (soma_op)
+    REAL_NUMBER  [reduce using rule 146 (soma_op)]
+    OPEN_PAREN   reduce using rule 82 (soma_op)
+    OPEN_PAREN   [reduce using rule 146 (soma_op)]
+    $default     reduce using rule 82 (soma_op)
 
 
 State 107
 
    77 relacional: EQUAL_OP •
+  141           | EQUAL_OP •
 
-    $default  reduce using rule 77 (relacional)
+    IDENTIFIER   reduce using rule 77 (relacional)
+    IDENTIFIER   [reduce using rule 141 (relacional)]
+    INT_NUMBER   reduce using rule 77 (relacional)
+    INT_NUMBER   [reduce using rule 141 (relacional)]
+    REAL_NUMBER  reduce using rule 77 (relacional)
+    REAL_NUMBER  [reduce using rule 141 (relacional)]
+    OPEN_PAREN   reduce using rule 77 (relacional)
+    OPEN_PAREN   [reduce using rule 141 (relacional)]
+    $default     reduce using rule 77 (relacional)
 
 
 State 108
 
    78 relacional: NE_OP •
+  142           | NE_OP •
 
-    $default  reduce using rule 78 (relacional)
+    IDENTIFIER   reduce using rule 78 (relacional)
+    IDENTIFIER   [reduce using rule 142 (relacional)]
+    INT_NUMBER   reduce using rule 78 (relacional)
+    INT_NUMBER   [reduce using rule 142 (relacional)]
+    REAL_NUMBER  reduce using rule 78 (relacional)
+    REAL_NUMBER  [reduce using rule 142 (relacional)]
+    OPEN_PAREN   reduce using rule 78 (relacional)
+    OPEN_PAREN   [reduce using rule 142 (relacional)]
+    $default     reduce using rule 78 (relacional)
 
 
 State 109
 
    74 relacional: LT_OP •
+  138           | LT_OP •
 
-    $default  reduce using rule 74 (relacional)
+    IDENTIFIER   reduce using rule 74 (relacional)
+    IDENTIFIER   [reduce using rule 138 (relacional)]
+    INT_NUMBER   reduce using rule 74 (relacional)
+    INT_NUMBER   [reduce using rule 138 (relacional)]
+    REAL_NUMBER  reduce using rule 74 (relacional)
+    REAL_NUMBER  [reduce using rule 138 (relacional)]
+    OPEN_PAREN   reduce using rule 74 (relacional)
+    OPEN_PAREN   [reduce using rule 138 (relacional)]
+    $default     reduce using rule 74 (relacional)
 
 
 State 110
 
    73 relacional: LE_OP •
+  137           | LE_OP •
 
-    $default  reduce using rule 73 (relacional)
+    IDENTIFIER   reduce using rule 73 (relacional)
+    IDENTIFIER   [reduce using rule 137 (relacional)]
+    INT_NUMBER   reduce using rule 73 (relacional)
+    INT_NUMBER   [reduce using rule 137 (relacional)]
+    REAL_NUMBER  reduce using rule 73 (relacional)
+    REAL_NUMBER  [reduce using rule 137 (relacional)]
+    OPEN_PAREN   reduce using rule 73 (relacional)
+    OPEN_PAREN   [reduce using rule 137 (relacional)]
+    $default     reduce using rule 73 (relacional)
 
 
 State 111
 
    75 relacional: GT_OP •
+  139           | GT_OP •
 
-    $default  reduce using rule 75 (relacional)
+    IDENTIFIER   reduce using rule 75 (relacional)
+    IDENTIFIER   [reduce using rule 139 (relacional)]
+    INT_NUMBER   reduce using rule 75 (relacional)
+    INT_NUMBER   [reduce using rule 139 (relacional)]
+    REAL_NUMBER  reduce using rule 75 (relacional)
+    REAL_NUMBER  [reduce using rule 139 (relacional)]
+    OPEN_PAREN   reduce using rule 75 (relacional)
+    OPEN_PAREN   [reduce using rule 139 (relacional)]
+    $default     reduce using rule 75 (relacional)
 
 
 State 112
 
    76 relacional: GE_OP •
+  140           | GE_OP •
 
-    $default  reduce using rule 76 (relacional)
+    IDENTIFIER   reduce using rule 76 (relacional)
+    IDENTIFIER   [reduce using rule 140 (relacional)]
+    INT_NUMBER   reduce using rule 76 (relacional)
+    INT_NUMBER   [reduce using rule 140 (relacional)]
+    REAL_NUMBER  reduce using rule 76 (relacional)
+    REAL_NUMBER  [reduce using rule 140 (relacional)]
+    OPEN_PAREN   reduce using rule 76 (relacional)
+    OPEN_PAREN   [reduce using rule 140 (relacional)]
+    $default     reduce using rule 76 (relacional)
 
 
 State 113
 
    72 expressao_simples: expressao_soma relacional • expressao_soma
+  136                  | expressao_soma relacional • expressao_soma
 
-    OPEN_PAREN   shift, and go to state 70
-    IDENTIFIER   shift, and go to state 72
-    INT_NUMBER   shift, and go to state 73
-    REAL_NUMBER  shift, and go to state 74
+    IDENTIFIER   shift, and go to state 66
+    INT_NUMBER   shift, and go to state 67
+    REAL_NUMBER  shift, and go to state 68
+    OPEN_PAREN   shift, and go to state 73
 
     var             go to state 133
     expressao_soma  go to state 134
@@ -1417,11 +2308,12 @@ State 113
 State 114
 
    80 expressao_soma: expressao_soma soma_op • termo
+  144               | expressao_soma soma_op • termo
 
-    OPEN_PAREN   shift, and go to state 70
-    IDENTIFIER   shift, and go to state 72
-    INT_NUMBER   shift, and go to state 73
-    REAL_NUMBER  shift, and go to state 74
+    IDENTIFIER   shift, and go to state 66
+    INT_NUMBER   shift, and go to state 67
+    REAL_NUMBER  shift, and go to state 68
+    OPEN_PAREN   shift, and go to state 73
 
     var       go to state 133
     termo     go to state 135
@@ -1432,25 +2324,44 @@ State 114
 State 115
 
    85 mult_op: MULT_OP •
+  149        | MULT_OP •
 
-    $default  reduce using rule 85 (mult_op)
+    IDENTIFIER   reduce using rule 85 (mult_op)
+    IDENTIFIER   [reduce using rule 149 (mult_op)]
+    INT_NUMBER   reduce using rule 85 (mult_op)
+    INT_NUMBER   [reduce using rule 149 (mult_op)]
+    REAL_NUMBER  reduce using rule 85 (mult_op)
+    REAL_NUMBER  [reduce using rule 149 (mult_op)]
+    OPEN_PAREN   reduce using rule 85 (mult_op)
+    OPEN_PAREN   [reduce using rule 149 (mult_op)]
+    $default     reduce using rule 85 (mult_op)
 
 
 State 116
 
    86 mult_op: DIV_OP •
+  150        | DIV_OP •
 
-    $default  reduce using rule 86 (mult_op)
+    IDENTIFIER   reduce using rule 86 (mult_op)
+    IDENTIFIER   [reduce using rule 150 (mult_op)]
+    INT_NUMBER   reduce using rule 86 (mult_op)
+    INT_NUMBER   [reduce using rule 150 (mult_op)]
+    REAL_NUMBER  reduce using rule 86 (mult_op)
+    REAL_NUMBER  [reduce using rule 150 (mult_op)]
+    OPEN_PAREN   reduce using rule 86 (mult_op)
+    OPEN_PAREN   [reduce using rule 150 (mult_op)]
+    $default     reduce using rule 86 (mult_op)
 
 
 State 117
 
    84 termo: termo mult_op • fator
+  148      | termo mult_op • fator
 
-    OPEN_PAREN   shift, and go to state 70
-    IDENTIFIER   shift, and go to state 72
-    INT_NUMBER   shift, and go to state 73
-    REAL_NUMBER  shift, and go to state 74
+    IDENTIFIER   shift, and go to state 66
+    INT_NUMBER   shift, and go to state 67
+    REAL_NUMBER  shift, and go to state 68
+    OPEN_PAREN   shift, and go to state 73
 
     var       go to state 133
     fator     go to state 136
@@ -1459,112 +2370,169 @@ State 117
 
 State 118
 
-   52 selecao_decl: IF_KEYWORD OPEN_PAREN error • CLOSE_PAREN comando
+   98 arg_lista: expressao •
 
-    CLOSE_PAREN  shift, and go to state 137
+    $default  reduce using rule 98 (arg_lista)
 
 
 State 119
 
-   49 selecao_decl: IF_KEYWORD OPEN_PAREN expressao • CLOSE_PAREN comando
-   50             | IF_KEYWORD OPEN_PAREN expressao • CLOSE_PAREN comando ELSE_KEYWORD comando
-   51             | IF_KEYWORD OPEN_PAREN expressao • error comando
+   94 ativacao: IDENTIFIER OPEN_PAREN args • CLOSE_PAREN
+   95         | IDENTIFIER OPEN_PAREN args • error
 
-    error        shift, and go to state 138
-    CLOSE_PAREN  shift, and go to state 139
+    error        shift, and go to state 137
+    CLOSE_PAREN  shift, and go to state 138
 
 
 State 120
 
-   56 iteracao_decl: WHILE_KEYWORD OPEN_PAREN error • CLOSE_PAREN comando
+   97 args: arg_lista •
+   99 arg_lista: arg_lista • COMMA expressao
 
-    CLOSE_PAREN  shift, and go to state 140
+    COMMA  shift, and go to state 139
+
+    $default  reduce using rule 97 (args)
 
 
 State 121
 
-   54 iteracao_decl: WHILE_KEYWORD OPEN_PAREN expressao • CLOSE_PAREN comando
-   55              | WHILE_KEYWORD OPEN_PAREN expressao • error comando
+   66 var: IDENTIFIER OPEN_BRACKET error • CLOSE_BRACKET arranjo_acesso
 
-    error        shift, and go to state 141
-    CLOSE_PAREN  shift, and go to state 142
+    CLOSE_BRACKET  shift, and go to state 140
 
 
 State 122
 
-   60 retorno_decl: RETURN_KEYWORD expressao error •
+   64 var: IDENTIFIER OPEN_BRACKET expressao • CLOSE_BRACKET arranjo_acesso
+   65    | IDENTIFIER OPEN_BRACKET expressao • error arranjo_acesso
 
-    $default  reduce using rule 60 (retorno_decl)
+    error          shift, and go to state 141
+    CLOSE_BRACKET  shift, and go to state 142
 
 
 State 123
 
-   59 retorno_decl: RETURN_KEYWORD expressao SEMICOLON •
+   52 selecao_decl: IF_KEYWORD OPEN_PAREN error • CLOSE_PAREN comando
+  126             | IF_KEYWORD OPEN_PAREN error • CLOSE_PAREN comando
 
-    $default  reduce using rule 59 (retorno_decl)
+    CLOSE_PAREN  shift, and go to state 143
 
 
 State 124
+
+   49 selecao_decl: IF_KEYWORD OPEN_PAREN expressao • CLOSE_PAREN comando
+   50             | IF_KEYWORD OPEN_PAREN expressao • CLOSE_PAREN comando ELSE_KEYWORD comando
+   51             | IF_KEYWORD OPEN_PAREN expressao • error comando
+  123             | IF_KEYWORD OPEN_PAREN expressao • CLOSE_PAREN comando
+  124             | IF_KEYWORD OPEN_PAREN expressao • CLOSE_PAREN comando ELSE_KEYWORD comando
+  125             | IF_KEYWORD OPEN_PAREN expressao • error comando
+
+    error        shift, and go to state 144
+    CLOSE_PAREN  shift, and go to state 145
+
+
+State 125
+
+   56 iteracao_decl: WHILE_KEYWORD OPEN_PAREN error • CLOSE_PAREN comando
+  130              | WHILE_KEYWORD OPEN_PAREN error • CLOSE_PAREN comando
+
+    CLOSE_PAREN  shift, and go to state 146
+
+
+State 126
+
+   54 iteracao_decl: WHILE_KEYWORD OPEN_PAREN expressao • CLOSE_PAREN comando
+   55              | WHILE_KEYWORD OPEN_PAREN expressao • error comando
+  128              | WHILE_KEYWORD OPEN_PAREN expressao • CLOSE_PAREN comando
+  129              | WHILE_KEYWORD OPEN_PAREN expressao • error comando
+
+    error        shift, and go to state 147
+    CLOSE_PAREN  shift, and go to state 148
+
+
+State 127
+
+   60 retorno_decl: RETURN_KEYWORD expressao error •
+  134             | RETURN_KEYWORD expressao error •
+
+    error           reduce using rule 60 (retorno_decl)
+    error           [reduce using rule 134 (retorno_decl)]
+    IDENTIFIER      reduce using rule 60 (retorno_decl)
+    IDENTIFIER      [reduce using rule 134 (retorno_decl)]
+    INT_NUMBER      reduce using rule 60 (retorno_decl)
+    INT_NUMBER      [reduce using rule 134 (retorno_decl)]
+    REAL_NUMBER     reduce using rule 60 (retorno_decl)
+    REAL_NUMBER     [reduce using rule 134 (retorno_decl)]
+    IF_KEYWORD      reduce using rule 60 (retorno_decl)
+    IF_KEYWORD      [reduce using rule 134 (retorno_decl)]
+    ELSE_KEYWORD    reduce using rule 60 (retorno_decl)
+    ELSE_KEYWORD    [reduce using rule 134 (retorno_decl)]
+    WHILE_KEYWORD   reduce using rule 60 (retorno_decl)
+    WHILE_KEYWORD   [reduce using rule 134 (retorno_decl)]
+    RETURN_KEYWORD  reduce using rule 60 (retorno_decl)
+    RETURN_KEYWORD  [reduce using rule 134 (retorno_decl)]
+    OPEN_BRACE      reduce using rule 60 (retorno_decl)
+    OPEN_BRACE      [reduce using rule 134 (retorno_decl)]
+    CLOSE_BRACE     reduce using rule 60 (retorno_decl)
+    CLOSE_BRACE     [reduce using rule 134 (retorno_decl)]
+    OPEN_PAREN      reduce using rule 60 (retorno_decl)
+    OPEN_PAREN      [reduce using rule 134 (retorno_decl)]
+    SEMICOLON       reduce using rule 60 (retorno_decl)
+    SEMICOLON       [reduce using rule 134 (retorno_decl)]
+    $default        reduce using rule 60 (retorno_decl)
+
+
+State 128
+
+   59 retorno_decl: RETURN_KEYWORD expressao SEMICOLON •
+  133             | RETURN_KEYWORD expressao SEMICOLON •
+
+    error           reduce using rule 59 (retorno_decl)
+    error           [reduce using rule 133 (retorno_decl)]
+    IDENTIFIER      reduce using rule 59 (retorno_decl)
+    IDENTIFIER      [reduce using rule 133 (retorno_decl)]
+    INT_NUMBER      reduce using rule 59 (retorno_decl)
+    INT_NUMBER      [reduce using rule 133 (retorno_decl)]
+    REAL_NUMBER     reduce using rule 59 (retorno_decl)
+    REAL_NUMBER     [reduce using rule 133 (retorno_decl)]
+    IF_KEYWORD      reduce using rule 59 (retorno_decl)
+    IF_KEYWORD      [reduce using rule 133 (retorno_decl)]
+    ELSE_KEYWORD    reduce using rule 59 (retorno_decl)
+    ELSE_KEYWORD    [reduce using rule 133 (retorno_decl)]
+    WHILE_KEYWORD   reduce using rule 59 (retorno_decl)
+    WHILE_KEYWORD   [reduce using rule 133 (retorno_decl)]
+    RETURN_KEYWORD  reduce using rule 59 (retorno_decl)
+    RETURN_KEYWORD  [reduce using rule 133 (retorno_decl)]
+    OPEN_BRACE      reduce using rule 59 (retorno_decl)
+    OPEN_BRACE      [reduce using rule 133 (retorno_decl)]
+    CLOSE_BRACE     reduce using rule 59 (retorno_decl)
+    CLOSE_BRACE     [reduce using rule 133 (retorno_decl)]
+    OPEN_PAREN      reduce using rule 59 (retorno_decl)
+    OPEN_PAREN      [reduce using rule 133 (retorno_decl)]
+    SEMICOLON       reduce using rule 59 (retorno_decl)
+    SEMICOLON       [reduce using rule 133 (retorno_decl)]
+    $default        reduce using rule 59 (retorno_decl)
+
+
+State 129
 
    93 fator: OPEN_PAREN error CLOSE_PAREN •
 
     $default  reduce using rule 93 (fator)
 
 
-State 125
+State 130
 
    92 fator: OPEN_PAREN expressao error •
 
     $default  reduce using rule 92 (fator)
 
 
-State 126
+State 131
 
    87 fator: OPEN_PAREN expressao CLOSE_PAREN •
 
     $default  reduce using rule 87 (fator)
-
-
-State 127
-
-   98 arg_lista: expressao •
-
-    $default  reduce using rule 98 (arg_lista)
-
-
-State 128
-
-   94 ativacao: IDENTIFIER OPEN_PAREN args • CLOSE_PAREN
-   95         | IDENTIFIER OPEN_PAREN args • error
-
-    error        shift, and go to state 143
-    CLOSE_PAREN  shift, and go to state 144
-
-
-State 129
-
-   97 args: arg_lista •
-   99 arg_lista: arg_lista • COMMA expressao
-
-    COMMA  shift, and go to state 145
-
-    $default  reduce using rule 97 (args)
-
-
-State 130
-
-   66 var: IDENTIFIER OPEN_BRACKET error • CLOSE_BRACKET arranjo_acesso
-
-    CLOSE_BRACKET  shift, and go to state 146
-
-
-State 131
-
-   64 var: IDENTIFIER OPEN_BRACKET expressao • CLOSE_BRACKET arranjo_acesso
-   65    | IDENTIFIER OPEN_BRACKET expressao • error arranjo_acesso
-
-    error          shift, and go to state 147
-    CLOSE_BRACKET  shift, and go to state 148
 
 
 State 132
@@ -1585,11 +2553,23 @@ State 134
 
    72 expressao_simples: expressao_soma relacional expressao_soma •
    80 expressao_soma: expressao_soma • soma_op termo
+  136 expressao_simples: expressao_soma relacional expressao_soma •
+  144 expressao_soma: expressao_soma • soma_op termo
 
     PLUS_OP   shift, and go to state 105
     MINUS_OP  shift, and go to state 106
 
-    $default  reduce using rule 72 (expressao_simples)
+    error          reduce using rule 72 (expressao_simples)
+    error          [reduce using rule 136 (expressao_simples)]
+    CLOSE_PAREN    reduce using rule 72 (expressao_simples)
+    CLOSE_PAREN    [reduce using rule 136 (expressao_simples)]
+    CLOSE_BRACKET  reduce using rule 72 (expressao_simples)
+    CLOSE_BRACKET  [reduce using rule 136 (expressao_simples)]
+    SEMICOLON      reduce using rule 72 (expressao_simples)
+    SEMICOLON      [reduce using rule 136 (expressao_simples)]
+    COMMA          reduce using rule 72 (expressao_simples)
+    COMMA          [reduce using rule 136 (expressao_simples)]
+    $default       reduce using rule 72 (expressao_simples)
 
     soma_op  go to state 114
 
@@ -1598,11 +2578,39 @@ State 135
 
    80 expressao_soma: expressao_soma soma_op termo •
    84 termo: termo • mult_op fator
+  144 expressao_soma: expressao_soma soma_op termo •
+  148 termo: termo • mult_op fator
 
     MULT_OP  shift, and go to state 115
     DIV_OP   shift, and go to state 116
 
-    $default  reduce using rule 80 (expressao_soma)
+    error          reduce using rule 80 (expressao_soma)
+    error          [reduce using rule 144 (expressao_soma)]
+    PLUS_OP        reduce using rule 80 (expressao_soma)
+    PLUS_OP        [reduce using rule 144 (expressao_soma)]
+    MINUS_OP       reduce using rule 80 (expressao_soma)
+    MINUS_OP       [reduce using rule 144 (expressao_soma)]
+    EQUAL_OP       reduce using rule 80 (expressao_soma)
+    EQUAL_OP       [reduce using rule 144 (expressao_soma)]
+    NE_OP          reduce using rule 80 (expressao_soma)
+    NE_OP          [reduce using rule 144 (expressao_soma)]
+    LT_OP          reduce using rule 80 (expressao_soma)
+    LT_OP          [reduce using rule 144 (expressao_soma)]
+    LE_OP          reduce using rule 80 (expressao_soma)
+    LE_OP          [reduce using rule 144 (expressao_soma)]
+    GT_OP          reduce using rule 80 (expressao_soma)
+    GT_OP          [reduce using rule 144 (expressao_soma)]
+    GE_OP          reduce using rule 80 (expressao_soma)
+    GE_OP          [reduce using rule 144 (expressao_soma)]
+    CLOSE_PAREN    reduce using rule 80 (expressao_soma)
+    CLOSE_PAREN    [reduce using rule 144 (expressao_soma)]
+    CLOSE_BRACKET  reduce using rule 80 (expressao_soma)
+    CLOSE_BRACKET  [reduce using rule 144 (expressao_soma)]
+    SEMICOLON      reduce using rule 80 (expressao_soma)
+    SEMICOLON      [reduce using rule 144 (expressao_soma)]
+    COMMA          reduce using rule 80 (expressao_soma)
+    COMMA          [reduce using rule 144 (expressao_soma)]
+    $default       reduce using rule 80 (expressao_soma)
 
     mult_op  go to state 117
 
@@ -1610,90 +2618,65 @@ State 135
 State 136
 
    84 termo: termo mult_op fator •
+  148      | termo mult_op fator •
 
-    $default  reduce using rule 84 (termo)
+    error          reduce using rule 84 (termo)
+    error          [reduce using rule 148 (termo)]
+    PLUS_OP        reduce using rule 84 (termo)
+    PLUS_OP        [reduce using rule 148 (termo)]
+    MINUS_OP       reduce using rule 84 (termo)
+    MINUS_OP       [reduce using rule 148 (termo)]
+    MULT_OP        reduce using rule 84 (termo)
+    MULT_OP        [reduce using rule 148 (termo)]
+    DIV_OP         reduce using rule 84 (termo)
+    DIV_OP         [reduce using rule 148 (termo)]
+    EQUAL_OP       reduce using rule 84 (termo)
+    EQUAL_OP       [reduce using rule 148 (termo)]
+    NE_OP          reduce using rule 84 (termo)
+    NE_OP          [reduce using rule 148 (termo)]
+    LT_OP          reduce using rule 84 (termo)
+    LT_OP          [reduce using rule 148 (termo)]
+    LE_OP          reduce using rule 84 (termo)
+    LE_OP          [reduce using rule 148 (termo)]
+    GT_OP          reduce using rule 84 (termo)
+    GT_OP          [reduce using rule 148 (termo)]
+    GE_OP          reduce using rule 84 (termo)
+    GE_OP          [reduce using rule 148 (termo)]
+    CLOSE_PAREN    reduce using rule 84 (termo)
+    CLOSE_PAREN    [reduce using rule 148 (termo)]
+    CLOSE_BRACKET  reduce using rule 84 (termo)
+    CLOSE_BRACKET  [reduce using rule 148 (termo)]
+    SEMICOLON      reduce using rule 84 (termo)
+    SEMICOLON      [reduce using rule 148 (termo)]
+    COMMA          reduce using rule 84 (termo)
+    COMMA          [reduce using rule 148 (termo)]
+    $default       reduce using rule 84 (termo)
 
 
 State 137
 
-   52 selecao_decl: IF_KEYWORD OPEN_PAREN error CLOSE_PAREN • comando
+   95 ativacao: IDENTIFIER OPEN_PAREN args error •
 
-    IF_KEYWORD      shift, and go to state 66
-    WHILE_KEYWORD   shift, and go to state 67
-    RETURN_KEYWORD  shift, and go to state 68
-    OPEN_BRACE      shift, and go to state 47
-    OPEN_PAREN      shift, and go to state 70
-    SEMICOLON       shift, and go to state 71
-    IDENTIFIER      shift, and go to state 72
-    INT_NUMBER      shift, and go to state 73
-    REAL_NUMBER     shift, and go to state 74
-
-    composto_decl      go to state 75
-    comando            go to state 149
-    expressao_decl     go to state 78
-    selecao_decl       go to state 79
-    iteracao_decl      go to state 80
-    retorno_decl       go to state 81
-    expressao          go to state 82
-    var                go to state 83
-    expressao_simples  go to state 84
-    expressao_soma     go to state 85
-    termo              go to state 86
-    fator              go to state 87
-    ativacao           go to state 88
+    $default  reduce using rule 95 (ativacao)
 
 
 State 138
 
-   51 selecao_decl: IF_KEYWORD OPEN_PAREN expressao error • comando
+   94 ativacao: IDENTIFIER OPEN_PAREN args CLOSE_PAREN •
 
-    IF_KEYWORD      shift, and go to state 66
-    WHILE_KEYWORD   shift, and go to state 67
-    RETURN_KEYWORD  shift, and go to state 68
-    OPEN_BRACE      shift, and go to state 47
-    OPEN_PAREN      shift, and go to state 70
-    SEMICOLON       shift, and go to state 71
-    IDENTIFIER      shift, and go to state 72
-    INT_NUMBER      shift, and go to state 73
-    REAL_NUMBER     shift, and go to state 74
-
-    composto_decl      go to state 75
-    comando            go to state 150
-    expressao_decl     go to state 78
-    selecao_decl       go to state 79
-    iteracao_decl      go to state 80
-    retorno_decl       go to state 81
-    expressao          go to state 82
-    var                go to state 83
-    expressao_simples  go to state 84
-    expressao_soma     go to state 85
-    termo              go to state 86
-    fator              go to state 87
-    ativacao           go to state 88
+    $default  reduce using rule 94 (ativacao)
 
 
 State 139
 
-   49 selecao_decl: IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN • comando
-   50             | IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN • comando ELSE_KEYWORD comando
+   99 arg_lista: arg_lista COMMA • expressao
 
-    IF_KEYWORD      shift, and go to state 66
-    WHILE_KEYWORD   shift, and go to state 67
-    RETURN_KEYWORD  shift, and go to state 68
-    OPEN_BRACE      shift, and go to state 47
-    OPEN_PAREN      shift, and go to state 70
-    SEMICOLON       shift, and go to state 71
-    IDENTIFIER      shift, and go to state 72
-    INT_NUMBER      shift, and go to state 73
-    REAL_NUMBER     shift, and go to state 74
+    IDENTIFIER   shift, and go to state 66
+    INT_NUMBER   shift, and go to state 67
+    REAL_NUMBER  shift, and go to state 68
+    OPEN_PAREN   shift, and go to state 73
 
-    composto_decl      go to state 75
-    comando            go to state 151
-    expressao_decl     go to state 78
-    selecao_decl       go to state 79
-    iteracao_decl      go to state 80
-    retorno_decl       go to state 81
-    expressao          go to state 82
+    expressao          go to state 149
     var                go to state 83
     expressao_simples  go to state 84
     expressao_soma     go to state 85
@@ -1704,46 +2687,147 @@ State 139
 
 State 140
 
-   56 iteracao_decl: WHILE_KEYWORD OPEN_PAREN error CLOSE_PAREN • comando
+   66 var: IDENTIFIER OPEN_BRACKET error CLOSE_BRACKET • arranjo_acesso
 
-    IF_KEYWORD      shift, and go to state 66
-    WHILE_KEYWORD   shift, and go to state 67
-    RETURN_KEYWORD  shift, and go to state 68
-    OPEN_BRACE      shift, and go to state 47
-    OPEN_PAREN      shift, and go to state 70
-    SEMICOLON       shift, and go to state 71
-    IDENTIFIER      shift, and go to state 72
-    INT_NUMBER      shift, and go to state 73
-    REAL_NUMBER     shift, and go to state 74
+    error          reduce using rule 67 (arranjo_acesso)
+    error          [reduce using rule 104 (arranjo_acesso)]
+    PLUS_OP        reduce using rule 67 (arranjo_acesso)
+    PLUS_OP        [reduce using rule 104 (arranjo_acesso)]
+    MINUS_OP       reduce using rule 67 (arranjo_acesso)
+    MINUS_OP       [reduce using rule 104 (arranjo_acesso)]
+    MULT_OP        reduce using rule 67 (arranjo_acesso)
+    MULT_OP        [reduce using rule 104 (arranjo_acesso)]
+    DIV_OP         reduce using rule 67 (arranjo_acesso)
+    DIV_OP         [reduce using rule 104 (arranjo_acesso)]
+    ASSIGN_OP      reduce using rule 67 (arranjo_acesso)
+    ASSIGN_OP      [reduce using rule 104 (arranjo_acesso)]
+    EQUAL_OP       reduce using rule 67 (arranjo_acesso)
+    EQUAL_OP       [reduce using rule 104 (arranjo_acesso)]
+    NE_OP          reduce using rule 67 (arranjo_acesso)
+    NE_OP          [reduce using rule 104 (arranjo_acesso)]
+    LT_OP          reduce using rule 67 (arranjo_acesso)
+    LT_OP          [reduce using rule 104 (arranjo_acesso)]
+    LE_OP          reduce using rule 67 (arranjo_acesso)
+    LE_OP          [reduce using rule 104 (arranjo_acesso)]
+    GT_OP          reduce using rule 67 (arranjo_acesso)
+    GT_OP          [reduce using rule 104 (arranjo_acesso)]
+    GE_OP          reduce using rule 67 (arranjo_acesso)
+    GE_OP          [reduce using rule 104 (arranjo_acesso)]
+    CLOSE_PAREN    reduce using rule 67 (arranjo_acesso)
+    CLOSE_PAREN    [reduce using rule 104 (arranjo_acesso)]
+    OPEN_BRACKET   reduce using rule 67 (arranjo_acesso)
+    OPEN_BRACKET   [reduce using rule 104 (arranjo_acesso)]
+    CLOSE_BRACKET  reduce using rule 67 (arranjo_acesso)
+    CLOSE_BRACKET  [reduce using rule 104 (arranjo_acesso)]
+    SEMICOLON      reduce using rule 67 (arranjo_acesso)
+    SEMICOLON      [reduce using rule 104 (arranjo_acesso)]
+    COMMA          reduce using rule 67 (arranjo_acesso)
+    COMMA          [reduce using rule 104 (arranjo_acesso)]
+    $default       reduce using rule 67 (arranjo_acesso)
 
-    composto_decl      go to state 75
-    comando            go to state 152
-    expressao_decl     go to state 78
-    selecao_decl       go to state 79
-    iteracao_decl      go to state 80
-    retorno_decl       go to state 81
-    expressao          go to state 82
-    var                go to state 83
-    expressao_simples  go to state 84
-    expressao_soma     go to state 85
-    termo              go to state 86
-    fator              go to state 87
-    ativacao           go to state 88
+    arranjo_acesso  go to state 150
 
 
 State 141
 
-   55 iteracao_decl: WHILE_KEYWORD OPEN_PAREN expressao error • comando
+   65 var: IDENTIFIER OPEN_BRACKET expressao error • arranjo_acesso
 
-    IF_KEYWORD      shift, and go to state 66
-    WHILE_KEYWORD   shift, and go to state 67
-    RETURN_KEYWORD  shift, and go to state 68
+    error          reduce using rule 67 (arranjo_acesso)
+    error          [reduce using rule 104 (arranjo_acesso)]
+    PLUS_OP        reduce using rule 67 (arranjo_acesso)
+    PLUS_OP        [reduce using rule 104 (arranjo_acesso)]
+    MINUS_OP       reduce using rule 67 (arranjo_acesso)
+    MINUS_OP       [reduce using rule 104 (arranjo_acesso)]
+    MULT_OP        reduce using rule 67 (arranjo_acesso)
+    MULT_OP        [reduce using rule 104 (arranjo_acesso)]
+    DIV_OP         reduce using rule 67 (arranjo_acesso)
+    DIV_OP         [reduce using rule 104 (arranjo_acesso)]
+    ASSIGN_OP      reduce using rule 67 (arranjo_acesso)
+    ASSIGN_OP      [reduce using rule 104 (arranjo_acesso)]
+    EQUAL_OP       reduce using rule 67 (arranjo_acesso)
+    EQUAL_OP       [reduce using rule 104 (arranjo_acesso)]
+    NE_OP          reduce using rule 67 (arranjo_acesso)
+    NE_OP          [reduce using rule 104 (arranjo_acesso)]
+    LT_OP          reduce using rule 67 (arranjo_acesso)
+    LT_OP          [reduce using rule 104 (arranjo_acesso)]
+    LE_OP          reduce using rule 67 (arranjo_acesso)
+    LE_OP          [reduce using rule 104 (arranjo_acesso)]
+    GT_OP          reduce using rule 67 (arranjo_acesso)
+    GT_OP          [reduce using rule 104 (arranjo_acesso)]
+    GE_OP          reduce using rule 67 (arranjo_acesso)
+    GE_OP          [reduce using rule 104 (arranjo_acesso)]
+    CLOSE_PAREN    reduce using rule 67 (arranjo_acesso)
+    CLOSE_PAREN    [reduce using rule 104 (arranjo_acesso)]
+    OPEN_BRACKET   reduce using rule 67 (arranjo_acesso)
+    OPEN_BRACKET   [reduce using rule 104 (arranjo_acesso)]
+    CLOSE_BRACKET  reduce using rule 67 (arranjo_acesso)
+    CLOSE_BRACKET  [reduce using rule 104 (arranjo_acesso)]
+    SEMICOLON      reduce using rule 67 (arranjo_acesso)
+    SEMICOLON      [reduce using rule 104 (arranjo_acesso)]
+    COMMA          reduce using rule 67 (arranjo_acesso)
+    COMMA          [reduce using rule 104 (arranjo_acesso)]
+    $default       reduce using rule 67 (arranjo_acesso)
+
+    arranjo_acesso  go to state 151
+
+
+State 142
+
+   64 var: IDENTIFIER OPEN_BRACKET expressao CLOSE_BRACKET • arranjo_acesso
+
+    error          reduce using rule 67 (arranjo_acesso)
+    error          [reduce using rule 104 (arranjo_acesso)]
+    PLUS_OP        reduce using rule 67 (arranjo_acesso)
+    PLUS_OP        [reduce using rule 104 (arranjo_acesso)]
+    MINUS_OP       reduce using rule 67 (arranjo_acesso)
+    MINUS_OP       [reduce using rule 104 (arranjo_acesso)]
+    MULT_OP        reduce using rule 67 (arranjo_acesso)
+    MULT_OP        [reduce using rule 104 (arranjo_acesso)]
+    DIV_OP         reduce using rule 67 (arranjo_acesso)
+    DIV_OP         [reduce using rule 104 (arranjo_acesso)]
+    ASSIGN_OP      reduce using rule 67 (arranjo_acesso)
+    ASSIGN_OP      [reduce using rule 104 (arranjo_acesso)]
+    EQUAL_OP       reduce using rule 67 (arranjo_acesso)
+    EQUAL_OP       [reduce using rule 104 (arranjo_acesso)]
+    NE_OP          reduce using rule 67 (arranjo_acesso)
+    NE_OP          [reduce using rule 104 (arranjo_acesso)]
+    LT_OP          reduce using rule 67 (arranjo_acesso)
+    LT_OP          [reduce using rule 104 (arranjo_acesso)]
+    LE_OP          reduce using rule 67 (arranjo_acesso)
+    LE_OP          [reduce using rule 104 (arranjo_acesso)]
+    GT_OP          reduce using rule 67 (arranjo_acesso)
+    GT_OP          [reduce using rule 104 (arranjo_acesso)]
+    GE_OP          reduce using rule 67 (arranjo_acesso)
+    GE_OP          [reduce using rule 104 (arranjo_acesso)]
+    CLOSE_PAREN    reduce using rule 67 (arranjo_acesso)
+    CLOSE_PAREN    [reduce using rule 104 (arranjo_acesso)]
+    OPEN_BRACKET   reduce using rule 67 (arranjo_acesso)
+    OPEN_BRACKET   [reduce using rule 104 (arranjo_acesso)]
+    CLOSE_BRACKET  reduce using rule 67 (arranjo_acesso)
+    CLOSE_BRACKET  [reduce using rule 104 (arranjo_acesso)]
+    SEMICOLON      reduce using rule 67 (arranjo_acesso)
+    SEMICOLON      [reduce using rule 104 (arranjo_acesso)]
+    COMMA          reduce using rule 67 (arranjo_acesso)
+    COMMA          [reduce using rule 104 (arranjo_acesso)]
+    $default       reduce using rule 67 (arranjo_acesso)
+
+    arranjo_acesso  go to state 152
+
+
+State 143
+
+   52 selecao_decl: IF_KEYWORD OPEN_PAREN error CLOSE_PAREN • comando
+  126             | IF_KEYWORD OPEN_PAREN error CLOSE_PAREN • comando
+
+    IDENTIFIER      shift, and go to state 66
+    INT_NUMBER      shift, and go to state 67
+    REAL_NUMBER     shift, and go to state 68
+    IF_KEYWORD      shift, and go to state 69
+    WHILE_KEYWORD   shift, and go to state 70
+    RETURN_KEYWORD  shift, and go to state 71
     OPEN_BRACE      shift, and go to state 47
-    OPEN_PAREN      shift, and go to state 70
-    SEMICOLON       shift, and go to state 71
-    IDENTIFIER      shift, and go to state 72
-    INT_NUMBER      shift, and go to state 73
-    REAL_NUMBER     shift, and go to state 74
+    OPEN_PAREN      shift, and go to state 73
+    SEMICOLON       shift, and go to state 74
 
     composto_decl      go to state 75
     comando            go to state 153
@@ -1760,19 +2844,20 @@ State 141
     ativacao           go to state 88
 
 
-State 142
+State 144
 
-   54 iteracao_decl: WHILE_KEYWORD OPEN_PAREN expressao CLOSE_PAREN • comando
+   51 selecao_decl: IF_KEYWORD OPEN_PAREN expressao error • comando
+  125             | IF_KEYWORD OPEN_PAREN expressao error • comando
 
-    IF_KEYWORD      shift, and go to state 66
-    WHILE_KEYWORD   shift, and go to state 67
-    RETURN_KEYWORD  shift, and go to state 68
+    IDENTIFIER      shift, and go to state 66
+    INT_NUMBER      shift, and go to state 67
+    REAL_NUMBER     shift, and go to state 68
+    IF_KEYWORD      shift, and go to state 69
+    WHILE_KEYWORD   shift, and go to state 70
+    RETURN_KEYWORD  shift, and go to state 71
     OPEN_BRACE      shift, and go to state 47
-    OPEN_PAREN      shift, and go to state 70
-    SEMICOLON       shift, and go to state 71
-    IDENTIFIER      shift, and go to state 72
-    INT_NUMBER      shift, and go to state 73
-    REAL_NUMBER     shift, and go to state 74
+    OPEN_PAREN      shift, and go to state 73
+    SEMICOLON       shift, and go to state 74
 
     composto_decl      go to state 75
     comando            go to state 154
@@ -1789,169 +2874,25 @@ State 142
     ativacao           go to state 88
 
 
-State 143
-
-   95 ativacao: IDENTIFIER OPEN_PAREN args error •
-
-    $default  reduce using rule 95 (ativacao)
-
-
-State 144
-
-   94 ativacao: IDENTIFIER OPEN_PAREN args CLOSE_PAREN •
-
-    $default  reduce using rule 94 (ativacao)
-
-
 State 145
 
-   99 arg_lista: arg_lista COMMA • expressao
-
-    OPEN_PAREN   shift, and go to state 70
-    IDENTIFIER   shift, and go to state 72
-    INT_NUMBER   shift, and go to state 73
-    REAL_NUMBER  shift, and go to state 74
-
-    expressao          go to state 155
-    var                go to state 83
-    expressao_simples  go to state 84
-    expressao_soma     go to state 85
-    termo              go to state 86
-    fator              go to state 87
-    ativacao           go to state 88
-
-
-State 146
-
-   66 var: IDENTIFIER OPEN_BRACKET error CLOSE_BRACKET • arranjo_acesso
-
-    $default  reduce using rule 67 (arranjo_acesso)
-
-    arranjo_acesso  go to state 156
-
-
-State 147
-
-   65 var: IDENTIFIER OPEN_BRACKET expressao error • arranjo_acesso
-
-    $default  reduce using rule 67 (arranjo_acesso)
-
-    arranjo_acesso  go to state 157
-
-
-State 148
-
-   64 var: IDENTIFIER OPEN_BRACKET expressao CLOSE_BRACKET • arranjo_acesso
-
-    $default  reduce using rule 67 (arranjo_acesso)
-
-    arranjo_acesso  go to state 158
-
-
-State 149
-
-   52 selecao_decl: IF_KEYWORD OPEN_PAREN error CLOSE_PAREN comando •
-
-    $default  reduce using rule 52 (selecao_decl)
-
-
-State 150
-
-   51 selecao_decl: IF_KEYWORD OPEN_PAREN expressao error comando •
-
-    $default  reduce using rule 51 (selecao_decl)
-
-
-State 151
-
-   49 selecao_decl: IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando •
-   50             | IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando • ELSE_KEYWORD comando
-
-    ELSE_KEYWORD  shift, and go to state 159
-
-    $default  reduce using rule 49 (selecao_decl)
-
-
-State 152
-
-   56 iteracao_decl: WHILE_KEYWORD OPEN_PAREN error CLOSE_PAREN comando •
-
-    $default  reduce using rule 56 (iteracao_decl)
-
-
-State 153
-
-   55 iteracao_decl: WHILE_KEYWORD OPEN_PAREN expressao error comando •
-
-    $default  reduce using rule 55 (iteracao_decl)
-
-
-State 154
-
-   54 iteracao_decl: WHILE_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando •
-
-    $default  reduce using rule 54 (iteracao_decl)
-
-
-State 155
-
-   99 arg_lista: arg_lista COMMA expressao •
-
-    $default  reduce using rule 99 (arg_lista)
-
-
-State 156
-
-   66 var: IDENTIFIER OPEN_BRACKET error CLOSE_BRACKET arranjo_acesso •
-   68 arranjo_acesso: arranjo_acesso • OPEN_BRACKET expressao CLOSE_BRACKET
-   69               | arranjo_acesso • OPEN_BRACKET expressao error
-   70               | arranjo_acesso • OPEN_BRACKET error CLOSE_BRACKET
-
-    OPEN_BRACKET  shift, and go to state 160
-
-    $default  reduce using rule 66 (var)
-
-
-State 157
-
-   65 var: IDENTIFIER OPEN_BRACKET expressao error arranjo_acesso •
-   68 arranjo_acesso: arranjo_acesso • OPEN_BRACKET expressao CLOSE_BRACKET
-   69               | arranjo_acesso • OPEN_BRACKET expressao error
-   70               | arranjo_acesso • OPEN_BRACKET error CLOSE_BRACKET
-
-    OPEN_BRACKET  shift, and go to state 160
-
-    $default  reduce using rule 65 (var)
-
-
-State 158
-
-   64 var: IDENTIFIER OPEN_BRACKET expressao CLOSE_BRACKET arranjo_acesso •
-   68 arranjo_acesso: arranjo_acesso • OPEN_BRACKET expressao CLOSE_BRACKET
-   69               | arranjo_acesso • OPEN_BRACKET expressao error
-   70               | arranjo_acesso • OPEN_BRACKET error CLOSE_BRACKET
-
-    OPEN_BRACKET  shift, and go to state 160
-
-    $default  reduce using rule 64 (var)
-
-
-State 159
-
-   50 selecao_decl: IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando ELSE_KEYWORD • comando
-
-    IF_KEYWORD      shift, and go to state 66
-    WHILE_KEYWORD   shift, and go to state 67
-    RETURN_KEYWORD  shift, and go to state 68
+   49 selecao_decl: IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN • comando
+   50             | IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN • comando ELSE_KEYWORD comando
+  123             | IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN • comando
+  124             | IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN • comando ELSE_KEYWORD comando
+
+    IDENTIFIER      shift, and go to state 66
+    INT_NUMBER      shift, and go to state 67
+    REAL_NUMBER     shift, and go to state 68
+    IF_KEYWORD      shift, and go to state 69
+    WHILE_KEYWORD   shift, and go to state 70
+    RETURN_KEYWORD  shift, and go to state 71
     OPEN_BRACE      shift, and go to state 47
-    OPEN_PAREN      shift, and go to state 70
-    SEMICOLON       shift, and go to state 71
-    IDENTIFIER      shift, and go to state 72
-    INT_NUMBER      shift, and go to state 73
-    REAL_NUMBER     shift, and go to state 74
+    OPEN_PAREN      shift, and go to state 73
+    SEMICOLON       shift, and go to state 74
 
     composto_decl      go to state 75
-    comando            go to state 161
+    comando            go to state 155
     expressao_decl     go to state 78
     selecao_decl       go to state 79
     iteracao_decl      go to state 80
@@ -1965,19 +2906,388 @@ State 159
     ativacao           go to state 88
 
 
-State 160
+State 146
+
+   56 iteracao_decl: WHILE_KEYWORD OPEN_PAREN error CLOSE_PAREN • comando
+  130              | WHILE_KEYWORD OPEN_PAREN error CLOSE_PAREN • comando
+
+    IDENTIFIER      shift, and go to state 66
+    INT_NUMBER      shift, and go to state 67
+    REAL_NUMBER     shift, and go to state 68
+    IF_KEYWORD      shift, and go to state 69
+    WHILE_KEYWORD   shift, and go to state 70
+    RETURN_KEYWORD  shift, and go to state 71
+    OPEN_BRACE      shift, and go to state 47
+    OPEN_PAREN      shift, and go to state 73
+    SEMICOLON       shift, and go to state 74
+
+    composto_decl      go to state 75
+    comando            go to state 156
+    expressao_decl     go to state 78
+    selecao_decl       go to state 79
+    iteracao_decl      go to state 80
+    retorno_decl       go to state 81
+    expressao          go to state 82
+    var                go to state 83
+    expressao_simples  go to state 84
+    expressao_soma     go to state 85
+    termo              go to state 86
+    fator              go to state 87
+    ativacao           go to state 88
+
+
+State 147
+
+   55 iteracao_decl: WHILE_KEYWORD OPEN_PAREN expressao error • comando
+  129              | WHILE_KEYWORD OPEN_PAREN expressao error • comando
+
+    IDENTIFIER      shift, and go to state 66
+    INT_NUMBER      shift, and go to state 67
+    REAL_NUMBER     shift, and go to state 68
+    IF_KEYWORD      shift, and go to state 69
+    WHILE_KEYWORD   shift, and go to state 70
+    RETURN_KEYWORD  shift, and go to state 71
+    OPEN_BRACE      shift, and go to state 47
+    OPEN_PAREN      shift, and go to state 73
+    SEMICOLON       shift, and go to state 74
+
+    composto_decl      go to state 75
+    comando            go to state 157
+    expressao_decl     go to state 78
+    selecao_decl       go to state 79
+    iteracao_decl      go to state 80
+    retorno_decl       go to state 81
+    expressao          go to state 82
+    var                go to state 83
+    expressao_simples  go to state 84
+    expressao_soma     go to state 85
+    termo              go to state 86
+    fator              go to state 87
+    ativacao           go to state 88
+
+
+State 148
+
+   54 iteracao_decl: WHILE_KEYWORD OPEN_PAREN expressao CLOSE_PAREN • comando
+  128              | WHILE_KEYWORD OPEN_PAREN expressao CLOSE_PAREN • comando
+
+    IDENTIFIER      shift, and go to state 66
+    INT_NUMBER      shift, and go to state 67
+    REAL_NUMBER     shift, and go to state 68
+    IF_KEYWORD      shift, and go to state 69
+    WHILE_KEYWORD   shift, and go to state 70
+    RETURN_KEYWORD  shift, and go to state 71
+    OPEN_BRACE      shift, and go to state 47
+    OPEN_PAREN      shift, and go to state 73
+    SEMICOLON       shift, and go to state 74
+
+    composto_decl      go to state 75
+    comando            go to state 158
+    expressao_decl     go to state 78
+    selecao_decl       go to state 79
+    iteracao_decl      go to state 80
+    retorno_decl       go to state 81
+    expressao          go to state 82
+    var                go to state 83
+    expressao_simples  go to state 84
+    expressao_soma     go to state 85
+    termo              go to state 86
+    fator              go to state 87
+    ativacao           go to state 88
+
+
+State 149
+
+   99 arg_lista: arg_lista COMMA expressao •
+
+    $default  reduce using rule 99 (arg_lista)
+
+
+State 150
+
+   66 var: IDENTIFIER OPEN_BRACKET error CLOSE_BRACKET arranjo_acesso •
+   68 arranjo_acesso: arranjo_acesso • OPEN_BRACKET expressao CLOSE_BRACKET
+   69               | arranjo_acesso • OPEN_BRACKET expressao error
+   70               | arranjo_acesso • OPEN_BRACKET error CLOSE_BRACKET
+  105               | arranjo_acesso • OPEN_BRACKET expressao CLOSE_BRACKET
+  106               | arranjo_acesso • OPEN_BRACKET expressao error
+  107               | arranjo_acesso • OPEN_BRACKET error CLOSE_BRACKET
+
+    OPEN_BRACKET  shift, and go to state 159
+
+    $default  reduce using rule 66 (var)
+
+
+State 151
+
+   65 var: IDENTIFIER OPEN_BRACKET expressao error arranjo_acesso •
+   68 arranjo_acesso: arranjo_acesso • OPEN_BRACKET expressao CLOSE_BRACKET
+   69               | arranjo_acesso • OPEN_BRACKET expressao error
+   70               | arranjo_acesso • OPEN_BRACKET error CLOSE_BRACKET
+  105               | arranjo_acesso • OPEN_BRACKET expressao CLOSE_BRACKET
+  106               | arranjo_acesso • OPEN_BRACKET expressao error
+  107               | arranjo_acesso • OPEN_BRACKET error CLOSE_BRACKET
+
+    OPEN_BRACKET  shift, and go to state 159
+
+    $default  reduce using rule 65 (var)
+
+
+State 152
+
+   64 var: IDENTIFIER OPEN_BRACKET expressao CLOSE_BRACKET arranjo_acesso •
+   68 arranjo_acesso: arranjo_acesso • OPEN_BRACKET expressao CLOSE_BRACKET
+   69               | arranjo_acesso • OPEN_BRACKET expressao error
+   70               | arranjo_acesso • OPEN_BRACKET error CLOSE_BRACKET
+  105               | arranjo_acesso • OPEN_BRACKET expressao CLOSE_BRACKET
+  106               | arranjo_acesso • OPEN_BRACKET expressao error
+  107               | arranjo_acesso • OPEN_BRACKET error CLOSE_BRACKET
+
+    OPEN_BRACKET  shift, and go to state 159
+
+    $default  reduce using rule 64 (var)
+
+
+State 153
+
+   52 selecao_decl: IF_KEYWORD OPEN_PAREN error CLOSE_PAREN comando •
+  126             | IF_KEYWORD OPEN_PAREN error CLOSE_PAREN comando •
+
+    error           reduce using rule 52 (selecao_decl)
+    error           [reduce using rule 126 (selecao_decl)]
+    IDENTIFIER      reduce using rule 52 (selecao_decl)
+    IDENTIFIER      [reduce using rule 126 (selecao_decl)]
+    INT_NUMBER      reduce using rule 52 (selecao_decl)
+    INT_NUMBER      [reduce using rule 126 (selecao_decl)]
+    REAL_NUMBER     reduce using rule 52 (selecao_decl)
+    REAL_NUMBER     [reduce using rule 126 (selecao_decl)]
+    IF_KEYWORD      reduce using rule 52 (selecao_decl)
+    IF_KEYWORD      [reduce using rule 126 (selecao_decl)]
+    ELSE_KEYWORD    reduce using rule 52 (selecao_decl)
+    ELSE_KEYWORD    [reduce using rule 126 (selecao_decl)]
+    WHILE_KEYWORD   reduce using rule 52 (selecao_decl)
+    WHILE_KEYWORD   [reduce using rule 126 (selecao_decl)]
+    RETURN_KEYWORD  reduce using rule 52 (selecao_decl)
+    RETURN_KEYWORD  [reduce using rule 126 (selecao_decl)]
+    OPEN_BRACE      reduce using rule 52 (selecao_decl)
+    OPEN_BRACE      [reduce using rule 126 (selecao_decl)]
+    CLOSE_BRACE     reduce using rule 52 (selecao_decl)
+    CLOSE_BRACE     [reduce using rule 126 (selecao_decl)]
+    OPEN_PAREN      reduce using rule 52 (selecao_decl)
+    OPEN_PAREN      [reduce using rule 126 (selecao_decl)]
+    SEMICOLON       reduce using rule 52 (selecao_decl)
+    SEMICOLON       [reduce using rule 126 (selecao_decl)]
+    $default        reduce using rule 52 (selecao_decl)
+
+
+State 154
+
+   51 selecao_decl: IF_KEYWORD OPEN_PAREN expressao error comando •
+  125             | IF_KEYWORD OPEN_PAREN expressao error comando •
+
+    error           reduce using rule 51 (selecao_decl)
+    error           [reduce using rule 125 (selecao_decl)]
+    IDENTIFIER      reduce using rule 51 (selecao_decl)
+    IDENTIFIER      [reduce using rule 125 (selecao_decl)]
+    INT_NUMBER      reduce using rule 51 (selecao_decl)
+    INT_NUMBER      [reduce using rule 125 (selecao_decl)]
+    REAL_NUMBER     reduce using rule 51 (selecao_decl)
+    REAL_NUMBER     [reduce using rule 125 (selecao_decl)]
+    IF_KEYWORD      reduce using rule 51 (selecao_decl)
+    IF_KEYWORD      [reduce using rule 125 (selecao_decl)]
+    ELSE_KEYWORD    reduce using rule 51 (selecao_decl)
+    ELSE_KEYWORD    [reduce using rule 125 (selecao_decl)]
+    WHILE_KEYWORD   reduce using rule 51 (selecao_decl)
+    WHILE_KEYWORD   [reduce using rule 125 (selecao_decl)]
+    RETURN_KEYWORD  reduce using rule 51 (selecao_decl)
+    RETURN_KEYWORD  [reduce using rule 125 (selecao_decl)]
+    OPEN_BRACE      reduce using rule 51 (selecao_decl)
+    OPEN_BRACE      [reduce using rule 125 (selecao_decl)]
+    CLOSE_BRACE     reduce using rule 51 (selecao_decl)
+    CLOSE_BRACE     [reduce using rule 125 (selecao_decl)]
+    OPEN_PAREN      reduce using rule 51 (selecao_decl)
+    OPEN_PAREN      [reduce using rule 125 (selecao_decl)]
+    SEMICOLON       reduce using rule 51 (selecao_decl)
+    SEMICOLON       [reduce using rule 125 (selecao_decl)]
+    $default        reduce using rule 51 (selecao_decl)
+
+
+State 155
+
+   49 selecao_decl: IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando •
+   50             | IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando • ELSE_KEYWORD comando
+  123             | IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando •
+  124             | IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando • ELSE_KEYWORD comando
+
+    ELSE_KEYWORD  shift, and go to state 160
+
+    error           reduce using rule 49 (selecao_decl)
+    error           [reduce using rule 123 (selecao_decl)]
+    IDENTIFIER      reduce using rule 49 (selecao_decl)
+    IDENTIFIER      [reduce using rule 123 (selecao_decl)]
+    INT_NUMBER      reduce using rule 49 (selecao_decl)
+    INT_NUMBER      [reduce using rule 123 (selecao_decl)]
+    REAL_NUMBER     reduce using rule 49 (selecao_decl)
+    REAL_NUMBER     [reduce using rule 123 (selecao_decl)]
+    IF_KEYWORD      reduce using rule 49 (selecao_decl)
+    IF_KEYWORD      [reduce using rule 123 (selecao_decl)]
+    WHILE_KEYWORD   reduce using rule 49 (selecao_decl)
+    WHILE_KEYWORD   [reduce using rule 123 (selecao_decl)]
+    RETURN_KEYWORD  reduce using rule 49 (selecao_decl)
+    RETURN_KEYWORD  [reduce using rule 123 (selecao_decl)]
+    OPEN_BRACE      reduce using rule 49 (selecao_decl)
+    OPEN_BRACE      [reduce using rule 123 (selecao_decl)]
+    CLOSE_BRACE     reduce using rule 49 (selecao_decl)
+    CLOSE_BRACE     [reduce using rule 123 (selecao_decl)]
+    OPEN_PAREN      reduce using rule 49 (selecao_decl)
+    OPEN_PAREN      [reduce using rule 123 (selecao_decl)]
+    SEMICOLON       reduce using rule 49 (selecao_decl)
+    SEMICOLON       [reduce using rule 123 (selecao_decl)]
+    $default        reduce using rule 49 (selecao_decl)
+
+
+State 156
+
+   56 iteracao_decl: WHILE_KEYWORD OPEN_PAREN error CLOSE_PAREN comando •
+  130              | WHILE_KEYWORD OPEN_PAREN error CLOSE_PAREN comando •
+
+    error           reduce using rule 56 (iteracao_decl)
+    error           [reduce using rule 130 (iteracao_decl)]
+    IDENTIFIER      reduce using rule 56 (iteracao_decl)
+    IDENTIFIER      [reduce using rule 130 (iteracao_decl)]
+    INT_NUMBER      reduce using rule 56 (iteracao_decl)
+    INT_NUMBER      [reduce using rule 130 (iteracao_decl)]
+    REAL_NUMBER     reduce using rule 56 (iteracao_decl)
+    REAL_NUMBER     [reduce using rule 130 (iteracao_decl)]
+    IF_KEYWORD      reduce using rule 56 (iteracao_decl)
+    IF_KEYWORD      [reduce using rule 130 (iteracao_decl)]
+    ELSE_KEYWORD    reduce using rule 56 (iteracao_decl)
+    ELSE_KEYWORD    [reduce using rule 130 (iteracao_decl)]
+    WHILE_KEYWORD   reduce using rule 56 (iteracao_decl)
+    WHILE_KEYWORD   [reduce using rule 130 (iteracao_decl)]
+    RETURN_KEYWORD  reduce using rule 56 (iteracao_decl)
+    RETURN_KEYWORD  [reduce using rule 130 (iteracao_decl)]
+    OPEN_BRACE      reduce using rule 56 (iteracao_decl)
+    OPEN_BRACE      [reduce using rule 130 (iteracao_decl)]
+    CLOSE_BRACE     reduce using rule 56 (iteracao_decl)
+    CLOSE_BRACE     [reduce using rule 130 (iteracao_decl)]
+    OPEN_PAREN      reduce using rule 56 (iteracao_decl)
+    OPEN_PAREN      [reduce using rule 130 (iteracao_decl)]
+    SEMICOLON       reduce using rule 56 (iteracao_decl)
+    SEMICOLON       [reduce using rule 130 (iteracao_decl)]
+    $default        reduce using rule 56 (iteracao_decl)
+
+
+State 157
+
+   55 iteracao_decl: WHILE_KEYWORD OPEN_PAREN expressao error comando •
+  129              | WHILE_KEYWORD OPEN_PAREN expressao error comando •
+
+    error           reduce using rule 55 (iteracao_decl)
+    error           [reduce using rule 129 (iteracao_decl)]
+    IDENTIFIER      reduce using rule 55 (iteracao_decl)
+    IDENTIFIER      [reduce using rule 129 (iteracao_decl)]
+    INT_NUMBER      reduce using rule 55 (iteracao_decl)
+    INT_NUMBER      [reduce using rule 129 (iteracao_decl)]
+    REAL_NUMBER     reduce using rule 55 (iteracao_decl)
+    REAL_NUMBER     [reduce using rule 129 (iteracao_decl)]
+    IF_KEYWORD      reduce using rule 55 (iteracao_decl)
+    IF_KEYWORD      [reduce using rule 129 (iteracao_decl)]
+    ELSE_KEYWORD    reduce using rule 55 (iteracao_decl)
+    ELSE_KEYWORD    [reduce using rule 129 (iteracao_decl)]
+    WHILE_KEYWORD   reduce using rule 55 (iteracao_decl)
+    WHILE_KEYWORD   [reduce using rule 129 (iteracao_decl)]
+    RETURN_KEYWORD  reduce using rule 55 (iteracao_decl)
+    RETURN_KEYWORD  [reduce using rule 129 (iteracao_decl)]
+    OPEN_BRACE      reduce using rule 55 (iteracao_decl)
+    OPEN_BRACE      [reduce using rule 129 (iteracao_decl)]
+    CLOSE_BRACE     reduce using rule 55 (iteracao_decl)
+    CLOSE_BRACE     [reduce using rule 129 (iteracao_decl)]
+    OPEN_PAREN      reduce using rule 55 (iteracao_decl)
+    OPEN_PAREN      [reduce using rule 129 (iteracao_decl)]
+    SEMICOLON       reduce using rule 55 (iteracao_decl)
+    SEMICOLON       [reduce using rule 129 (iteracao_decl)]
+    $default        reduce using rule 55 (iteracao_decl)
+
+
+State 158
+
+   54 iteracao_decl: WHILE_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando •
+  128              | WHILE_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando •
+
+    error           reduce using rule 54 (iteracao_decl)
+    error           [reduce using rule 128 (iteracao_decl)]
+    IDENTIFIER      reduce using rule 54 (iteracao_decl)
+    IDENTIFIER      [reduce using rule 128 (iteracao_decl)]
+    INT_NUMBER      reduce using rule 54 (iteracao_decl)
+    INT_NUMBER      [reduce using rule 128 (iteracao_decl)]
+    REAL_NUMBER     reduce using rule 54 (iteracao_decl)
+    REAL_NUMBER     [reduce using rule 128 (iteracao_decl)]
+    IF_KEYWORD      reduce using rule 54 (iteracao_decl)
+    IF_KEYWORD      [reduce using rule 128 (iteracao_decl)]
+    ELSE_KEYWORD    reduce using rule 54 (iteracao_decl)
+    ELSE_KEYWORD    [reduce using rule 128 (iteracao_decl)]
+    WHILE_KEYWORD   reduce using rule 54 (iteracao_decl)
+    WHILE_KEYWORD   [reduce using rule 128 (iteracao_decl)]
+    RETURN_KEYWORD  reduce using rule 54 (iteracao_decl)
+    RETURN_KEYWORD  [reduce using rule 128 (iteracao_decl)]
+    OPEN_BRACE      reduce using rule 54 (iteracao_decl)
+    OPEN_BRACE      [reduce using rule 128 (iteracao_decl)]
+    CLOSE_BRACE     reduce using rule 54 (iteracao_decl)
+    CLOSE_BRACE     [reduce using rule 128 (iteracao_decl)]
+    OPEN_PAREN      reduce using rule 54 (iteracao_decl)
+    OPEN_PAREN      [reduce using rule 128 (iteracao_decl)]
+    SEMICOLON       reduce using rule 54 (iteracao_decl)
+    SEMICOLON       [reduce using rule 128 (iteracao_decl)]
+    $default        reduce using rule 54 (iteracao_decl)
+
+
+State 159
 
    68 arranjo_acesso: arranjo_acesso OPEN_BRACKET • expressao CLOSE_BRACKET
    69               | arranjo_acesso OPEN_BRACKET • expressao error
    70               | arranjo_acesso OPEN_BRACKET • error CLOSE_BRACKET
+  105               | arranjo_acesso OPEN_BRACKET • expressao CLOSE_BRACKET
+  106               | arranjo_acesso OPEN_BRACKET • expressao error
+  107               | arranjo_acesso OPEN_BRACKET • error CLOSE_BRACKET
 
-    error        shift, and go to state 162
-    OPEN_PAREN   shift, and go to state 70
-    IDENTIFIER   shift, and go to state 72
-    INT_NUMBER   shift, and go to state 73
-    REAL_NUMBER  shift, and go to state 74
+    error        shift, and go to state 161
+    IDENTIFIER   shift, and go to state 66
+    INT_NUMBER   shift, and go to state 67
+    REAL_NUMBER  shift, and go to state 68
+    OPEN_PAREN   shift, and go to state 73
 
-    expressao          go to state 163
+    expressao          go to state 162
+    var                go to state 83
+    expressao_simples  go to state 84
+    expressao_soma     go to state 85
+    termo              go to state 86
+    fator              go to state 87
+    ativacao           go to state 88
+
+
+State 160
+
+   50 selecao_decl: IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando ELSE_KEYWORD • comando
+  124             | IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando ELSE_KEYWORD • comando
+
+    IDENTIFIER      shift, and go to state 66
+    INT_NUMBER      shift, and go to state 67
+    REAL_NUMBER     shift, and go to state 68
+    IF_KEYWORD      shift, and go to state 69
+    WHILE_KEYWORD   shift, and go to state 70
+    RETURN_KEYWORD  shift, and go to state 71
+    OPEN_BRACE      shift, and go to state 47
+    OPEN_PAREN      shift, and go to state 73
+    SEMICOLON       shift, and go to state 74
+
+    composto_decl      go to state 75
+    comando            go to state 163
+    expressao_decl     go to state 78
+    selecao_decl       go to state 79
+    iteracao_decl      go to state 80
+    retorno_decl       go to state 81
+    expressao          go to state 82
     var                go to state 83
     expressao_simples  go to state 84
     expressao_soma     go to state 85
@@ -1988,43 +3298,176 @@ State 160
 
 State 161
 
-   50 selecao_decl: IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando ELSE_KEYWORD comando •
-
-    $default  reduce using rule 50 (selecao_decl)
-
-
-State 162
-
    70 arranjo_acesso: arranjo_acesso OPEN_BRACKET error • CLOSE_BRACKET
+  107               | arranjo_acesso OPEN_BRACKET error • CLOSE_BRACKET
 
     CLOSE_BRACKET  shift, and go to state 164
 
 
-State 163
+State 162
 
    68 arranjo_acesso: arranjo_acesso OPEN_BRACKET expressao • CLOSE_BRACKET
    69               | arranjo_acesso OPEN_BRACKET expressao • error
+  105               | arranjo_acesso OPEN_BRACKET expressao • CLOSE_BRACKET
+  106               | arranjo_acesso OPEN_BRACKET expressao • error
 
     error          shift, and go to state 165
     CLOSE_BRACKET  shift, and go to state 166
 
 
+State 163
+
+   50 selecao_decl: IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando ELSE_KEYWORD comando •
+  124             | IF_KEYWORD OPEN_PAREN expressao CLOSE_PAREN comando ELSE_KEYWORD comando •
+
+    error           reduce using rule 50 (selecao_decl)
+    error           [reduce using rule 124 (selecao_decl)]
+    IDENTIFIER      reduce using rule 50 (selecao_decl)
+    IDENTIFIER      [reduce using rule 124 (selecao_decl)]
+    INT_NUMBER      reduce using rule 50 (selecao_decl)
+    INT_NUMBER      [reduce using rule 124 (selecao_decl)]
+    REAL_NUMBER     reduce using rule 50 (selecao_decl)
+    REAL_NUMBER     [reduce using rule 124 (selecao_decl)]
+    IF_KEYWORD      reduce using rule 50 (selecao_decl)
+    IF_KEYWORD      [reduce using rule 124 (selecao_decl)]
+    ELSE_KEYWORD    reduce using rule 50 (selecao_decl)
+    ELSE_KEYWORD    [reduce using rule 124 (selecao_decl)]
+    WHILE_KEYWORD   reduce using rule 50 (selecao_decl)
+    WHILE_KEYWORD   [reduce using rule 124 (selecao_decl)]
+    RETURN_KEYWORD  reduce using rule 50 (selecao_decl)
+    RETURN_KEYWORD  [reduce using rule 124 (selecao_decl)]
+    OPEN_BRACE      reduce using rule 50 (selecao_decl)
+    OPEN_BRACE      [reduce using rule 124 (selecao_decl)]
+    CLOSE_BRACE     reduce using rule 50 (selecao_decl)
+    CLOSE_BRACE     [reduce using rule 124 (selecao_decl)]
+    OPEN_PAREN      reduce using rule 50 (selecao_decl)
+    OPEN_PAREN      [reduce using rule 124 (selecao_decl)]
+    SEMICOLON       reduce using rule 50 (selecao_decl)
+    SEMICOLON       [reduce using rule 124 (selecao_decl)]
+    $default        reduce using rule 50 (selecao_decl)
+
+
 State 164
 
    70 arranjo_acesso: arranjo_acesso OPEN_BRACKET error CLOSE_BRACKET •
+  107               | arranjo_acesso OPEN_BRACKET error CLOSE_BRACKET •
 
-    $default  reduce using rule 70 (arranjo_acesso)
+    error          reduce using rule 70 (arranjo_acesso)
+    error          [reduce using rule 107 (arranjo_acesso)]
+    PLUS_OP        reduce using rule 70 (arranjo_acesso)
+    PLUS_OP        [reduce using rule 107 (arranjo_acesso)]
+    MINUS_OP       reduce using rule 70 (arranjo_acesso)
+    MINUS_OP       [reduce using rule 107 (arranjo_acesso)]
+    MULT_OP        reduce using rule 70 (arranjo_acesso)
+    MULT_OP        [reduce using rule 107 (arranjo_acesso)]
+    DIV_OP         reduce using rule 70 (arranjo_acesso)
+    DIV_OP         [reduce using rule 107 (arranjo_acesso)]
+    ASSIGN_OP      reduce using rule 70 (arranjo_acesso)
+    ASSIGN_OP      [reduce using rule 107 (arranjo_acesso)]
+    EQUAL_OP       reduce using rule 70 (arranjo_acesso)
+    EQUAL_OP       [reduce using rule 107 (arranjo_acesso)]
+    NE_OP          reduce using rule 70 (arranjo_acesso)
+    NE_OP          [reduce using rule 107 (arranjo_acesso)]
+    LT_OP          reduce using rule 70 (arranjo_acesso)
+    LT_OP          [reduce using rule 107 (arranjo_acesso)]
+    LE_OP          reduce using rule 70 (arranjo_acesso)
+    LE_OP          [reduce using rule 107 (arranjo_acesso)]
+    GT_OP          reduce using rule 70 (arranjo_acesso)
+    GT_OP          [reduce using rule 107 (arranjo_acesso)]
+    GE_OP          reduce using rule 70 (arranjo_acesso)
+    GE_OP          [reduce using rule 107 (arranjo_acesso)]
+    CLOSE_PAREN    reduce using rule 70 (arranjo_acesso)
+    CLOSE_PAREN    [reduce using rule 107 (arranjo_acesso)]
+    OPEN_BRACKET   reduce using rule 70 (arranjo_acesso)
+    OPEN_BRACKET   [reduce using rule 107 (arranjo_acesso)]
+    CLOSE_BRACKET  reduce using rule 70 (arranjo_acesso)
+    CLOSE_BRACKET  [reduce using rule 107 (arranjo_acesso)]
+    SEMICOLON      reduce using rule 70 (arranjo_acesso)
+    SEMICOLON      [reduce using rule 107 (arranjo_acesso)]
+    COMMA          reduce using rule 70 (arranjo_acesso)
+    COMMA          [reduce using rule 107 (arranjo_acesso)]
+    $default       reduce using rule 70 (arranjo_acesso)
 
 
 State 165
 
    69 arranjo_acesso: arranjo_acesso OPEN_BRACKET expressao error •
+  106               | arranjo_acesso OPEN_BRACKET expressao error •
 
-    $default  reduce using rule 69 (arranjo_acesso)
+    error          reduce using rule 69 (arranjo_acesso)
+    error          [reduce using rule 106 (arranjo_acesso)]
+    PLUS_OP        reduce using rule 69 (arranjo_acesso)
+    PLUS_OP        [reduce using rule 106 (arranjo_acesso)]
+    MINUS_OP       reduce using rule 69 (arranjo_acesso)
+    MINUS_OP       [reduce using rule 106 (arranjo_acesso)]
+    MULT_OP        reduce using rule 69 (arranjo_acesso)
+    MULT_OP        [reduce using rule 106 (arranjo_acesso)]
+    DIV_OP         reduce using rule 69 (arranjo_acesso)
+    DIV_OP         [reduce using rule 106 (arranjo_acesso)]
+    ASSIGN_OP      reduce using rule 69 (arranjo_acesso)
+    ASSIGN_OP      [reduce using rule 106 (arranjo_acesso)]
+    EQUAL_OP       reduce using rule 69 (arranjo_acesso)
+    EQUAL_OP       [reduce using rule 106 (arranjo_acesso)]
+    NE_OP          reduce using rule 69 (arranjo_acesso)
+    NE_OP          [reduce using rule 106 (arranjo_acesso)]
+    LT_OP          reduce using rule 69 (arranjo_acesso)
+    LT_OP          [reduce using rule 106 (arranjo_acesso)]
+    LE_OP          reduce using rule 69 (arranjo_acesso)
+    LE_OP          [reduce using rule 106 (arranjo_acesso)]
+    GT_OP          reduce using rule 69 (arranjo_acesso)
+    GT_OP          [reduce using rule 106 (arranjo_acesso)]
+    GE_OP          reduce using rule 69 (arranjo_acesso)
+    GE_OP          [reduce using rule 106 (arranjo_acesso)]
+    CLOSE_PAREN    reduce using rule 69 (arranjo_acesso)
+    CLOSE_PAREN    [reduce using rule 106 (arranjo_acesso)]
+    OPEN_BRACKET   reduce using rule 69 (arranjo_acesso)
+    OPEN_BRACKET   [reduce using rule 106 (arranjo_acesso)]
+    CLOSE_BRACKET  reduce using rule 69 (arranjo_acesso)
+    CLOSE_BRACKET  [reduce using rule 106 (arranjo_acesso)]
+    SEMICOLON      reduce using rule 69 (arranjo_acesso)
+    SEMICOLON      [reduce using rule 106 (arranjo_acesso)]
+    COMMA          reduce using rule 69 (arranjo_acesso)
+    COMMA          [reduce using rule 106 (arranjo_acesso)]
+    $default       reduce using rule 69 (arranjo_acesso)
 
 
 State 166
 
    68 arranjo_acesso: arranjo_acesso OPEN_BRACKET expressao CLOSE_BRACKET •
+  105               | arranjo_acesso OPEN_BRACKET expressao CLOSE_BRACKET •
 
-    $default  reduce using rule 68 (arranjo_acesso)
+    error          reduce using rule 68 (arranjo_acesso)
+    error          [reduce using rule 105 (arranjo_acesso)]
+    PLUS_OP        reduce using rule 68 (arranjo_acesso)
+    PLUS_OP        [reduce using rule 105 (arranjo_acesso)]
+    MINUS_OP       reduce using rule 68 (arranjo_acesso)
+    MINUS_OP       [reduce using rule 105 (arranjo_acesso)]
+    MULT_OP        reduce using rule 68 (arranjo_acesso)
+    MULT_OP        [reduce using rule 105 (arranjo_acesso)]
+    DIV_OP         reduce using rule 68 (arranjo_acesso)
+    DIV_OP         [reduce using rule 105 (arranjo_acesso)]
+    ASSIGN_OP      reduce using rule 68 (arranjo_acesso)
+    ASSIGN_OP      [reduce using rule 105 (arranjo_acesso)]
+    EQUAL_OP       reduce using rule 68 (arranjo_acesso)
+    EQUAL_OP       [reduce using rule 105 (arranjo_acesso)]
+    NE_OP          reduce using rule 68 (arranjo_acesso)
+    NE_OP          [reduce using rule 105 (arranjo_acesso)]
+    LT_OP          reduce using rule 68 (arranjo_acesso)
+    LT_OP          [reduce using rule 105 (arranjo_acesso)]
+    LE_OP          reduce using rule 68 (arranjo_acesso)
+    LE_OP          [reduce using rule 105 (arranjo_acesso)]
+    GT_OP          reduce using rule 68 (arranjo_acesso)
+    GT_OP          [reduce using rule 105 (arranjo_acesso)]
+    GE_OP          reduce using rule 68 (arranjo_acesso)
+    GE_OP          [reduce using rule 105 (arranjo_acesso)]
+    CLOSE_PAREN    reduce using rule 68 (arranjo_acesso)
+    CLOSE_PAREN    [reduce using rule 105 (arranjo_acesso)]
+    OPEN_BRACKET   reduce using rule 68 (arranjo_acesso)
+    OPEN_BRACKET   [reduce using rule 105 (arranjo_acesso)]
+    CLOSE_BRACKET  reduce using rule 68 (arranjo_acesso)
+    CLOSE_BRACKET  [reduce using rule 105 (arranjo_acesso)]
+    SEMICOLON      reduce using rule 68 (arranjo_acesso)
+    SEMICOLON      [reduce using rule 105 (arranjo_acesso)]
+    COMMA          reduce using rule 68 (arranjo_acesso)
+    COMMA          [reduce using rule 105 (arranjo_acesso)]
+    $default       reduce using rule 68 (arranjo_acesso)
