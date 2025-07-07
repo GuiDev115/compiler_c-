@@ -9,7 +9,9 @@ int main() {
 
     
     if (x > 0) {
-        y = x + 2;
+        int z;
+        z = 10;
+        y = x + 2 - 1;
     }
     
     while (y < 20) {

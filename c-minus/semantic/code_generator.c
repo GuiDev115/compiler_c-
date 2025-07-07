@@ -313,7 +313,7 @@ char* generate_function_call_code(const char* func_name, int param_count __attri
     return temp;
 }
 
-// Otimização simples de código (placeholder)
+// Otimização simples de código (placeholder)~
 void optimize_code() {
     // Implementação futura de otimizações:
     // - Eliminação de código morto

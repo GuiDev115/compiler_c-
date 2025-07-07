@@ -119,6 +119,19 @@ void enter_scope(SymbolTable* st) {
     st->current_address = 0;
 }
 
+// Sai do escopo atual (versão para análise - mantém símbolos para depuração)
+void exit_scope_keep_symbols(SymbolTable* st) {
+    if (st->scope_top < 0) {
+        fprintf(stderr, "Erro: Tentativa de sair do escopo global\n");
+        return;
+    }
+    
+    // Apenas restaura escopo e endereço, mas mantém símbolos para análise
+    st->current_scope = st->scope_stack[st->scope_top];
+    st->current_address = st->address_stack[st->scope_top];
+    st->scope_top--;
+}
+
 // Sai do escopo atual
 void exit_scope(SymbolTable* st) {
     if (st->scope_top < 0) {

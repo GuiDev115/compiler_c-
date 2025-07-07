@@ -101,6 +101,7 @@ unsigned int hash(const char* str);
 // Gerenciamento de escopo
 void enter_scope(SymbolTable* st);
 void exit_scope(SymbolTable* st);
+void exit_scope_keep_symbols(SymbolTable* st);
 
 // Operações com símbolos
 SymbolEntry* insert_symbol(SymbolTable* st, const char* name, SymbolType symbol_type, 

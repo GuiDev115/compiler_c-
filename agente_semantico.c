@@ -200,162 +200,59 @@ void analyze_test_file(const char *filepath, const char *filename) {
     
     printf("🔍 Construindo tabela de símbolos...\n");
     
+    // Stack para rastrear blocos aninhados
+    int brace_count = 0;
+    int in_function = 0;
+    
     // Analisar linha por linha para construir tabela de símbolos
     char *line = strtok(content, "\n");
     while (line != NULL) {
         char line_copy[1000];
         strcpy(line_copy, line);
         
-        // Detectar declarações de arrays int
-        if (strstr(line_copy, "int ") && strstr(line_copy, "[") && strstr(line_copy, "]")) {
-            char *token = strstr(line_copy, "int ");
-            if (token) {
-                token += 4; // pular "int "
-                while (*token == ' ') token++; // pular espaços
-                
-                char var_name[100] = "";
-                int i = 0;
-                while (token[i] && token[i] != '[' && token[i] != ' ') {
-                    var_name[i] = token[i];
-                    i++;
-                }
-                var_name[i] = '\0';
-                
-                // Extrair tamanho do array
-                char *bracket_start = strstr(token, "[");
-                char *bracket_end = strstr(token, "]");
-                if (bracket_start && bracket_end && strlen(var_name) > 0) {
-                    char size_str[20] = "";
-                    int size_len = bracket_end - bracket_start - 1;
-                    if (size_len > 0 && size_len < 20) {
-                        strncpy(size_str, bracket_start + 1, size_len);
-                        size_str[size_len] = '\0';
-                        
-                        int array_size = atoi(size_str);
-                        if (array_size > 0) {
-                            declare_variable(var_name, TYPE_INT, 1, line_counter);
-                            SymbolEntry* entry = lookup_symbol(global_symbol_table, var_name);
-                            if (entry) {
-                                add_array_dimension(entry, array_size);
-                            }
-                            printf("   ✓ Array '%s[%d]' (int) inserido na tabela - linha %d\n", var_name, array_size, line_counter);
-                            var_declarations++;
-                            arrays++;
-                        }
-                    }
-                }
-            }
+        // Detectar abertura de bloco
+        if (strstr(line_copy, "{")) {
+            brace_count++;
+            enter_scope(global_symbol_table);
+            printf("   ➡️  Entrando em novo escopo (nível %d) - linha %d\n", 
+                   global_symbol_table->current_scope, line_counter);
         }
-        // Detectar declarações de arrays float
-        else if (strstr(line_copy, "float ") && strstr(line_copy, "[") && strstr(line_copy, "]")) {
-            char *token = strstr(line_copy, "float ");
-            if (token) {
-                token += 6; // pular "float "
-                while (*token == ' ') token++; // pular espaços
+        
+        // Detectar fechamento de bloco
+        if (strstr(line_copy, "}")) {
+            if (brace_count > 0) {
+                printf("   ⬅️  Saindo do escopo (nível %d) - linha %d\n", 
+                       global_symbol_table->current_scope, line_counter);
+                exit_scope_keep_symbols(global_symbol_table);
+                brace_count--;
                 
-                char var_name[100] = "";
-                int i = 0;
-                while (token[i] && token[i] != '[' && token[i] != ' ') {
-                    var_name[i] = token[i];
-                    i++;
-                }
-                var_name[i] = '\0';
-                
-                // Extrair tamanho do array
-                char *bracket_start = strstr(token, "[");
-                char *bracket_end = strstr(token, "]");
-                if (bracket_start && bracket_end && strlen(var_name) > 0) {
-                    char size_str[20] = "";
-                    int size_len = bracket_end - bracket_start - 1;
-                    if (size_len > 0 && size_len < 20) {
-                        strncpy(size_str, bracket_start + 1, size_len);
-                        size_str[size_len] = '\0';
-                        
-                        int array_size = atoi(size_str);
-                        if (array_size > 0) {
-                            declare_variable(var_name, TYPE_FLOAT, 1, line_counter);
-                            SymbolEntry* entry = lookup_symbol(global_symbol_table, var_name);
-                            if (entry) {
-                                add_array_dimension(entry, array_size);
-                            }
-                            printf("   ✓ Array '%s[%d]' (float) inserido na tabela - linha %d\n", var_name, array_size, line_counter);
-                            var_declarations++;
-                            arrays++;
-                        }
-                    }
-                }
-            }
-        }
-        // Detectar declarações de variáveis int simples
-        else if (strstr(line_copy, "int ") && strstr(line_copy, ";")) {
-            char *token = strstr(line_copy, "int ");
-            if (token) {
-                token += 4; // pular "int "
-                while (*token == ' ') token++; // pular espaços
-                
-                char var_name[100] = "";
-                int i = 0;
-                while (token[i] && token[i] != ';' && token[i] != '[' && token[i] != ' ') {
-                    var_name[i] = token[i];
-                    i++;
-                }
-                var_name[i] = '\0';
-                
-                if (strlen(var_name) > 0) {
-                    declare_variable(var_name, TYPE_INT, 0, line_counter);
-                    printf("   ✓ Variável '%s' (int) inserida na tabela - linha %d\n", var_name, line_counter);
-                    var_declarations++;
+                if (in_function && brace_count == 0) {
+                    in_function = 0;
+                    printf("   🔚 Fim da função - linha %d\n", line_counter);
                 }
             }
         }
         
-        // Detectar declarações float
-        if (strstr(line_copy, "float ") && strstr(line_copy, ";")) {
-            char *token = strstr(line_copy, "float ");
-            if (token) {
-                token += 6; // pular "float "
-                while (*token == ' ') token++; // pular espaços
-                
-                char var_name[100] = "";
-                int i = 0;
-                while (token[i] && token[i] != ';' && token[i] != '[' && token[i] != ' ') {
-                    var_name[i] = token[i];
-                    i++;
-                }
-                var_name[i] = '\0';
-                
-                if (strlen(var_name) > 0) {
-                    declare_variable(var_name, TYPE_FLOAT, 0, line_counter);
-                    printf("   ✓ Variável '%s' (float) inserida na tabela - linha %d\n", var_name, line_counter);
-                    var_declarations++;
-                }
-            }
+        // Detectar função main (entrada em escopo de função)
+        if (strstr(line_copy, "main") && strstr(line_copy, "(")) {
+            in_function = 1;
+            printf("   🚀 Início da função main - linha %d\n", line_counter);
         }
         
-        // Detectar declarações char
-        if (strstr(line_copy, "char ") && strstr(line_copy, ";")) {
-            char *token = strstr(line_copy, "char ");
-            if (token) {
-                token += 5; // pular "char "
-                while (*token == ' ') token++; // pular espaços
-                
-                char var_name[100] = "";
-                int i = 0;
-                while (token[i] && token[i] != ';' && token[i] != '[' && token[i] != ' ') {
-                    var_name[i] = token[i];
-                    i++;
-                }
-                var_name[i] = '\0';
-                
-                if (strlen(var_name) > 0) {
-                    declare_variable(var_name, TYPE_CHAR, 0, line_counter);
-                    printf("   ✓ Variável '%s' (char) inserida na tabela - linha %d\n", var_name, line_counter);
-                    var_declarations++;
-                }
-            }
+        // Detectar estruturas de controle que podem criar novos escopos
+        if (strstr(line_copy, "if ") && strstr(line_copy, "(")) {
+            printf("   🔀 Estrutura condicional 'if' detectada - linha %d\n", line_counter);
         }
         
-        // Detectar arrays bidimensionais
+        if (strstr(line_copy, "while ") && strstr(line_copy, "(")) {
+            printf("   🔄 Estrutura de repetição 'while' detectada - linha %d\n", line_counter);
+        }
+        
+        if (strstr(line_copy, "for ") && strstr(line_copy, "(")) {
+            printf("   🔁 Estrutura de repetição 'for' detectada - linha %d\n", line_counter);
+        }
+        
+        // Detectar arrays bidimensionais primeiro (para evitar conflito)
         if (strstr(line_copy, "][") && strstr(line_copy, "[")) {
             // Arrays bidimensionais como int matriz[5][3]
             char *type_start = NULL;
@@ -424,9 +321,130 @@ void analyze_test_file(const char *filepath, const char *filename) {
                 }
             }
         }
+        // Detectar arrays unidimensionais (só se não for bidimensional)
+        else if (strstr(line_copy, "[") && strstr(line_copy, "]") && !strstr(line_copy, "][")) {
+            DataType array_type = TYPE_INT;
+            char *token = NULL;
+            
+            if (strstr(line_copy, "int ")) {
+                token = strstr(line_copy, "int ") + 4;
+                array_type = TYPE_INT;
+            } else if (strstr(line_copy, "float ")) {
+                token = strstr(line_copy, "float ") + 6;
+                array_type = TYPE_FLOAT;
+            } else if (strstr(line_copy, "char ")) {
+                token = strstr(line_copy, "char ") + 5;
+                array_type = TYPE_CHAR;
+            }
+            
+            if (token) {
+                while (*token == ' ') token++; // pular espaços
+                
+                char var_name[100] = "";
+                int i = 0;
+                while (token[i] && token[i] != '[' && token[i] != ' ') {
+                    var_name[i] = token[i];
+                    i++;
+                }
+                var_name[i] = '\0';
+                
+                // Extrair tamanho do array
+                char *bracket_start = strstr(token, "[");
+                char *bracket_end = strstr(token, "]");
+                if (bracket_start && bracket_end && strlen(var_name) > 0) {
+                    char size_str[20] = "";
+                    int size_len = bracket_end - bracket_start - 1;
+                    if (size_len > 0 && size_len < 20) {
+                        strncpy(size_str, bracket_start + 1, size_len);
+                        size_str[size_len] = '\0';
+                        
+                        int array_size = atoi(size_str);
+                        if (array_size > 0) {
+                            declare_variable(var_name, array_type, 1, line_counter);
+                            SymbolEntry* entry = lookup_symbol(global_symbol_table, var_name);
+                            if (entry) {
+                                add_array_dimension(entry, array_size);
+                            }
+                            printf("   ✓ Array '%s[%d]' (%s) inserido na tabela - linha %d\n", 
+                                   var_name, array_size, type_to_string(array_type), line_counter);
+                            var_declarations++;
+                            arrays++;
+                        }
+                    }
+                }
+            }
+        }
+        // Detectar declarações de variáveis int simples
+        else if (strstr(line_copy, "int ") && strstr(line_copy, ";") && !strstr(line_copy, "[")) {
+            char *token = strstr(line_copy, "int ");
+            if (token) {
+                token += 4; // pular "int "
+                while (*token == ' ') token++; // pular espaços
+                
+                char var_name[100] = "";
+                int i = 0;
+                while (token[i] && token[i] != ';' && token[i] != '[' && token[i] != ' ') {
+                    var_name[i] = token[i];
+                    i++;
+                }
+                var_name[i] = '\0';
+                
+                if (strlen(var_name) > 0) {
+                    declare_variable(var_name, TYPE_INT, 0, line_counter);
+                    printf("   ✓ Variável '%s' (int) inserida na tabela - linha %d\n", var_name, line_counter);
+                    var_declarations++;
+                }
+            }
+        }
+        
+        // Detectar declarações float simples
+        else if (strstr(line_copy, "float ") && strstr(line_copy, ";") && !strstr(line_copy, "[")) {
+            char *token = strstr(line_copy, "float ");
+            if (token) {
+                token += 6; // pular "float "
+                while (*token == ' ') token++; // pular espaços
+                
+                char var_name[100] = "";
+                int i = 0;
+                while (token[i] && token[i] != ';' && token[i] != '[' && token[i] != ' ') {
+                    var_name[i] = token[i];
+                    i++;
+                }
+                var_name[i] = '\0';
+                
+                if (strlen(var_name) > 0) {
+                    declare_variable(var_name, TYPE_FLOAT, 0, line_counter);
+                    printf("   ✓ Variável '%s' (float) inserida na tabela - linha %d\n", var_name, line_counter);
+                    var_declarations++;
+                }
+            }
+        }
+        
+        // Detectar declarações char simples
+        else if (strstr(line_copy, "char ") && strstr(line_copy, ";") && !strstr(line_copy, "[")) {
+            char *token = strstr(line_copy, "char ");
+            if (token) {
+                token += 5; // pular "char "
+                while (*token == ' ') token++; // pular espaços
+                
+                char var_name[100] = "";
+                int i = 0;
+                while (token[i] && token[i] != ';' && token[i] != '[' && token[i] != ' ') {
+                    var_name[i] = token[i];
+                    i++;
+                }
+                var_name[i] = '\0';
+                
+                if (strlen(var_name) > 0) {
+                    declare_variable(var_name, TYPE_CHAR, 0, line_counter);
+                    printf("   ✓ Variável '%s' (char) inserida na tabela - linha %d\n", var_name, line_counter);
+                    var_declarations++;
+                }
+            }
+        }
         
         // Detectar structs
-        if (strstr(line_copy, "struct ")) {
+        else if (strstr(line_copy, "struct ")) {
             structs++;
             printf("   ✓ Struct detectado - linha %d\n", line_counter);
         }
