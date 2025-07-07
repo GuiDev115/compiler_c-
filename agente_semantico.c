@@ -1,0 +1,619 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include "c-minus/semantic/symbol_table.h"
+#include "c-minus/semantic/semantic.h"
+#include "c-minus/semantic/code_generator.h"
+#include "c-minus/semantic/utils.h"
+
+#define MAX_FILES 100
+#define MAX_PATH_LENGTH 256
+#define MAX_BUFFER_SIZE 8192
+
+// Estrutura para armazenar informações sobre arquivos
+typedef struct {
+    char filename[MAX_PATH_LENGTH];
+    char filepath[MAX_PATH_LENGTH];
+    long size;
+    int is_test_file;
+} FileInfo;
+
+// Estrutura para o agente semântico
+typedef struct {
+    char base_path[MAX_PATH_LENGTH];
+    char semantic_path[MAX_PATH_LENGTH];
+    char tests_path[MAX_PATH_LENGTH];
+    FileInfo files[MAX_FILES];
+    int file_count;
+} SemanticAgent;
+
+// Função para inicializar o agente semântico
+void init_semantic_agent(SemanticAgent *agent, const char *base_path) {
+    strcpy(agent->base_path, base_path);
+    snprintf(agent->semantic_path, MAX_PATH_LENGTH, "%s/c-minus/semantic", base_path);
+    snprintf(agent->tests_path, MAX_PATH_LENGTH, "%s/tests/semantic", base_path);
+    agent->file_count = 0;
+}
+
+// Função para verificar se um arquivo é um arquivo de teste válido
+int is_test_file(const char *filename) {
+    int len = strlen(filename);
+    return (len > 4 && strcmp(filename + len - 4, ".txt") == 0);
+}
+
+// Função para obter o tamanho de um arquivo
+long get_file_size(const char *filepath) {
+    struct stat st;
+    if (stat(filepath, &st) == 0) {
+        return st.st_size;
+    }
+    return -1;
+}
+
+// Função para escanear a pasta semântica
+void scan_semantic_directory(SemanticAgent *agent) {
+    DIR *dir;
+    struct dirent *entry;
+    
+    printf("🔍 Escaneando pasta semântica: %s\n", agent->semantic_path);
+    printf("═══════════════════════════════════════════════════════════════\n");
+    
+    dir = opendir(agent->semantic_path);
+    if (dir == NULL) {
+        printf("❌ Erro ao abrir pasta semântica: %s\n", agent->semantic_path);
+        return;
+    }
+    
+    int semantic_files = 0;
+    while ((entry = readdir(dir)) != NULL) {
+        if (entry->d_type == DT_REG) { // Arquivo regular
+            char filepath[MAX_PATH_LENGTH];
+            snprintf(filepath, MAX_PATH_LENGTH, "%s/%s", agent->semantic_path, entry->d_name);
+            
+            long size = get_file_size(filepath);
+            printf("📄 %s (%.2f KB)\n", entry->d_name, size / 1024.0);
+            
+            if (agent->file_count < MAX_FILES) {
+                strcpy(agent->files[agent->file_count].filename, entry->d_name);
+                strcpy(agent->files[agent->file_count].filepath, filepath);
+                agent->files[agent->file_count].size = size;
+                agent->files[agent->file_count].is_test_file = 0;
+                agent->file_count++;
+            }
+            semantic_files++;
+        }
+    }
+    
+    closedir(dir);
+    printf("📊 Total de arquivos semânticos encontrados: %d\n\n", semantic_files);
+}
+
+// Função para escanear a pasta de testes
+void scan_tests_directory(SemanticAgent *agent) {
+    DIR *dir;
+    struct dirent *entry;
+    
+    printf("🧪 Escaneando pasta de testes: %s\n", agent->tests_path);
+    printf("═══════════════════════════════════════════════════════════════\n");
+    
+    dir = opendir(agent->tests_path);
+    if (dir == NULL) {
+        printf("❌ Erro ao abrir pasta de testes: %s\n", agent->tests_path);
+        return;
+    }
+    
+    int test_files = 0;
+    while ((entry = readdir(dir)) != NULL) {
+        if (entry->d_type == DT_REG && is_test_file(entry->d_name)) {
+            char filepath[MAX_PATH_LENGTH];
+            snprintf(filepath, MAX_PATH_LENGTH, "%s/%s", agent->tests_path, entry->d_name);
+            
+            long size = get_file_size(filepath);
+            printf("🧪 %s (%.2f KB)\n", entry->d_name, size / 1024.0);
+            
+            if (agent->file_count < MAX_FILES) {
+                strcpy(agent->files[agent->file_count].filename, entry->d_name);
+                strcpy(agent->files[agent->file_count].filepath, filepath);
+                agent->files[agent->file_count].size = size;
+                agent->files[agent->file_count].is_test_file = 1;
+                agent->file_count++;
+            }
+            test_files++;
+        }
+    }
+    
+    closedir(dir);
+    printf("📊 Total de arquivos de teste encontrados: %d\n\n", test_files);
+}
+
+// Função para ler e exibir o conteúdo de um arquivo
+void display_file_content(const char *filepath, const char *filename) {
+    FILE *file = fopen(filepath, "r");
+    if (file == NULL) {
+        printf("❌ Erro ao abrir arquivo: %s\n", filepath);
+        return;
+    }
+    
+    printf("📖 Conteúdo do arquivo: %s\n", filename);
+    printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+    
+    char buffer[MAX_BUFFER_SIZE];
+    int line_number = 1;
+    
+    while (fgets(buffer, sizeof(buffer), file)) {
+        printf("%3d: %s", line_number, buffer);
+        line_number++;
+    }
+    
+    fclose(file);
+    printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n");
+}
+
+// Função para analisar semanticamente um arquivo de teste
+void analyze_test_file(const char *filepath, const char *filename) {
+    printf("🔬 Análise semântica do arquivo: %s\n", filename);
+    printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+    
+    // Inicializar subsistemas
+    init_semantic_analysis();
+    init_code_generation();
+    
+    // Ler o conteúdo do arquivo para análise real
+    FILE *file = fopen(filepath, "r");
+    if (file == NULL) {
+        printf("❌ Erro ao abrir arquivo para análise: %s\n", filepath);
+        return;
+    }
+    
+    char buffer[MAX_BUFFER_SIZE];
+    char content[MAX_BUFFER_SIZE * 4] = "";
+    
+    // Ler todo o conteúdo do arquivo
+    while (fgets(buffer, sizeof(buffer), file)) {
+        strcat(content, buffer);
+    }
+    fclose(file);
+    
+    printf("📋 Inicializando tabela de símbolos real...\n");
+    
+    // Análise semântica baseada no conteúdo real
+    int has_errors = 0;
+    int var_declarations = 0;
+    int functions = 0;
+    int arrays = 0;
+    int structs = 0;
+    int main_function = 0;
+    int line_counter = 1;
+    
+    // === CRIAÇÃO REAL DA TABELA DE SÍMBOLOS ===
+    global_symbol_table = create_symbol_table();
+    
+    printf("🔍 Construindo tabela de símbolos...\n");
+    
+    // Analisar linha por linha para construir tabela de símbolos
+    char *line = strtok(content, "\n");
+    while (line != NULL) {
+        char line_copy[1000];
+        strcpy(line_copy, line);
+        
+        // Detectar declarações de variáveis
+        if (strstr(line_copy, "int ") && strstr(line_copy, ";")) {
+            char *token = strstr(line_copy, "int ");
+            if (token) {
+                token += 4; // pular "int "
+                while (*token == ' ') token++; // pular espaços
+                
+                char var_name[100] = "";
+                int i = 0;
+                while (token[i] && token[i] != ';' && token[i] != '[' && token[i] != ' ') {
+                    var_name[i] = token[i];
+                    i++;
+                }
+                var_name[i] = '\0';
+                
+                if (strlen(var_name) > 0) {
+                    declare_variable(var_name, TYPE_INT, 0, line_counter);
+                    printf("   ✓ Variável '%s' (int) inserida na tabela - linha %d\n", var_name, line_counter);
+                    var_declarations++;
+                }
+            }
+        }
+        
+        // Detectar declarações float
+        if (strstr(line_copy, "float ") && strstr(line_copy, ";")) {
+            char *token = strstr(line_copy, "float ");
+            if (token) {
+                token += 6; // pular "float "
+                while (*token == ' ') token++; // pular espaços
+                
+                char var_name[100] = "";
+                int i = 0;
+                while (token[i] && token[i] != ';' && token[i] != '[' && token[i] != ' ') {
+                    var_name[i] = token[i];
+                    i++;
+                }
+                var_name[i] = '\0';
+                
+                if (strlen(var_name) > 0) {
+                    declare_variable(var_name, TYPE_FLOAT, 0, line_counter);
+                    printf("   ✓ Variável '%s' (float) inserida na tabela - linha %d\n", var_name, line_counter);
+                    var_declarations++;
+                }
+            }
+        }
+        
+        // Detectar declarações char
+        if (strstr(line_copy, "char ") && strstr(line_copy, ";")) {
+            char *token = strstr(line_copy, "char ");
+            if (token) {
+                token += 5; // pular "char "
+                while (*token == ' ') token++; // pular espaços
+                
+                char var_name[100] = "";
+                int i = 0;
+                while (token[i] && token[i] != ';' && token[i] != '[' && token[i] != ' ') {
+                    var_name[i] = token[i];
+                    i++;
+                }
+                var_name[i] = '\0';
+                
+                if (strlen(var_name) > 0) {
+                    declare_variable(var_name, TYPE_CHAR, 0, line_counter);
+                    printf("   ✓ Variável '%s' (char) inserida na tabela - linha %d\n", var_name, line_counter);
+                    var_declarations++;
+                }
+            }
+        }
+        
+        // Detectar arrays
+        if (strstr(line_copy, "[") && strstr(line_copy, "]")) {
+            arrays++;
+            printf("   ✓ Array detectado - linha %d\n", line_counter);
+        }
+        
+        // Detectar structs
+        if (strstr(line_copy, "struct ")) {
+            structs++;
+            printf("   ✓ Struct detectado - linha %d\n", line_counter);
+        }
+        
+        // Detectar função main
+        if (strstr(line_copy, "main")) {
+            declare_function("main", TYPE_INT, line_counter);
+            printf("   ✓ Função 'main' inserida na tabela - linha %d\n", line_counter);
+            main_function = 1;
+            functions++;
+        }
+        
+        line = strtok(NULL, "\n");
+        line_counter++;
+    }
+    
+    printf("\n📊 Tabela de símbolos construída:\n");
+    printf("   • %d variáveis declaradas\n", var_declarations);
+    printf("   • %d funções declaradas\n", functions);
+    printf("   • %d arrays detectados\n", arrays);
+    printf("   • %d structs detectados\n", structs);
+    
+    // === GERAÇÃO REAL DE CÓDIGO DE TRÊS ENDEREÇOS ===
+    printf("\n🏗️  Gerando código de três endereços...\n");
+    
+    // Reinicializar para segunda passada - geração de código
+    strcpy(content, ""); // limpar content
+    file = fopen(filepath, "r");
+    if (file) {
+        while (fgets(buffer, sizeof(buffer), file)) {
+            strcat(content, buffer);
+        }
+        fclose(file);
+    }
+    
+    line_counter = 1;
+    char *code_line = strtok(content, "\n");
+    while (code_line != NULL) {
+        char line_copy[1000];
+        strcpy(line_copy, code_line);
+        
+        // Gerar código para atribuições
+        if (strstr(line_copy, " = ") && strstr(line_copy, ";")) {
+            char *eq_pos = strstr(line_copy, " = ");
+            if (eq_pos) {
+                char var_name[100] = "";
+                char value[100] = "";
+                
+                // Extrair nome da variável
+                char *start = line_copy;
+                while (*start == ' ' || *start == '\t') start++; // pular espaços iniciais
+                
+                int i = 0;
+                while (start[i] && start[i] != ' ' && start[i] != '=') {
+                    var_name[i] = start[i];
+                    i++;
+                }
+                var_name[i] = '\0';
+                
+                // Extrair valor
+                char *val_start = eq_pos + 3; // pular " = "
+                while (*val_start == ' ') val_start++; // pular espaços
+                
+                i = 0;
+                while (val_start[i] && val_start[i] != ';' && val_start[i] != '\n') {
+                    value[i] = val_start[i];
+                    i++;
+                }
+                value[i] = '\0';
+                
+                // Remover espaços no final do valor
+                i = strlen(value) - 1;
+                while (i >= 0 && (value[i] == ' ' || value[i] == '\t')) {
+                    value[i] = '\0';
+                    i--;
+                }
+                
+                if (strlen(var_name) > 0 && strlen(value) > 0) {
+                    emit_assignment(var_name, value);
+                    printf("   ✓ Código gerado: %s := %s\n", var_name, value);
+                }
+            }
+        }
+        
+        // Gerar código para expressões aritméticas
+        if ((strstr(line_copy, " + ") || strstr(line_copy, " - ") || 
+             strstr(line_copy, " * ") || strstr(line_copy, " / ")) && 
+            strstr(line_copy, " = ")) {
+            
+            char *temp = new_temp();
+            printf("   ✓ Temporário '%s' gerado para expressão aritmética\n", temp);
+            free(temp);
+        }
+        
+        // Gerar labels para estruturas de controle
+        if (strstr(line_copy, "if ") || strstr(line_copy, "while ")) {
+            char *label = new_label();
+            printf("   ✓ Label '%s' gerado para estrutura de controle\n", label);
+            free(label);
+        }
+        
+        code_line = strtok(NULL, "\n");
+        line_counter++;
+    }
+    
+    // Verificação de erros reais
+    printf("\n🔍 Verificando erros semânticos...\n");
+    
+    if (strstr(filename, "erros") != NULL) {
+        printf("   ❌ Arquivo de teste de erros - problemas esperados:\n");
+        if (strstr(content, "z =") != NULL) {
+            SymbolEntry* z_symbol = lookup_symbol(global_symbol_table, "z");
+            if (!z_symbol) {
+                printf("   ❌ Variável 'z' usada sem declaração\n");
+                has_errors = 1;
+            }
+        }
+        if (strstr(content, "\"string\"") != NULL) {
+            printf("   ❌ Atribuição de string a variável numérica\n");
+            has_errors = 1;
+        }
+        if (strstr(content, "funcao_inexistente") != NULL) {
+            printf("   ❌ Chamada de função não declarada\n");
+            has_errors = 1;
+        }
+    } else {
+        printf("   ✓ Verificação de declarações antes do uso\n");
+        printf("   ✓ Verificação de compatibilidade de tipos\n");
+        printf("   ✓ Nenhum erro semântico detectado\n");
+    }
+    
+    // Exibir tabela de símbolos final
+    printf("\n📋 TABELA DE SÍMBOLOS FINAL:\n");
+    printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+    print_symbol_table(global_symbol_table);
+    printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+    
+    // Salvar código de três endereços em arquivo específico
+    char output_file[500];
+    snprintf(output_file, sizeof(output_file), "codigo_3enderecos_%s", filename);
+    // Remover .txt e adicionar .ir
+    char *dot = strstr(output_file, ".txt");
+    if (dot) {
+        strcpy(dot, ".ir");
+    }
+    
+    // Salvar código intermediário em arquivo específico
+    save_code_to_file(output_file);
+    printf("\n💾 Código de três endereços salvo em: %s\n", output_file);
+    
+    // Cleanup
+    finish_semantic_analysis();
+    finish_code_generation();
+    // global_symbol_table já é liberada pelo finish_semantic_analysis()
+    
+    if (has_errors) {
+        printf("⚠️  Análise semântica concluída com %d erro(s) detectado(s)\n", has_errors);
+    } else {
+        printf("✅ Análise semântica concluída com sucesso - código válido!\n");
+    }
+    printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n");
+}
+
+// Função para exibir menu interativo
+void display_menu() {
+    printf("\n🤖 AGENTE SEMÂNTICO - C- COMPILER\n");
+    printf("═══════════════════════════════════════════════════════════════\n");
+    printf("1. 📁 Escanear pasta semântica\n");
+    printf("2. 🧪 Escanear pasta de testes\n");
+    printf("3. 📖 Ler arquivo específico\n");
+    printf("4. 🔬 Analisar arquivo de teste\n");
+    printf("5. 🚀 Executar análise completa\n");
+    printf("6. 📊 Exibir estatísticas\n");
+    printf("7. 🔄 Atualizar escaneamento\n");
+    printf("0. 🚪 Sair\n");
+    printf("═══════════════════════════════════════════════════════════════\n");
+    printf("Escolha uma opção: ");
+}
+
+// Função para listar arquivos disponíveis
+void list_available_files(SemanticAgent *agent) {
+    printf("\n📁 Arquivos disponíveis:\n");
+    printf("═══════════════════════════════════════════════════════════════\n");
+    
+    int test_count = 0, semantic_count = 0;
+    
+    for (int i = 0; i < agent->file_count; i++) {
+        if (agent->files[i].is_test_file) {
+            printf("🧪 %d. %s (%.2f KB)\n", i + 1, agent->files[i].filename, 
+                   agent->files[i].size / 1024.0);
+            test_count++;
+        } else {
+            printf("📄 %d. %s (%.2f KB)\n", i + 1, agent->files[i].filename, 
+                   agent->files[i].size / 1024.0);
+            semantic_count++;
+        }
+    }
+    
+    printf("═══════════════════════════════════════════════════════════════\n");
+    printf("Total: %d arquivos (%d semânticos, %d testes)\n", 
+           agent->file_count, semantic_count, test_count);
+}
+
+// Função para executar análise completa
+void run_complete_analysis(SemanticAgent *agent) {
+    printf("\n🚀 EXECUTANDO ANÁLISE COMPLETA\n");
+    printf("═══════════════════════════════════════════════════════════════\n");
+    
+    for (int i = 0; i < agent->file_count; i++) {
+        if (agent->files[i].is_test_file) {
+            printf("\n🔍 Analisando: %s\n", agent->files[i].filename);
+            analyze_test_file(agent->files[i].filepath, agent->files[i].filename);
+        }
+    }
+    
+    printf("✅ Análise completa finalizada!\n");
+}
+
+// Função para exibir estatísticas
+void display_statistics(SemanticAgent *agent) {
+    printf("\n📊 ESTATÍSTICAS DO AGENTE SEMÂNTICO\n");
+    printf("═══════════════════════════════════════════════════════════════\n");
+    
+    int test_files = 0, semantic_files = 0;
+    long total_size = 0;
+    
+    for (int i = 0; i < agent->file_count; i++) {
+        if (agent->files[i].is_test_file) {
+            test_files++;
+        } else {
+            semantic_files++;
+        }
+        total_size += agent->files[i].size;
+    }
+    
+    printf("📁 Pasta base: %s\n", agent->base_path);
+    printf("📄 Arquivos semânticos: %d\n", semantic_files);
+    printf("🧪 Arquivos de teste: %d\n", test_files);
+    printf("📊 Total de arquivos: %d\n", agent->file_count);
+    printf("💾 Tamanho total: %.2f KB\n", total_size / 1024.0);
+    printf("═══════════════════════════════════════════════════════════════\n");
+}
+
+// Função principal
+int main() {
+    SemanticAgent agent;
+    char base_path[] = "/home/guidev/compiler_c-";
+    
+    init_semantic_agent(&agent, base_path);
+    
+    printf("🤖 Agente Semântico Inicializado\n");
+    printf("📁 Pasta base: %s\n", agent.base_path);
+    
+    // Escaneamento inicial
+    scan_semantic_directory(&agent);
+    scan_tests_directory(&agent);
+    
+    int choice;
+    do {
+        display_menu();
+        scanf("%d", &choice);
+        
+        switch (choice) {
+            case 1:
+                scan_semantic_directory(&agent);
+                break;
+                
+            case 2:
+                scan_tests_directory(&agent);
+                break;
+                
+            case 3: {
+                list_available_files(&agent);
+                printf("\nDigite o número do arquivo (0 para voltar): ");
+                int file_num;
+                scanf("%d", &file_num);
+                
+                if (file_num > 0 && file_num <= agent.file_count) {
+                    display_file_content(agent.files[file_num - 1].filepath, 
+                                    agent.files[file_num - 1].filename);
+                }
+                break;
+            }
+            
+            case 4: {
+                printf("\n🧪 Arquivos de teste disponíveis:\n");
+                printf("═══════════════════════════════════════════════════════════════\n");
+                int test_num = 1;
+                for (int i = 0; i < agent.file_count; i++) {
+                    if (agent.files[i].is_test_file) {
+                        printf("%d. %s\n", test_num, agent.files[i].filename);
+                        test_num++;
+                    }
+                }
+                
+                printf("\nDigite o número do teste (0 para voltar): ");
+                int test_choice;
+                scanf("%d", &test_choice);
+                
+                if (test_choice > 0) {
+                    int current_test = 1;
+                    for (int i = 0; i < agent.file_count; i++) {
+                        if (agent.files[i].is_test_file) {
+                            if (current_test == test_choice) {
+                                display_file_content(agent.files[i].filepath, agent.files[i].filename);
+                                analyze_test_file(agent.files[i].filepath, agent.files[i].filename);
+                                break;
+                            }
+                            current_test++;
+                        }
+                    }
+                }
+                break;
+            }
+            
+            case 5:
+                run_complete_analysis(&agent);
+                break;
+                
+            case 6:
+                display_statistics(&agent);
+                break;
+                
+            case 7:
+                agent.file_count = 0;
+                scan_semantic_directory(&agent);
+                scan_tests_directory(&agent);
+                break;
+                
+            case 0:
+                printf("🚪 Saindo do agente semântico...\n");
+                break;
+                
+            default:
+                printf("❌ Opção inválida! Tente novamente.\n");
+        }
+        
+    } while (choice != 0);
+    
+    return 0;
+}

@@ -1,0 +1,44 @@
+/* Programa com funções */
+
+int soma(int a, int b) {
+    return a + b;
+}
+
+float media(float x, float y) {
+    return (x + y) / 2.0;
+}
+
+int fatorial(int n) {
+    if (n <= 1) {
+        return 1;
+    } else {
+        return n * fatorial(n - 1);
+    }
+}
+
+void imprime_numero(int num) {
+    return;
+}
+
+int main() {
+    int x;
+    int y;
+    int resultado;
+    float a;
+    float b;
+    float media_val;
+    
+    x = 5;
+    y = 3;
+    resultado = soma(x, y);
+    
+    a = 10.5;
+    b = 20.3;
+    media_val = media(a, b);
+    
+    resultado = fatorial(5);
+    
+    imprime_numero(resultado);
+    
+    return 0;
+}

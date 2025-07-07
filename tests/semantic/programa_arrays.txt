@@ -1,0 +1,33 @@
+/* Programa com arrays */
+int main() {
+    int vetor[10];
+    int matriz[5][3];
+    float numeros[20];
+    int i;
+    int j;
+    
+    /* Inicialização de array */
+    i = 0;
+    while (i < 10) {
+        vetor[i] = i * 2;
+        i = i + 1;
+    }
+    
+    /* Array bidimensional */
+    i = 0;
+    while (i < 5) {
+        j = 0;
+        while (j < 3) {
+            matriz[i][j] = i + j;
+            j = j + 1;
+        }
+        i = i + 1;
+    }
+    
+    /* Array de floats */
+    numeros[0] = 1.5;
+    numeros[1] = 2.7;
+    numeros[2] = 3.14;
+    
+    return 0;
+}

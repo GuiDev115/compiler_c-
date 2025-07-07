@@ -1,0 +1,9 @@
+=== CÓDIGO INTERMEDIÁRIO DE TRÊS ENDEREÇOS ===
+
+  1: x = 5
+  2: y = 3
+  3: resultado = soma(x, y)
+  4: a = 10.5
+  5: b = 20.3
+  6: media_val = media(a, b)
+  7: resultado = fatorial(5)

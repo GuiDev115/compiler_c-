@@ -1,0 +1,36 @@
+/* Programa com estruturas */
+
+struct Pessoa {
+    int idade;
+    char nome;
+    float altura;
+};
+
+struct Ponto {
+    float x;
+    float y;
+};
+
+int main() {
+    struct Pessoa p1;
+    struct Pessoa p2;
+    struct Ponto origem;
+    struct Ponto destino;
+    
+    /* Inicialização de structs */
+    p1.idade = 25;
+    p1.nome = 'J';
+    p1.altura = 1.75;
+    
+    p2.idade = 30;
+    p2.nome = 'M';
+    p2.altura = 1.68;
+    
+    origem.x = 0.0;
+    origem.y = 0.0;
+    
+    destino.x = 10.5;
+    destino.y = 20.3;
+    
+    return 0;
+}

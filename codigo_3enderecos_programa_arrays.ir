@@ -1,0 +1,13 @@
+=== CÓDIGO INTERMEDIÁRIO DE TRÊS ENDEREÇOS ===
+
+  1: i = 0
+  2: vetor[i] = i * 2
+  3: i = i + 1
+  4: i = 0
+  5: j = 0
+  6: matriz[i][j] = i + j
+  7: j = j + 1
+  8: i = i + 1
+  9: numeros[0] = 1.5
+ 10: numeros[1] = 2.7
+ 11: numeros[2] = 3.14

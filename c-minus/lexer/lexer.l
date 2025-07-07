@@ -116,11 +116,11 @@ other                   .
  
 {digito}+{letra}({letra}|{digito})* 	{ fprintf(yyout, "(%d) Erro léxico na linha %d e na coluna %d. 						Identificador inválido -> \"%s\"\n", ++errors_count, line_number, 						column_number, yytext); column_number+=yyleng; return 						INVALID_IDENTIFIER; }
 
-{num_int}               		{ column_number+=yyleng; return INT_NUMBER; }  
+{num_int}               		{ column_number+=yyleng; yylval.strval = strdup(yytext); return INT_NUMBER; }  
 
-{int}                   		{ column_number+=yyleng; return REAL_NUMBER; } 
+{int}                   		{ column_number+=yyleng; yylval.strval = strdup(yytext); return REAL_NUMBER; } 
 
-{ident}                 		{ column_number+=yyleng; return IDENTIFIER; } 
+{ident}                 		{ column_number+=yyleng; yylval.strval = strdup(yytext); return IDENTIFIER; } 
 
  /* --- Outros --- */
  

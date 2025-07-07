@@ -1,0 +1,22 @@
+/* Programa com erros semânticos */
+int main() {
+    int x;
+    float y;
+    
+    x = 5;
+    y = 2.5;
+    
+    /* Erro: variável não declarada */
+    z = x + y;
+    
+    /* Erro: operação incompatível */
+    x = "string";
+    
+    /* Erro: função não declarada */
+    resultado = funcao_inexistente(x);
+    
+    /* Erro: array não declarado */
+    arr[0] = 10;
+    
+    return 0;
+}

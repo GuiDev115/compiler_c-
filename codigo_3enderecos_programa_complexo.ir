@@ -1,0 +1,33 @@
+=== CÓDIGO INTERMEDIÁRIO DE TRÊS ENDEREÇOS ===
+
+  1: soma = 0.0
+  2: i = 0
+  3: soma = soma + notas[i]
+  4: i = i + 1
+  5: i = 0
+  6: i = i + 1
+  7: total_alunos = 3
+  8: turma[0].matricula = 12345
+  9: turma[0].nome = 'A'
+ 10: turma[0].notas[0] = 8.5
+ 11: turma[0].notas[1] = 7.0
+ 12: turma[0].notas[2] = 9.2
+ 13: turma[0].notas[3] = 8.8
+ 14: turma[1].matricula = 12346
+ 15: turma[1].nome = 'B'
+ 16: turma[1].notas[0] = 7.5
+ 17: turma[1].notas[1] = 8.0
+ 18: turma[1].notas[2] = 6.5
+ 19: turma[1].notas[3] = 7.2
+ 20: turma[2].matricula = 12347
+ 21: turma[2].nome = 'C'
+ 22: turma[2].notas[0] = 9.0
+ 23: turma[2].notas[1] = 8.5
+ 24: turma[2].notas[2] = 9.5
+ 25: turma[2].notas[3] = 9.8
+ 26: i = 0
+ 27: media_turma = calcular_media(turma[i].notas, 4)
+ 28: i = i + 1
+ 29: matricula_busca = 12346
+ 30: posicao = buscar_aluno(turma, total_alunos, matricula_busca)
+ 31: media_turma = calcular_media(turma[posicao].notas, 4)

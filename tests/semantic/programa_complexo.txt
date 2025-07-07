@@ -1,0 +1,86 @@
+/* Programa complexo combinando todos os recursos */
+
+struct Aluno {
+    int matricula;
+    char nome;
+    float notas[4];
+};
+
+float calcular_media(float notas[], int quantidade) {
+    float soma;
+    int i;
+    
+    soma = 0.0;
+    i = 0;
+    while (i < quantidade) {
+        soma = soma + notas[i];
+        i = i + 1;
+    }
+    
+    return soma / quantidade;
+}
+
+int buscar_aluno(struct Aluno alunos[], int total, int matricula) {
+    int i;
+    
+    i = 0;
+    while (i < total) {
+        if (alunos[i].matricula == matricula) {
+            return i;
+        }
+        i = i + 1;
+    }
+    
+    return -1;
+}
+
+int main() {
+    struct Aluno turma[30];
+    int total_alunos;
+    int i;
+    float media_turma;
+    int matricula_busca;
+    int posicao;
+    
+    total_alunos = 3;
+    
+    /* Cadastro de alunos */
+    turma[0].matricula = 12345;
+    turma[0].nome = 'A';
+    turma[0].notas[0] = 8.5;
+    turma[0].notas[1] = 7.0;
+    turma[0].notas[2] = 9.2;
+    turma[0].notas[3] = 8.8;
+    
+    turma[1].matricula = 12346;
+    turma[1].nome = 'B';
+    turma[1].notas[0] = 7.5;
+    turma[1].notas[1] = 8.0;
+    turma[1].notas[2] = 6.5;
+    turma[1].notas[3] = 7.2;
+    
+    turma[2].matricula = 12347;
+    turma[2].nome = 'C';
+    turma[2].notas[0] = 9.0;
+    turma[2].notas[1] = 8.5;
+    turma[2].notas[2] = 9.5;
+    turma[2].notas[3] = 9.8;
+    
+    /* Calcula média de cada aluno */
+    i = 0;
+    while (i < total_alunos) {
+        media_turma = calcular_media(turma[i].notas, 4);
+        i = i + 1;
+    }
+    
+    /* Busca um aluno específico */
+    matricula_busca = 12346;
+    posicao = buscar_aluno(turma, total_alunos, matricula_busca);
+    
+    if (posicao >= 0) {
+        /* Aluno encontrado */
+        media_turma = calcular_media(turma[posicao].notas, 4);
+    }
+    
+    return 0;
+}
