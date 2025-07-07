@@ -71,7 +71,11 @@ void scan_semantic_directory(SemanticAgent *agent) {
     while ((entry = readdir(dir)) != NULL) {
         if (entry->d_type == DT_REG) { // Arquivo regular
             char filepath[MAX_PATH_LENGTH];
-            snprintf(filepath, MAX_PATH_LENGTH, "%s/%s", agent->semantic_path, entry->d_name);
+            int ret = snprintf(filepath, MAX_PATH_LENGTH, "%s/%s", agent->semantic_path, entry->d_name);
+            if (ret >= MAX_PATH_LENGTH) {
+                printf("⚠️  Caminho muito longo para %s\n", entry->d_name);
+                continue;
+            }
             
             long size = get_file_size(filepath);
             printf("📄 %s (%.2f KB)\n", entry->d_name, size / 1024.0);
@@ -109,7 +113,11 @@ void scan_tests_directory(SemanticAgent *agent) {
     while ((entry = readdir(dir)) != NULL) {
         if (entry->d_type == DT_REG && is_test_file(entry->d_name)) {
             char filepath[MAX_PATH_LENGTH];
-            snprintf(filepath, MAX_PATH_LENGTH, "%s/%s", agent->tests_path, entry->d_name);
+            int ret = snprintf(filepath, MAX_PATH_LENGTH, "%s/%s", agent->tests_path, entry->d_name);
+            if (ret >= MAX_PATH_LENGTH) {
+                printf("⚠️  Caminho muito longo para %s\n", entry->d_name);
+                continue;
+            }
             
             long size = get_file_size(filepath);
             printf("🧪 %s (%.2f KB)\n", entry->d_name, size / 1024.0);
@@ -185,7 +193,6 @@ void analyze_test_file(const char *filepath, const char *filename) {
     int functions = 0;
     int arrays = 0;
     int structs = 0;
-    int main_function = 0;
     int line_counter = 1;
     
     // === CRIAÇÃO REAL DA TABELA DE SÍMBOLOS ===
@@ -284,7 +291,6 @@ void analyze_test_file(const char *filepath, const char *filename) {
         if (strstr(line_copy, "main")) {
             declare_function("main", TYPE_INT, line_counter);
             printf("   ✓ Função 'main' inserida na tabela - linha %d\n", line_counter);
-            main_function = 1;
             functions++;
         }
         
@@ -522,7 +528,7 @@ void display_statistics(SemanticAgent *agent) {
 // Função principal
 int main() {
     SemanticAgent agent;
-    char base_path[] = "/home/guidev/compiler_c-";
+    char base_path[] = "/home/guidev/Documentos/Ufla/compiladores/compiler_c-";
     
     init_semantic_agent(&agent, base_path);
     

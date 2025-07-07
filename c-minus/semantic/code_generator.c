@@ -276,7 +276,7 @@ void save_code_to_file(const char* filename) {
 }
 
 // Gera código para expressão
-char* generate_expression_code(const char* expr_type, const char* left, const char* op, const char* right) {
+char* generate_expression_code(const char* expr_type __attribute__((unused)), const char* left, const char* op, const char* right) {
     if (!op) {
         // Expressão simples (identificador ou número)
         return strdup(left);
@@ -305,7 +305,7 @@ char* generate_array_code(const char* array, const char* index) {
 }
 
 // Gera código para chamada de função
-char* generate_function_call_code(const char* func_name, int param_count) {
+char* generate_function_call_code(const char* func_name, int param_count __attribute__((unused))) {
     char* temp = new_temp();
     if (!temp) return NULL;
     

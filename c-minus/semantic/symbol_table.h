@@ -5,7 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE  // Para strdup
+#endif
 #ifndef _GNU_SOURCE
 char* strdup(const char* s);
 #endif
