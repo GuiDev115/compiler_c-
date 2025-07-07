@@ -78,6 +78,24 @@ void destroy_symbol_table(SymbolTable* st) {
     free(st);
 }
 
+// Função para calcular tamanho de tipos em bytes
+int get_type_size(DataType type) {
+    switch (type) {
+        case TYPE_INT:
+            return 4;   // int = 4 bytes
+        case TYPE_FLOAT:
+            return 4;   // float = 4 bytes
+        case TYPE_CHAR:
+            return 1;   // char = 1 byte
+        case TYPE_VOID:
+            return 0;   // void não ocupa espaço
+        case TYPE_STRUCT:
+            return 8;   // struct = 8 bytes (padrão, pode ser variável)
+        default:
+            return 4;   // padrão = 4 bytes
+    }
+}
+
 // Função hash simples
 unsigned int hash(const char* str) {
     unsigned int hash_value = 0;
@@ -197,7 +215,12 @@ SymbolEntry* insert_symbol(SymbolTable* st, const char* name, SymbolType symbol_
     entry->data_type = data_type;
     entry->scope_level = st->current_scope;
     entry->line_declared = line;
-    entry->address = st->current_address++;
+    entry->address = st->current_address;
+    
+    // Calcular e alocar endereço baseado no tamanho do tipo
+    int type_size = get_type_size(data_type);
+    st->current_address += type_size;
+    
     entry->is_array = 0;
     entry->dimensions = NULL;
     entry->parameters = NULL;
@@ -251,30 +274,46 @@ void print_symbol_table(SymbolTable* st) {
     if (!st) return;
     
     printf("\n=== TABELA DE SÍMBOLOS ===\n");
-    printf("%-15s %-10s %-10s %-6s %-6s %-10s\n", 
-           "Nome", "Tipo", "DataType", "Escopo", "Linha", "Endereço");
-    printf("================================================================\n");
+    printf("%-15s %-10s %-10s %-6s %-6s %-15s %-13s\n", 
+           "Nome", "Tipo", "DataType", "Escopo", "Linha", "Endereço(bytes)", "Tamanho(bytes)");
+    printf("============================================================================\n");
     
     for (int i = 0; i < HASH_SIZE; i++) {
         SymbolEntry* entry = st->table[i];
         while (entry) {
-            printf("%-15s %-10s %-10s %-6d %-6d %-10d", 
+            int type_size = get_type_size(entry->data_type);
+            int total_size = type_size;
+            
+            // Se for array, calcular tamanho total
+            if (entry->is_array && entry->dimensions) {
+                int array_elements = calculate_array_size(entry->dimensions);
+                total_size = type_size * array_elements;
+            }
+            
+            printf("%-15s %-10s %-10s %-6d %-6d %-15d %-13d", 
                    entry->name,
                    symbol_type_to_string(entry->symbol_type),
                    type_to_string(entry->data_type),
                    entry->scope_level,
                    entry->line_declared,
-                   entry->address);
+                   entry->address,
+                   total_size);
             
             if (entry->is_array) {
-                printf(" [array]");
+                printf(" [array");
+                ArrayDim* dim = entry->dimensions;
+                while (dim) {
+                    printf("[%d]", dim->size);
+                    dim = dim->next;
+                }
+                printf("]");
             }
             
             printf("\n");
             entry = entry->next;
         }
     }
-    printf("================================================================\n");
+    printf("============================================================================\n");
 }
 
 // Converte tipo de dado para string
@@ -330,6 +369,17 @@ void add_array_dimension(SymbolEntry* entry, int size) {
             current = current->next;
         }
         current->next = new_dim;
+    }
+    
+    // Recalcular endereço baseado no tamanho total do array
+    if (global_symbol_table) {
+        int base_type_size = get_type_size(entry->data_type);
+        int array_total_elements = calculate_array_size(entry->dimensions);
+        int total_array_size = base_type_size * array_total_elements;
+        
+        // Ajustar o current_address para considerar o espaço total do array
+        // Como já foi incrementado pelo tamanho base, precisa ajustar
+        global_symbol_table->current_address = entry->address + total_array_size;
     }
 }
 

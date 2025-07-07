@@ -126,4 +126,7 @@ void add_parameter(SymbolEntry* func_entry, Parameter* param);
 StructAttr* create_struct_attr(const char* name, DataType type, int is_array);
 void add_struct_attr(SymbolEntry* struct_entry, StructAttr* attr);
 
+// Função para calcular tamanho de tipos em bytes
+int get_type_size(DataType type);
+
 #endif
