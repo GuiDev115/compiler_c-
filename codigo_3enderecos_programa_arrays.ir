@@ -1,5 +1,0 @@
-=== CÓDIGO INTERMEDIÁRIO DE TRÊS ENDEREÇOS ===
-
-  1: i = 0
-  2: t0 = i * 2
-  3: vetor[i] = t0

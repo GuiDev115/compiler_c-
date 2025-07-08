@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <ctype.h>
 #include "c-minus/semantic/symbol_table.h"
 #include "c-minus/semantic/semantic.h"
 #include "c-minus/semantic/code_generator.h"
@@ -12,6 +13,9 @@
 #define MAX_FILES 100
 #define MAX_PATH_LENGTH 256
 #define MAX_BUFFER_SIZE 8192
+
+// Declaração de função 
+void detect_function_declaration(char *line, int line_num);
 
 // Estrutura para armazenar informações sobre arquivos
 typedef struct {
@@ -449,10 +453,13 @@ void analyze_test_file(const char *filepath, const char *filename) {
             printf("   ✓ Struct detectado - linha %d\n", line_counter);
         }
         
-        // Detectar função main
-        if (strstr(line_copy, "main")) {
-            declare_function("main", TYPE_INT, line_counter);
-            printf("   ✓ Função 'main' inserida na tabela - linha %d\n", line_counter);
+        // Detectar declarações de função usando a função corrigida
+        detect_function_declaration(line_copy, line_counter);
+        
+        // Contar funções declaradas para estatísticas
+        if (strstr(line_copy, "(") && strstr(line_copy, ")") && 
+            (strstr(line_copy, "void ") || strstr(line_copy, "int ") || 
+             strstr(line_copy, "float ") || strstr(line_copy, "char "))) {
             functions++;
         }
         
@@ -559,30 +566,264 @@ void analyze_test_file(const char *filepath, const char *filename) {
         line_counter++;
     }
     
-    // Verificação de erros reais
+    // === VERIFICAÇÃO DETALHADA DE ERROS SEMÂNTICOS ===
     printf("\n🔍 Verificando erros semânticos...\n");
     
-    if (strstr(filename, "erros") != NULL) {
-        printf("   ❌ Arquivo de teste de erros - problemas esperados:\n");
-        if (strstr(content, "z =") != NULL) {
-            SymbolEntry* z_symbol = lookup_symbol(global_symbol_table, "z");
-            if (!z_symbol) {
-                printf("   ❌ Variável 'z' usada sem declaração\n");
-                has_errors = 1;
+    int error_count = 0;
+    
+    // Reinicializar para terceira passada - verificação de erros
+    strcpy(content, "");
+    file = fopen(filepath, "r");
+    if (file) {
+        while (fgets(buffer, sizeof(buffer), file)) {
+            strcat(content, buffer);
+        }
+        fclose(file);
+    }
+    
+    line_counter = 1;
+    char content_error_copy[MAX_BUFFER_SIZE * 4];
+    strcpy(content_error_copy, content);
+    char *error_line = strtok(content_error_copy, "\n");
+    
+    while (error_line != NULL) {
+        char line_copy[1000];
+        strcpy(line_copy, error_line);
+        
+        // 1. Verificar variáveis não declaradas na linha "z = x + y;"
+        if (strstr(line_copy, " = ") && !strstr(line_copy, "int ") && 
+            !strstr(line_copy, "float ") && !strstr(line_copy, "char ") &&
+            !strstr(line_copy, "/*") && !strstr(line_copy, "return")) {
+            
+            char *eq_pos = strstr(line_copy, " = ");
+            if (eq_pos) {
+                // Verificar variável do lado esquerdo da atribuição
+                char var_name[100] = "";
+                char *start = line_copy;
+                while (*start == ' ' || *start == '\t') start++; // pular espaços iniciais
+                
+                int i = 0;
+                while (start[i] && start[i] != ' ' && start[i] != '=' && start[i] != '[') {
+                    var_name[i] = start[i];
+                    i++;
+                }
+                var_name[i] = '\0';
+                
+                if (strlen(var_name) > 0) {
+                    SymbolEntry* entry = lookup_symbol(global_symbol_table, var_name);
+                    if (!entry) {
+                        printf("   ❌ ERRO SEMÂNTICO linha %d: Variável '%s' usada sem declaração\n", 
+                               line_counter, var_name);
+                        error_count++;
+                        has_errors = 1;
+                    }
+                }
+                
+                // Verificar variáveis do lado direito da atribuição
+                char *value_start = eq_pos + 3;
+                while (*value_start == ' ') value_start++;
+                
+                // Extrair tokens do lado direito
+                char value_copy[500];
+                strcpy(value_copy, value_start);
+                
+                // Remover ; e espaços no final
+                char *semicolon = strchr(value_copy, ';');
+                if (semicolon) *semicolon = '\0';
+                
+                // Parse tokens mais cuidadoso
+                char *saveptr;
+                char *token = strtok_r(value_copy, " +*/-()&|!", &saveptr);
+                while (token != NULL) {
+                    // Ignorar números, strings, operadores e palavras-chave
+                    if (token[0] != '"' && !isdigit(token[0]) && strlen(token) > 0 && 
+                        strcmp(token, "+") != 0 && strcmp(token, "-") != 0 && 
+                        strcmp(token, "*") != 0 && strcmp(token, "/") != 0 &&
+                        strcmp(token, "(") != 0 && strcmp(token, ")") != 0 &&
+                        !isdigit(token[0]) && strchr(token, '.') == NULL) {
+                        
+                        // Limpar token de caracteres especiais
+                        char clean_token[100] = "";
+                        int j = 0;
+                        for (int k = 0; k < strlen(token); k++) {
+                            if (isalnum(token[k]) || token[k] == '_') {
+                                clean_token[j++] = token[k];
+                            }
+                        }
+                        clean_token[j] = '\0';
+                        
+                        if (strlen(clean_token) > 0) {
+                            SymbolEntry* entry = lookup_symbol(global_symbol_table, clean_token);
+                            if (!entry) {
+                                printf("   ❌ ERRO SEMÂNTICO linha %d: Variável '%s' usada sem declaração\n", 
+                                       line_counter, clean_token);
+                                error_count++;
+                                has_errors = 1;
+                            }
+                        }
+                    }
+                    token = strtok_r(NULL, " +*/-()&|!", &saveptr);
+                }
             }
         }
-        if (strstr(content, "\"string\"") != NULL) {
-            printf("   ❌ Atribuição de string a variável numérica\n");
-            has_errors = 1;
+        
+        // 2. Verificar incompatibilidade de tipos (string para numérico)
+        if (strstr(line_copy, " = ") && strstr(line_copy, "\"")) {
+            char *eq_pos = strstr(line_copy, " = ");
+            if (eq_pos) {
+                char var_name[100] = "";
+                char *start = line_copy;
+                while (*start == ' ' || *start == '\t') start++;
+                
+                int i = 0;
+                while (start[i] && start[i] != ' ' && start[i] != '=') {
+                    var_name[i] = start[i];
+                    i++;
+                }
+                var_name[i] = '\0';
+                
+                if (strlen(var_name) > 0) {
+                    SymbolEntry* entry = lookup_symbol(global_symbol_table, var_name);
+                    if (entry && (entry->data_type == TYPE_INT || entry->data_type == TYPE_FLOAT)) {
+                        printf("   ❌ ERRO SEMÂNTICO linha %d: Atribuição de string à variável '%s' do tipo %s\n", 
+                               line_counter, var_name, type_to_string(entry->data_type));
+                        error_count++;
+                        has_errors = 1;
+                    }
+                }
+            }
         }
-        if (strstr(content, "funcao_inexistente") != NULL) {
-            printf("   ❌ Chamada de função não declarada\n");
-            has_errors = 1;
+        
+        // 3. Verificar chamadas de função não declaradas
+        // Primeiro, verificar chamadas em atribuições (var = funcao(params))
+        if (strstr(line_copy, "(") && strstr(line_copy, ")") && strstr(line_copy, "=")) {
+            char *paren_pos = strstr(line_copy, "(");
+            if (paren_pos) {
+                // Extrair nome da função
+                char *func_start = paren_pos;
+                while (func_start > line_copy && (isalnum(*(func_start-1)) || *(func_start-1) == '_')) {
+                    func_start--;
+                }
+                
+                char func_name[100] = "";
+                int i = 0;
+                while (func_start[i] && func_start[i] != '(' && func_start[i] != ' ') {
+                    func_name[i] = func_start[i];
+                    i++;
+                }
+                func_name[i] = '\0';
+                
+                // Ignorar palavras-chave e funções conhecidas
+                if (strlen(func_name) > 0 && strcmp(func_name, "main") != 0 && 
+                    strcmp(func_name, "if") != 0 && strcmp(func_name, "while") != 0 && 
+                    strcmp(func_name, "for") != 0 && strcmp(func_name, "printf") != 0 && 
+                    strcmp(func_name, "scanf") != 0) {
+                    
+                    SymbolEntry* entry = lookup_symbol(global_symbol_table, func_name);
+                    if (!entry) {
+                        printf("   ❌ ERRO SEMÂNTICO linha %d: Função '%s' não declarada\n", 
+                               line_counter, func_name);
+                        error_count++;
+                        has_errors = 1;
+                    } else if (entry->symbol_type != SYMBOL_FUNC) {
+                        printf("   ❌ ERRO SEMÂNTICO linha %d: '%s' não é uma função\n", 
+                               line_counter, func_name);
+                        error_count++;
+                        has_errors = 1;
+                    } else {
+                        printf("   ✅ Função '%s' encontrada na tabela de símbolos - linha %d\n", 
+                               func_name, line_counter);
+                    }
+                }
+            }
         }
+        
+        // Verificar chamadas de função em linhas próprias (como imprime_numero)
+        if (strstr(line_copy, "(") && strstr(line_copy, ")") && 
+            !strstr(line_copy, "{") && // Não é declaração de função
+            !strstr(line_copy, "=") &&  // Não é atribuição
+            !strstr(line_copy, "if") && !strstr(line_copy, "while")) { // Não é estrutura de controle
+            
+            char *paren_pos = strstr(line_copy, "(");
+            char *func_start = paren_pos;
+            while (func_start > line_copy && (isalnum(*(func_start-1)) || *(func_start-1) == '_')) {
+                func_start--;
+            }
+            
+            char func_name[100] = "";
+            int i = 0;
+            while (func_start[i] && func_start[i] != '(' && func_start[i] != ' ') {
+                func_name[i] = func_start[i];
+                i++;
+            }
+            func_name[i] = '\0';
+            
+            if (strlen(func_name) > 0 && strcmp(func_name, "main") != 0 && 
+                strcmp(func_name, "printf") != 0 && strcmp(func_name, "scanf") != 0) {
+                SymbolEntry* entry = lookup_symbol(global_symbol_table, func_name);
+                if (!entry) {
+                    printf("   ❌ ERRO SEMÂNTICO linha %d: Função '%s' não declarada\n", 
+                           line_counter, func_name);
+                    error_count++;
+                    has_errors = 1;
+                } else if (entry->symbol_type != SYMBOL_FUNC) {
+                    printf("   ❌ ERRO SEMÂNTICO linha %d: '%s' não é uma função\n", 
+                           line_counter, func_name);
+                    error_count++;
+                    has_errors = 1;
+                } else {
+                    printf("   ✅ Função '%s' encontrada na tabela de símbolos - linha %d\n", 
+                           func_name, line_counter);
+                }
+            }
+        }
+        
+        // 4. Verificar acesso a arrays não declarados
+        if (strstr(line_copy, "[") && strstr(line_copy, "]")) {
+            char *bracket_pos = strstr(line_copy, "[");
+            if (bracket_pos) {
+                // Extrair nome da variável antes do [
+                char *var_start = bracket_pos;
+                while (var_start > line_copy && (isalnum(*(var_start-1)) || *(var_start-1) == '_')) {
+                    var_start--;
+                }
+                
+                char var_name[100] = "";
+                int i = 0;
+                while (var_start[i] && var_start[i] != '[' && var_start[i] != ' ') {
+                    var_name[i] = var_start[i];
+                    i++;
+                }
+                var_name[i] = '\0';
+                
+                if (strlen(var_name) > 0 && !strstr(line_copy, "int ") && 
+                    !strstr(line_copy, "float ") && !strstr(line_copy, "char ")) {
+                    // É um uso de array, não uma declaração
+                    SymbolEntry* entry = lookup_symbol(global_symbol_table, var_name);
+                    if (!entry) {
+                        printf("   ❌ ERRO SEMÂNTICO linha %d: Array '%s' não declarado\n", 
+                               line_counter, var_name);
+                        error_count++;
+                        has_errors = 1;
+                    } else if (!entry->is_array) {
+                        printf("   ❌ ERRO SEMÂNTICO linha %d: '%s' não é um array\n", 
+                               line_counter, var_name);
+                        error_count++;
+                        has_errors = 1;
+                    }
+                }
+            }
+        }
+        
+        error_line = strtok(NULL, "\n");
+        line_counter++;
+    }
+    
+    // Resumo da verificação de erros
+    if (error_count > 0) {
+        printf("\n   📊 RESUMO: %d erro(s) semântico(s) detectado(s)\n", error_count);
     } else {
-        printf("   ✓ Verificação de declarações antes do uso\n");
-        printf("   ✓ Verificação de compatibilidade de tipos\n");
-        printf("   ✓ Nenhum erro semântico detectado\n");
+        printf("   ✅ Nenhum erro semântico detectado - código válido!\n");
     }
     
     // Exibir tabela de símbolos final
@@ -615,6 +856,64 @@ void analyze_test_file(const char *filepath, const char *filename) {
         printf("✅ Análise semântica concluída com sucesso - código válido!\n");
     }
     printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n");
+}
+
+// Função para detectar declarações de função conforme BNF
+// <fun-declaracao> ::= <tipo-especificador> <ident> ( <params> ) <composto-decl>
+void detect_function_declaration(char *line, int line_num) {
+    // Verifica se é uma declaração de função (tipo + nome + parênteses)
+    if (strstr(line, "(") && strstr(line, ")")) {
+        // Verificar se há um tipo antes dos parênteses
+        char func_name[100] = "";
+        DataType return_type = TYPE_VOID;
+        
+        // Detectar tipo de retorno (ordem importa!)
+        if (strstr(line, "void ")) {
+            return_type = TYPE_VOID;
+        } else if (strstr(line, "int ")) {
+            return_type = TYPE_INT;
+        } else if (strstr(line, "float ")) {
+            return_type = TYPE_FLOAT;
+        } else if (strstr(line, "char ")) {
+            return_type = TYPE_CHAR;
+        }
+        
+        // Extrair nome da função (ordem importa!)
+        char *type_end = NULL;
+        if (strstr(line, "void ")) type_end = strstr(line, "void ") + 5;
+        else if (strstr(line, "int ")) type_end = strstr(line, "int ") + 4;
+        else if (strstr(line, "float ")) type_end = strstr(line, "float ") + 6;
+        else if (strstr(line, "char ")) type_end = strstr(line, "char ") + 5;
+        
+        if (type_end) {
+            while (*type_end == ' ') type_end++; // pular espaços
+            
+            char *paren_pos = strstr(type_end, "(");
+            if (paren_pos) {
+                int name_len = paren_pos - type_end;
+                if (name_len > 0 && name_len < 100) {
+                    strncpy(func_name, type_end, name_len);
+                    func_name[name_len] = '\0';
+                    
+                    // Remover espaços no final
+                    int i = strlen(func_name) - 1;
+                    while (i >= 0 && func_name[i] == ' ') {
+                        func_name[i] = '\0';
+                        i--;
+                    }
+                    
+                    if (strlen(func_name) > 0 && 
+                        strcmp(func_name, "if") != 0 && 
+                        strcmp(func_name, "while") != 0 && 
+                        strcmp(func_name, "for") != 0) {
+                        declare_function(func_name, return_type, line_num);
+                        printf("   ✓ Função '%s' (%s) declarada - linha %d\n", 
+                               func_name, type_to_string(return_type), line_num);
+                    }
+                }
+            }
+        }
+    }
 }
 
 // Função para exibir menu interativo

@@ -265,11 +265,19 @@ test-erros: $(AGENT)
 	@echo "=== TESTANDO PROGRAMA COM ERROS ==="
 	@echo "Analisando programa_com_erros.txt..."
 	@if [ -f "$(TEST_DIR)/semantic/programa_com_erros.txt" ]; then \
+		echo "📖 Conteúdo do arquivo:"; \
+		echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"; \
 		cat "$(TEST_DIR)/semantic/programa_com_erros.txt"; \
+		echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"; \
 		echo ""; \
-		echo "Arquivo encontrado e exibido."; \
+		echo "🔍 Executando análise semântica automática..."; \
+		echo ""; \
+		echo -e "4\n5\n0\n0" | ./$(AGENT) | grep -A 50 "🔍 Verificando erros semânticos..." || true; \
+		echo ""; \
+		echo "✅ Análise de erros semânticos concluída."; \
+		echo "💡 Para análise detalhada completa, use: make run-agent"; \
 	else \
-		echo "Arquivo programa_com_erros.txt não encontrado em $(TEST_DIR)/semantic/"; \
+		echo "❌ Arquivo programa_com_erros.txt não encontrado em $(TEST_DIR)/semantic/"; \
 	fi
 
 test-complexo: $(AGENT)
@@ -315,6 +323,31 @@ analyze-%.txt: $(AGENT)
 		echo "❌ Arquivo $*.txt não encontrado em $(TEST_DIR)/semantic/"; \
 		echo "📁 Arquivos disponíveis:"; \
 		ls -1 $(TEST_DIR)/semantic/*.txt 2>/dev/null | sed 's/.*\///g' | sed 's/^/  - /' || echo "  Nenhum arquivo encontrado"; \
+	fi
+
+# Análise semântica específica do arquivo com erros
+analyze-erros: $(AGENT)
+	@echo "🔬 ANÁLISE SEMÂNTICA DE ERROS - programa_com_erros.txt"
+	@echo "═══════════════════════════════════════════════════════════════"
+	@if [ -f "$(TEST_DIR)/semantic/programa_com_erros.txt" ]; then \
+		echo "📖 Executando análise semântica completa..."; \
+		echo ""; \
+		printf "4\n5\n0\n0\n" | ./$(AGENT) | tail -n +20; \
+		echo ""; \
+		echo "📁 Arquivo de saída gerado: codigo_3enderecos_programa_com_erros.ir"; \
+		echo "💡 Use 'cat codigo_3enderecos_programa_com_erros.ir' para ver o código intermediário"; \
+	else \
+		echo "❌ Arquivo programa_com_erros.txt não encontrado em $(TEST_DIR)/semantic/"; \
+	fi
+
+# Comando melhorado para mostrar apenas os erros
+show-erros: $(AGENT)
+	@echo "❌ LISTAGEM DE ERROS SEMÂNTICOS - programa_com_erros.txt"
+	@echo "═══════════════════════════════════════════════════════════════"
+	@if [ -f "$(TEST_DIR)/semantic/programa_com_erros.txt" ]; then \
+		printf "4\n5\n0\n0\n" | ./$(AGENT) 2>/dev/null | grep -A 20 "🔍 Verificando erros semânticos..." | grep -E "(❌|📊)" || echo "Nenhum erro encontrado ou processamento falhou."; \
+	else \
+		echo "❌ Arquivo programa_com_erros.txt não encontrado em $(TEST_DIR)/semantic/"; \
 	fi
 
 # Listar arquivos da pasta semântica
@@ -421,8 +454,10 @@ help:
 	@echo "  test-arrays      - Testa programa_arrays.txt"
 	@echo "  test-funcoes     - Testa programa_funcoes.txt"
 	@echo "  test-structs     - Testa programa_structs.txt"
-	@echo "  test-erros       - Testa programa_com_erros.txt"
+	@echo "  test-erros       - Testa programa_com_erros.txt com análise automática"
 	@echo "  test-complexo    - Testa programa_complexo.txt"
+	@echo "  analyze-erros    - Análise semântica completa do arquivo com erros"
+	@echo "  show-erros       - Mostra apenas os erros semânticos detectados"
 	@echo "  test-NOME.txt    - Mostra qualquer arquivo NOME.txt"
 	@echo "  analyze-NOME.txt - Executa análise semântica de NOME.txt"
 	@echo ""
@@ -450,4 +485,4 @@ help:
 .PRECIOUS: $(PARSER_C) $(PARSER_H)
 
 # Phony targets
-.PHONY: all clean distclean run-demo run-agent test test-semantic test-basico test-arrays test-funcoes test-structs test-erros test-complexo list-semantic check-structure show-tests install-deps check-deps docs info help
+.PHONY: all clean distclean run-demo run-agent test test-semantic test-basico test-arrays test-funcoes test-structs test-erros test-complexo analyze-erros show-erros list-semantic check-structure show-tests install-deps check-deps docs info help
