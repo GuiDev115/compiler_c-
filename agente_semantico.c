@@ -697,10 +697,80 @@ void display_statistics(SemanticAgent *agent) {
     printf("═══════════════════════════════════════════════════════════════\n");
 }
 
+// Função para obter o diretório atual do programa
+char* get_current_directory() {
+    static char current_dir[MAX_PATH_LENGTH];
+    if (getcwd(current_dir, sizeof(current_dir)) != NULL) {
+        return current_dir;
+    }
+    return "."; // fallback para diretório atual
+}
+
+// Função para verificar se os diretórios necessários existem
+int verify_project_structure(const char* base_path) {
+    char semantic_path[MAX_PATH_LENGTH];
+    char tests_path[MAX_PATH_LENGTH];
+    
+    snprintf(semantic_path, MAX_PATH_LENGTH, "%s/c-minus/semantic", base_path);
+    snprintf(tests_path, MAX_PATH_LENGTH, "%s/tests/semantic", base_path);
+    
+    struct stat st;
+    
+    // Verificar se o diretório semântico existe
+    if (stat(semantic_path, &st) != 0 || !S_ISDIR(st.st_mode)) {
+        printf("❌ Diretório semântico não encontrado: %s\n", semantic_path);
+        return 0;
+    }
+    
+    // Verificar se o diretório de testes existe
+    if (stat(tests_path, &st) != 0 || !S_ISDIR(st.st_mode)) {
+        printf("❌ Diretório de testes não encontrado: %s\n", tests_path);
+        return 0;
+    }
+    
+    return 1;
+}
+
 // Função principal
 int main() {
     SemanticAgent agent;
-    char base_path[] = "/home/guidev/Documentos/Ufla/compiladores/compiler_c-";
+    char* base_path = get_current_directory();
+    
+    printf("🔍 Detectando diretório do projeto: %s\n", base_path);
+    
+    // Verificar se a estrutura do projeto está correta
+    if (!verify_project_structure(base_path)) {
+        printf("\n⚠️  Estrutura do projeto não encontrada no diretório atual.\n");
+        printf("💡 Certifique-se de que você está executando o programa na pasta raiz do projeto compiler_c-\n");
+        printf("📁 A estrutura esperada é:\n");
+        printf("   compiler_c-/\n");
+        printf("   ├── c-minus/semantic/\n");
+        printf("   ├── tests/semantic/\n");
+        printf("   └── agente_semantico.c\n\n");
+        
+        printf("🔄 Deseja especificar manualmente o caminho? (s/n): ");
+        char choice;
+        scanf(" %c", &choice);
+        
+        if (choice == 's' || choice == 'S') {
+            printf("📝 Digite o caminho completo para a pasta compiler_c-: ");
+            static char manual_path[MAX_PATH_LENGTH];
+            scanf("%s", manual_path);
+            
+            if (verify_project_structure(manual_path)) {
+                base_path = manual_path;
+                printf("✅ Estrutura do projeto verificada com sucesso!\n");
+            } else {
+                printf("❌ Estrutura inválida no caminho especificado. Encerrando...\n");
+                return 1;
+            }
+        } else {
+            printf("❌ Não é possível continuar sem a estrutura correta do projeto.\n");
+            return 1;
+        }
+    } else {
+        printf("✅ Estrutura do projeto verificada com sucesso!\n");
+    }
     
     init_semantic_agent(&agent, base_path);
     

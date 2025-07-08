@@ -1,4 +1,4 @@
-# Makefile para Compilador C-
+# Makefile para Compilador C- (Versão Portável)
 
 # Diretórios
 PARSER_DIR = c-minus/parser
@@ -7,7 +7,7 @@ TEST_DIR = tests
 
 # Compilador e flags
 CC = gcc
-CFLAGS = -Wall -Wextra -g -std=gnu99 -I$(SEMANTIC_DIR) -D_GNU_SOURCE
+CFLAGS = -Wall -Wextra -g -std=gnu99 -I$(SEMANTIC_DIR) -I. -D_GNU_SOURCE
 YFLAGS = -d -v
 LFLAGS = -v
 
@@ -24,30 +24,174 @@ PARSER_OUTPUT = $(PARSER_DIR)/parser.output
 TARGET = c-minus-compiler
 AGENT = agente_semantico
 
-# Regra principal
+# ============================================================================
+# REGRAS PRINCIPAIS - PORTÁVEIS
+# ============================================================================
+
+# Regra principal - compila o agente semântico
 all: $(AGENT)
+	@echo "✅ Compilação concluída! Execute com: ./$(AGENT)"
+	@echo "📁 Certifique-se de estar na pasta raiz do projeto compiler_c-"
 
-# Compilação do agente semântico
+# Compilação do agente semântico (PORTÁVEL)
 $(AGENT): agente_semantico.c $(SEMANTIC_SOURCES)
+	@echo "🔨 Compilando agente semântico..."
+	@echo "📂 Verificando estrutura do projeto..."
+	@if [ ! -d "$(SEMANTIC_DIR)" ]; then \
+		echo "❌ Erro: Diretório $(SEMANTIC_DIR) não encontrado!"; \
+		echo "💡 Certifique-se de estar na pasta raiz do projeto compiler_c-"; \
+		exit 1; \
+	fi
+	@if [ ! -d "$(TEST_DIR)/semantic" ]; then \
+		echo "❌ Erro: Diretório $(TEST_DIR)/semantic não encontrado!"; \
+		echo "💡 Criando diretório de testes..."; \
+		mkdir -p $(TEST_DIR)/semantic; \
+	fi
 	$(CC) $(CFLAGS) -o $@ $^
+	@echo "✅ Agente semântico compilado com sucesso!"
 
-# Compilação do executável (não funcional ainda)
-$(TARGET): $(PARSER_C) $(SEMANTIC_SOURCES)
-	$(CC) $(CFLAGS) -o $@ $^ -lfl
+# Regra para executar o agente (PORTÁVEL)
+run-agent: $(AGENT)
+	@echo "🚀 Executando agente semântico..."
+	@echo "📁 Diretório atual: $$(pwd)"
+	./$(AGENT)
 
-# Geração do parser
-$(PARSER_C) $(PARSER_H): $(PARSER_SRC)
-	cd $(PARSER_DIR) && bison $(YFLAGS) parser.y
+# ============================================================================
+# TESTES AUTOMATIZADOS - PORTÁVEIS
+# ============================================================================
 
-# Limpeza
+# Executa todos os testes semânticos
+test-all: $(AGENT)
+	@echo "🧪 Executando todos os testes semânticos..."
+	@if [ ! -d "$(TEST_DIR)/semantic" ]; then \
+		echo "❌ Diretório de testes não encontrado: $(TEST_DIR)/semantic"; \
+		exit 1; \
+	fi
+	@for file in $(TEST_DIR)/semantic/*.txt; do \
+		if [ -f "$$file" ]; then \
+			echo "🔍 Testando: $$(basename $$file)"; \
+		fi; \
+	done
+	@echo "✅ Estrutura de testes verificada. Use o agente interativo para análises detalhadas."
+
+# Testes individuais (PORTÁVEIS)
+test-basico: $(AGENT)
+	@if [ -f "$(TEST_DIR)/semantic/programa_basico.txt" ]; then \
+		echo "🧪 Teste básico disponível"; \
+	else \
+		echo "⚠️  Arquivo de teste básico não encontrado"; \
+	fi
+
+test-arrays: $(AGENT)
+	@if [ -f "$(TEST_DIR)/semantic/programa_arrays.txt" ]; then \
+		echo "🧪 Teste de arrays disponível"; \
+	else \
+		echo "⚠️  Arquivo de teste de arrays não encontrado"; \
+	fi
+
+# ============================================================================
+# UTILITÁRIOS
+# ============================================================================
+
+# Verifica a estrutura do projeto
+check-structure:
+	@echo "🔍 Verificando estrutura do projeto..."
+	@echo "📁 Diretório atual: $$(pwd)"
+	@echo "📂 Verificando diretórios necessários:"
+	@if [ -d "$(SEMANTIC_DIR)" ]; then \
+		echo "✅ $(SEMANTIC_DIR) - OK"; \
+	else \
+		echo "❌ $(SEMANTIC_DIR) - NÃO ENCONTRADO"; \
+	fi
+	@if [ -d "$(TEST_DIR)/semantic" ]; then \
+		echo "✅ $(TEST_DIR)/semantic - OK"; \
+	else \
+		echo "❌ $(TEST_DIR)/semantic - NÃO ENCONTRADO"; \
+	fi
+	@echo "📄 Verificando arquivos fonte:"
+	@for file in $(SEMANTIC_SOURCES); do \
+		if [ -f "$$file" ]; then \
+			echo "✅ $$file - OK"; \
+		else \
+			echo "❌ $$file - NÃO ENCONTRADO"; \
+		fi; \
+	done
+
+# Instala dependências (Linux/Ubuntu)
+install-deps:
+	@echo "📦 Instalando dependências..."
+	@if command -v apt-get >/dev/null 2>&1; then \
+		echo "🐧 Sistema Ubuntu/Debian detectado"; \
+		sudo apt-get update && sudo apt-get install -y build-essential flex bison; \
+	elif command -v yum >/dev/null 2>&1; then \
+		echo "🎩 Sistema RedHat/CentOS detectado"; \
+		sudo yum install -y gcc flex bison; \
+	elif command -v brew >/dev/null 2>&1; then \
+		echo "🍎 Sistema macOS detectado"; \
+		brew install gcc flex bison; \
+	else \
+		echo "⚠️  Sistema não reconhecido. Instale manualmente: gcc, flex, bison"; \
+	fi
+
+# ============================================================================
+# LIMPEZA
+# ============================================================================
+
+# Limpeza básica
 clean:
+	@echo "🧹 Limpando arquivos temporários..."
 	rm -f $(PARSER_C) $(PARSER_H) $(PARSER_OUTPUT)
 	rm -f $(TARGET) $(AGENT)
-	rm -f *.o
+	rm -f *.o *.ir
+	@echo "✅ Limpeza concluída!"
 
 # Limpeza completa
 distclean: clean
+	@echo "🧹 Limpeza completa..."
 	rm -f *~ c-minus/*~ $(PARSER_DIR)/*~ $(SEMANTIC_DIR)/*~
+	rm -f codigo_3enderecos_*.ir
+	@echo "✅ Limpeza completa concluída!"
+
+# ============================================================================
+# AJUDA
+# ============================================================================
+
+help:
+	@echo "🤖 MAKEFILE DO COMPILADOR C- - VERSÃO PORTÁVEL"
+	@echo "════════════════════════════════════════════════════════════════"
+	@echo ""
+	@echo "📋 COMANDOS PRINCIPAIS:"
+	@echo "  make              - Compila o agente semântico"
+	@echo "  make run-agent    - Executa o agente semântico interativo"
+	@echo "  make test-all     - Verifica todos os testes disponíveis"
+	@echo ""
+	@echo "🔧 UTILITÁRIOS:"
+	@echo "  make check-structure - Verifica se a estrutura do projeto está correta"
+	@echo "  make install-deps    - Instala dependências (Linux/macOS)"
+	@echo "  make clean          - Remove arquivos temporários"
+	@echo "  make distclean      - Limpeza completa"
+	@echo ""
+	@echo "🧪 TESTES INDIVIDUAIS:"
+	@echo "  make test-basico    - Verifica teste básico"
+	@echo "  make test-arrays    - Verifica teste de arrays"
+	@echo ""
+	@echo "💡 DICAS:"
+	@echo "  • Execute 'make check-structure' se houver problemas"
+	@echo "  • Certifique-se de estar na pasta raiz compiler_c-"
+	@echo "  • Use 'make install-deps' para instalar dependências"
+	@echo ""
+	@echo "📁 ESTRUTURA ESPERADA:"
+	@echo "  compiler_c-/"
+	@echo "  ├── c-minus/semantic/"
+	@echo "  ├── tests/semantic/"
+	@echo "  ├── agente_semantico.c"
+	@echo "  └── Makefile"
+
+# ============================================================================
+# REGRAS ESPECIAIS
+# ============================================================================
+
+.PHONY: all clean distclean run-agent test-all test-basico test-arrays check-structure install-deps help
 
 # Agente semântico
 run-agent: $(AGENT)

@@ -27,7 +27,7 @@ letra                   [a-z]
 num_int                 {digito}+
 int                     {digito}+(\.{digito}+)?([E][+-]?{digito}+)?
 ident                   {letra}({letra}|{digito})*
-array_ident             {ident}"["{num-int}"]"
+array_ident             {ident}"["{num_int}"]"
 
 
 other                   .
