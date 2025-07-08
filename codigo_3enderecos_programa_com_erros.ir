@@ -2,7 +2,5 @@
 
   1: x = 5
   2: y = 2.5
-  3: z = x + y
-  4: x = "string"
-  5: resultado = funcao_inexistente(x)
-  6: arr[0] = 10
+  3: t0 = x + y
+  4: z = t0

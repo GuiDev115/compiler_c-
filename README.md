@@ -1,117 +1,182 @@
-# Compilador C-Minus
+# Compilador C- - Sistema Completo de Análise
 
-Este projeto implementa um compilador para a linguagem C-Minus, incluindo analisador léxico (Flex) e analisador sintático (Bison).
+**Autores:** Guilherme Fabricio Brito da Rosa, Harisson de Carvalho Alvarenga, Raul Soares de Carvalho
 
-## Sobre C-Minus
+## 📋 Visão Geral
 
-C-Minus é uma linguagem de programação simplificada baseada em C, comumente utilizada em cursos de compiladores para fins educacionais. A linguagem suporta:
-- Tipos básicos: `int` e `float`
+Este projeto implementa um compilador completo para a linguagem C- com:
+- **Análise Léxica** (Flex)
+- **Análise Sintática** (Bison) 
+- **Análise Semântica** com tabela de símbolos
+- **Geração de Código Intermediário** (três endereços)
+
+## 🎯 Características da Linguagem C-
+
+### Tipos de Dados
+- `int`, `float`, `char`, `void`
+- `struct` (registros)
+- Arrays multidimensionais
+
+### Funcionalidades
+- Funções com recursão
 - Estruturas de controle: `if`, `else`, `while`
-- Funções e recursão
-- Arrays
 - Operadores aritméticos e relacionais
-- Comentários multi-linha
+- Comentários `/* */`
 
-## Estrutura do Projeto
+## 🏗️ Arquitetura do Sistema
 
 ```
 compiler_c-/
 ├── c-minus/
 │   ├── lexer/
-│   │   └── lexer.l              # Definições do analisador léxico (Flex)
-│   └── parser/
-│       └── parser.y             # Definições do analisador sintático (Bison)
+│   │   ├── lexer.l              # Analisador léxico principal
+│   │   ├── c-minus-lexer.l      # Lexer standalone
+│   │   └── arquivos gerados     # lex.yy.c, scanner.yy.c
+│   ├── parser/
+│   │   └── parser.y             # Analisador sintático (Bison)
+│   └── semantic/                # Sistema semântico
+│       ├── semantic.c/h         # Análise semântica
+│       ├── symbol_table.c/h     # Tabela de símbolos com hash
+│       ├── code_generator.c/h   # Geração de código
+│       └── utils.c/h            # Utilitários
 ├── tests/
-│   └── parser/
-│       └── teste.txt            # Arquivos de teste para o parser
-├── c-minus-lexer/               # Analisador léxico standalone
-│   ├── c-minus-lexer.l         
-│   └── tests/                   # Testes do lexer
-├── scriptCompileAndRun.sh       # Script para compilar e executar apenas o lexer
-├── ScriptRunParser.sh           # Script para compilar e executar o parser completo
-└── README.md
+│   ├── lexer/                   # Testes do analisador léxico
+│   ├── parser/                  # Testes do analisador sintático
+│   └── semantic/                # Testes da análise semântica
+├── agente_semantico.c           # Interface interativa
+├── scriptRunLexer.sh            # Script para executar lexer
+├── ScriptRunParser.sh           # Script para executar parser
+├── Makefile                     # Sistema de build
+└── *.ir                         # Arquivos de código intermediário gerados
 ```
 
-## Dependências
-
-Para executar este projeto, você precisa ter instalado:
-
-- **Flex**: Ferramenta para gerar analisadores léxicos
-- **Bison**: Ferramenta para gerar analisadores sintáticos
-- **GCC**: Compilador C
-
-### Instalação das Dependências (Ubuntu/Debian)
+## ⚙️ Dependências
 
 ```bash
 sudo apt update
 sudo apt install flex bison gcc
 ```
 
-## Como Compilar e Executar
+## 🚀 Como Usar
 
-### 1. Analisador Léxico (Lexer apenas)
-
-Para testar apenas o analisador léxico:
-
+### Compilar Tudo
 ```bash
-# Dar permissão de execução
-chmod +x scriptRunLexer.sh
-
-# Executar o lexer
-./scriptRunLexer.sh c-minus-lexer teste.txt
+make all
 ```
 
-Este comando irá:
-- Navegar até o diretório `c-minus-lexer`
-- Gerar o arquivo `lex.yy.c` usando `flex`
-- Compilar para criar o executável
-- Executar o analisador léxico com o arquivo de teste
-
-### 2. Compilador Completo (Lexer + Parser)
-
-Para compilar e executar o analisador sintático completo:
-
+### Sistema Semântico (Principal)
 ```bash
-# Dar permissão de execução
-chmod +x ScriptRunParser.sh
+# Interface interativa do agente semântico
+make run-agent
 
-# Executar o parser completo
-./ScriptRunParser.sh teste.txt
+# Análise automática de todos os testes semânticos
+make test-semantic
+
+# Testes individuais por arquivo
+make test-basico           # programa_basico.txt
+make test-arrays           # programa_arrays.txt
+make test-funcoes          # programa_funcoes.txt
+make test-structs          # programa_structs.txt
+make test-erros            # programa_com_erros.txt
+make test-complexo         # programa_complexo.txt
 ```
 
-O script `ScriptRunParser.sh` automatiza o processo completo:
+### Analisadores Léxico/Sintático (Standalone)
+```bash
+# Nota: Os scripts requerem ajustes para a estrutura atual
+# O foco principal do projeto é o sistema semântico
+```
 
-1. **Geração do Parser**: Executa `bison` no arquivo `c-minus/parser/parser.y` para gerar:
-   - `parser.tab.c` (código do parser)
-   - `parser.tab.h` (definições de tokens)
+## ✅ Funcionalidades Implementadas
 
-2. **Geração do Lexer**: Executa `flex` no arquivo `c-minus/lexer/lexer.l` para gerar:
-   - `scanner.yy.c` (código do lexer integrado)
+### 1. **Tabela de Símbolos**
+- Hash table com 211 posições
+- Resolução de colisões por encadeamento
+- Gerenciamento de escopo hierárquico
+- Armazenamento de tipos, endereços e metadados
 
-3. **Compilação**: Usa `gcc` para compilar ambos os arquivos, criando o executável `c-` em `tests/parser/`
+### 2. **Análise Semântica**
+- Verificação de tipos em operações
+- Detecção de variáveis não declaradas
+- Validação de compatibilidade de tipos
+- Conversão implícita (int ↔ float)
+- Verificação de redeclarações
 
-4. **Execução**: Roda o compilador com o arquivo de teste especificado
+### 3. **Geração de Código Intermediário**
+- Código de três endereços padrão
+- Geração automática de temporários (`t0, t1, t2...`)
+- Labels para controle de fluxo (`L0, L1, L2...`)
+- Suporte a arrays multidimensionais
+- Estruturas de controle (if/while)
 
-5. **Debug**: Salva o log detalhado em `tests/parser/log.txt`
+### 4. **Arquivos de Teste Disponíveis**
+- `programa_basico.txt`: Estruturas básicas
+- `programa_arrays.txt`: Arrays 1D e 2D  
+- `programa_structs.txt`: Estruturas de dados
+- `programa_funcoes.txt`: Chamadas de função
+- `programa_com_erros.txt`: Detecção de erros
+- `programa_complexo.txt`: Exemplo completo
 
-### Arquivos de Teste
+## 📊 Exemplo de Saída
 
-O script procura arquivos de teste em duas localizações:
-1. No diretório raiz do projeto
-2. Na pasta `tests/parser/`
+### Tabela de Símbolos
+```
+=== TABELA DE SÍMBOLOS ===
+Nome            Tipo       DataType   Escopo Linha  Endereço 
+================================================================
+x               var        int        0      3      1         
+y               var        int        0      4      2         
+main            func       int        0      2      0         
+================================================================
+```
 
-Exemplo de arquivo de teste (`teste.txt`):
-```c
-/* Programa exemplo em C-Minus */
-int fatorial(int n) {
-    if (n <= 1)
-        return 1;
-    else
-        return n * fatorial(n - 1);
-}
+### Código de Três Endereços
+```
+=== CÓDIGO INTERMEDIÁRIO DE TRÊS ENDEREÇOS ===
+  1: x = 5
+  2: y = 3
+  3: resultado = soma(x, y)
+  4: a = 10.5
+  5: b = 20.3
+  6: media_val = media(a, b)
+```
 
-int main(void) {
-    int numero;
+## 🔧 Agente Semântico Interativo
+
+O agente oferece menu com opções para:
+- Escanear arquivos semânticos
+- Ler conteúdo de arquivos
+- Executar análises individuais
+- Executar análise completa
+- Exibir estatísticas do projeto
+
+## 🎓 Status do Projeto
+
+### ✅ Requisitos Atendidos
+- [x] Tabela de símbolos com hash table
+- [x] Gerenciamento de escopo hierárquico
+- [x] Análise semântica completa
+- [x] Geração de código intermediário
+- [x] Suporte a arrays multidimensionais
+- [x] Suporte a structs e funções
+- [x] Interface interativa de teste
+- [x] Sistema de build automatizado
+
+### 🔧 Correções Implementadas
+- Loop infinito no `test-semantic` corrigido
+- Análise baseada no conteúdo real dos arquivos
+- Comandos individuais para cada arquivo de teste
+- Detecção real de erros semânticos
+
+### 📁 Arquivos Gerados
+Para cada teste, o sistema gera:
+- Arquivo `.ir` com código de três endereços
+- Tabela de símbolos no terminal
+- Relatório de erros (quando aplicável)
+
+---
+
+**Projeto desenvolvido para a disciplina de Compiladores - UFLA**
     numero = 5;
     return fatorial(numero);
 }

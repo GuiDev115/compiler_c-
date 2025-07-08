@@ -522,8 +522,18 @@ void analyze_test_file(const char *filepath, const char *filename) {
                 }
                 
                 if (strlen(var_name) > 0 && strlen(value) > 0) {
-                    emit_assignment(var_name, value);
-                    printf("   ✓ Código gerado: %s := %s\n", var_name, value);
+                    // Processar expressão complexa e gerar código de três endereços
+                    char* final_result = process_complex_expression(value);
+                    if (final_result) {
+                        emit_assignment(var_name, final_result);
+                        printf("   ✓ Código gerado: %s := %s\n", var_name, final_result);
+                        if (strcmp(final_result, value) != 0) {
+                            free(final_result);
+                        }
+                    } else {
+                        emit_assignment(var_name, value);
+                        printf("   ✓ Código gerado: %s := %s\n", var_name, value);
+                    }
                 }
             }
         }

@@ -1164,17 +1164,17 @@ YY_RULE_SETUP
 case 37:
 YY_RULE_SETUP
 #line 120 "c-minus/lexer/lexer.l"
-{ column_number+=yyleng; return INT_NUMBER; }  
+{ column_number+=yyleng; yylval.strval = strdup(yytext); return INT_NUMBER; }  
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
 #line 122 "c-minus/lexer/lexer.l"
-{ column_number+=yyleng; return REAL_NUMBER; } 
+{ column_number+=yyleng; yylval.strval = strdup(yytext); return REAL_NUMBER; } 
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
 #line 124 "c-minus/lexer/lexer.l"
-{ column_number+=yyleng; return IDENTIFIER; } 
+{ column_number+=yyleng; yylval.strval = strdup(yytext); return IDENTIFIER; } 
 	YY_BREAK
 /* --- Outros --- */
 case 40:

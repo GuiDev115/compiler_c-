@@ -313,6 +313,78 @@ char* generate_function_call_code(const char* func_name, int param_count __attri
     return temp;
 }
 
+// Função para processar expressões complexas e gerar código de três endereços
+char* process_complex_expression(const char* expression) {
+    if (!expression || strlen(expression) == 0) return NULL;
+    
+    char expr_copy[500];
+    strcpy(expr_copy, expression);
+    
+    // Remove espaços extras
+    char cleaned[500] = "";
+    int j = 0;
+    for (int i = 0; expr_copy[i]; i++) {
+        if (expr_copy[i] != ' ' || (j > 0 && cleaned[j-1] != ' ')) {
+            cleaned[j++] = expr_copy[i];
+        }
+    }
+    cleaned[j] = '\0';
+    
+    // Se é uma expressão simples (apenas um identificador ou número), retorna ela mesma
+    if (!strstr(cleaned, "+") && !strstr(cleaned, "-") && !strstr(cleaned, "*") && !strstr(cleaned, "/")) {
+        return strdup(cleaned);
+    }
+    
+    // Processa expressões com múltiplos operadores
+    // Exemplo: "x + 2 - 1" deve virar:
+    // t0 = x + 2
+    // t1 = t0 - 1
+    // retorna t1
+    
+    char tokens[10][50];  // máximo 10 tokens
+    char operators[10];   // máximo 10 operadores
+    int token_count = 0;
+    int op_count = 0;
+    
+    // Tokenizar a expressão
+    char* token = strtok(cleaned, " ");
+    while (token && token_count < 10) {
+        if (strcmp(token, "+") == 0 || strcmp(token, "-") == 0 || 
+            strcmp(token, "*") == 0 || strcmp(token, "/") == 0) {
+            operators[op_count++] = token[0];
+        } else {
+            strcpy(tokens[token_count++], token);
+        }
+        token = strtok(NULL, " ");
+    }
+    
+    if (token_count < 2) {
+        // Expressão simples
+        return strdup(tokens[0]);
+    }
+    
+    // Gerar código de três endereços para múltiplos operadores
+    char* current_result = strdup(tokens[0]);
+    
+    for (int i = 0; i < op_count && i + 1 < token_count; i++) {
+        char* temp = new_temp();
+        if (!temp) break;
+        
+        // Emitir operação binária
+        char op_str[2] = {operators[i], '\0'};
+        emit_binary_op(op_str, current_result, tokens[i + 1], temp);
+        
+        printf("   ✓ Código gerado: %s = %s %c %s\n", temp, current_result, operators[i], tokens[i + 1]);
+        
+        if (current_result && strcmp(current_result, tokens[0]) != 0) {
+            free(current_result);
+        }
+        current_result = temp;
+    }
+    
+    return current_result;
+}
+
 // Otimização simples de código (placeholder)~
 void optimize_code() {
     // Implementação futura de otimizações:

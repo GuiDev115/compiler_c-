@@ -22,15 +22,10 @@ PARSER_OUTPUT = $(PARSER_DIR)/parser.output
 
 # Executáveis
 TARGET = c-minus-compiler
-DEMO = demo
 AGENT = agente_semantico
 
 # Regra principal
-all: $(DEMO) $(AGENT)
-
-# Compilação da demonstração
-$(DEMO): demo.c $(SEMANTIC_SOURCES)
-	$(CC) $(CFLAGS) -o $@ $^
+all: $(AGENT)
 
 # Compilação do agente semântico
 $(AGENT): agente_semantico.c $(SEMANTIC_SOURCES)
@@ -47,9 +42,8 @@ $(PARSER_C) $(PARSER_H): $(PARSER_SRC)
 # Limpeza
 clean:
 	rm -f $(PARSER_C) $(PARSER_H) $(PARSER_OUTPUT)
-	rm -f $(TARGET) $(DEMO) $(AGENT)
+	rm -f $(TARGET) $(AGENT)
 	rm -f *.o
-	rm -f codigo_intermediario.txt
 
 # Limpeza completa
 distclean: clean

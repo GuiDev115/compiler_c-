@@ -62,4 +62,7 @@ char* generate_assignment_code(const char* var, const char* value);
 char* generate_array_code(const char* array, const char* index);
 char* generate_function_call_code(const char* func_name, int param_count);
 
+// Processamento de expressões complexas
+char* process_complex_expression(const char* expression);
+
 #endif
