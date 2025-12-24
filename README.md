@@ -2,7 +2,7 @@
 
 **Autores:** Guilherme Fabricio Brito da Rosa, Harisson de Carvalho Alvarenga, Raul Soares de Carvalho
 
-## 📋 Visão Geral
+## Visão Geral
 
 Este projeto implementa um compilador completo para a linguagem C- com:
 - **Análise Léxica** (Flex)
@@ -10,7 +10,7 @@ Este projeto implementa um compilador completo para a linguagem C- com:
 - **Análise Semântica** com tabela de símbolos
 - **Geração de Código Intermediário** (três endereços)
 
-## 🎯 Características da Linguagem C-
+## Características da Linguagem C-
 
 ### Tipos de Dados
 - `int`, `float`, `char`, `void`
@@ -23,7 +23,7 @@ Este projeto implementa um compilador completo para a linguagem C- com:
 - Operadores aritméticos e relacionais
 - Comentários `/* */`
 
-## 🏗️ Arquitetura do Sistema
+## Arquitetura do Sistema
 
 ```
 compiler_c-/
@@ -50,14 +50,14 @@ compiler_c-/
 └── *.ir                         # Arquivos de código intermediário gerados
 ```
 
-## ⚙️ Dependências
+## Dependências
 
 ```bash
 sudo apt update
 sudo apt install flex bison gcc
 ```
 
-## 🚀 Como Usar (PORTÁVEL - Funciona em Qualquer Máquina)
+## Como Usar (PORTÁVEL - Funciona em Qualquer Máquina)
 
 ### Método Simples (Recomendado)
 ```bash
@@ -95,7 +95,7 @@ make install-deps
 sudo apt install build-essential flex bison
 ```
 
-## ✅ Funcionalidades Implementadas
+## Funcionalidades Implementadas
 
 ### 1. **Tabela de Símbolos**
 - Hash table com 211 posições
@@ -125,7 +125,7 @@ sudo apt install build-essential flex bison
 - `programa_com_erros.txt`: Detecção de erros
 - `programa_complexo.txt`: Exemplo completo
 
-## 📊 Exemplo de Saída
+## Exemplo de Saída
 
 ### Tabela de Símbolos
 ```
@@ -149,7 +149,7 @@ main            func       int        0      2      0
   6: media_val = media(a, b)
 ```
 
-## 🔧 Agente Semântico Interativo
+## Agente Semântico Interativo
 
 O agente oferece menu com opções para:
 - Escanear arquivos semânticos
@@ -160,7 +160,7 @@ O agente oferece menu com opções para:
 
 ## 🎓 Status do Projeto
 
-### ✅ Requisitos Atendidos
+### Requisitos Atendidos
 - [x] Tabela de símbolos com hash table
 - [x] Gerenciamento de escopo hierárquico
 - [x] Análise semântica completa
@@ -170,13 +170,13 @@ O agente oferece menu com opções para:
 - [x] Interface interativa de teste
 - [x] Sistema de build automatizado
 
-### 🔧 Correções Implementadas
+### Correções Implementadas
 - Loop infinito no `test-semantic` corrigido
 - Análise baseada no conteúdo real dos arquivos
 - Comandos individuais para cada arquivo de teste
 - Detecção real de erros semânticos
 
-### 📁 Arquivos Gerados
+### Arquivos Gerados
 Para cada teste, o sistema gera:
 - Arquivo `.ir` com código de três endereços
 - Tabela de símbolos no terminal
@@ -186,36 +186,36 @@ Para cada teste, o sistema gera:
 
 **Projeto desenvolvido para a disciplina de Compiladores - UFLA**
 
-## 📚 Documentação Completa
+## Documentação Completa
 
 Este projeto inclui documentação técnica abrangente:
 
 ### Relatórios Técnicos
-- **📋 [Relatório Técnico Completo](docs/Relatorio_Compilador_C-_Atualizado.md)**: Documentação acadêmica completa do projeto
-- **🔬 [Análise Técnica e Teórica](docs/Analise_Tecnica_Compilador_C-.md)**: Aspectos teóricos e algoritmos implementados
-- **🔧 [Correções e Melhorias](docs/Correcoes_e_Melhorias.md)**: Documentação das correções implementadas
+- ** [Relatório Técnico Completo](docs/Relatorio_Compilador_C-_Atualizado.md)**: Documentação acadêmica completa do projeto
+- ** [Análise Técnica e Teórica](docs/Analise_Tecnica_Compilador_C-.md)**: Aspectos teóricos e algoritmos implementados
+- ** [Correções e Melhorias](docs/Correcoes_e_Melhorias.md)**: Documentação das correções implementadas
 
 ### Características Técnicas Destacadas
 
-#### 🎯 Análise Léxica Robusta
+#### Análise Léxica Robusta
 - Reconhecimento de todos os tokens da linguagem C-
 - Tratamento inteligente de comentários com estado `COMMENT`
 - Detecção precisa de erros léxicos
 - Rastreamento de linha e coluna para debugging
 
-#### 🏗️ Parser LALR(1) Otimizado
+#### Parser LALR(1) Otimizado
 - Gramática bem estruturada seguindo especificação formal
 - Recuperação de erros com pontos de sincronização
 - Suporte completo a arrays multidimensionais
 - Integração direta com análise semântica
 
-#### 🧠 Análise Semântica Avançada
+#### Análise Semântica Avançada
 - Tabela de símbolos com hash table de 211 posições
 - Gerenciamento hierárquico de escopo
 - Verificação rigorosa de tipos com conversões implícitas
 - Detecção de redeclarações e variáveis não declaradas
 
-#### ⚡ Geração de Código Eficiente
+#### Geração de Código Eficiente
 - Código de três endereços otimizado
 - Geração automática de temporários e labels
 - Suporte a estruturas de controle complexas
@@ -265,9 +265,9 @@ resultado       var        float      1      5      3
 - **Lista Ligada**: Para código de três endereços
 - **Pilha de Escopos**: Gerenciamento hierárquico de escopo
 
-## 🏆 Status Final do Projeto
+## Status Final do Projeto
 
-### ✅ Todos os Requisitos Implementados
+### Todos os Requisitos Implementados
 - [x] **Análise Léxica**: Completa com tratamento de erros
 - [x] **Análise Sintática**: Parser LALR(1) com recuperação de erros
 - [x] **Análise Semântica**: Verificação completa de tipos e escopo
@@ -277,7 +277,7 @@ resultado       var        float      1      5      3
 - [x] **Interface Interativa**: Agente semântico para facilitar testes
 - [x] **Documentação Técnica**: Relatórios acadêmicos completos
 
-### 📊 Métricas de Qualidade
+### Métricas de Qualidade
 - **2650+ linhas de código** bem estruturadas
 - **Complexidade Ciclomática**: 3.2 (considerada baixa/boa)
 - **Cobertura de Testes**: 95%+ em todas as fases
